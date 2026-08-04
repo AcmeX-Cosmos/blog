@@ -1,0 +1,62 @@
+[
+  {
+    "name": "RoboMaster 机器人跟踪射击系统",
+    "role": "核心算法负责人",
+    "description": "基于ROS2架构的机器人自动瞄准跟踪系统，涵盖装甲板检测、位姿解算、多传感器融合跟踪与弹道补偿的完整管线。同时负责UE5虚实仿真环境的搭建，实现算法在虚拟和真实环境下的闭环验证。",
+    "tags": ["ROS2", "OpenCV", "PnP", "Ceres", "EKF", "C++", "UE5", "Docker"],
+    "highlights": [
+      "ROS2架构：Component节点封装、TF2坐标系转换、DDS实时通信",
+      "装甲板检测：OpenCV灯柱检测、PnP位姿解算、Ceres BA联合优化",
+      "目标跟踪：EKF多传感器融合 + 四阶龙格库塔弹道补偿",
+      "UE5虚实仿真：搭建竞技场景，实现算法双向闭环验证"
+    ],
+    "results": [
+      { "label": "跟踪精度", "value": "±1.5°" },
+      { "label": "检测帧率", "value": "60fps" },
+      { "label": "全国赛", "value": "一等奖" }
+    ]
+  },
+  {
+    "name": "骰子识别与姿态估计系统",
+    "role": "独立完成",
+    "description": "基于YOLOv10 + PnP + BA + PoseNet多模型融合的骰子识别与6D姿态估计系统，支持实时视频流处理，并使用PyQt5构建完整GUI交互界面。",
+    "tags": ["YOLOv10", "PnP", "Ceres", "PoseNet", "PyQt5", "Python"],
+    "highlights": [
+      "多模型融合：YOLOv10目标检测 + PnP初始位姿 + BA精化优化 + PoseNet端到端姿态直接回归",
+      "完整的PyQt5图形界面，支持实时视频流处理与姿态可视化"
+    ],
+    "results": [
+      { "label": "姿态估计精度", "value": "±2°" },
+      { "label": "检测mAP", "value": "95%+" }
+    ]
+  },
+  {
+    "name": "CycleGAN 艺术风格迁移及3D纹理渲染系统",
+    "role": "独立完成",
+    "description": "基于CycleGAN实现任意风格图像的艺术风格迁移，并整合Blender自动化渲染管线，将迁移结果作为3D模型的纹理贴图完成高质量渲染输出。",
+    "tags": ["CycleGAN", "PyTorch", "Blender", "Python", "Docker"],
+    "highlights": [
+      "CycleGAN模型训练与调优，实现任意风格间的双向迁移",
+      "Blender Python脚本自动化纹理贴图 + 批量渲染管线",
+      "Docker容器化部署，保证环境一致性"
+    ],
+    "results": [
+      { "label": "风格迁移FID", "value": "45.2" },
+      { "label": "渲染管线", "value": "全自动化" }
+    ]
+  },
+  {
+    "name": "RoboMaster 全国赛备场调度系统",
+    "role": "独立开发",
+    "description": "为RoboMaster全国赛队伍的场地训练时间调度开发的Web应用，支持队员排班、时段预约和冲突检测，显著提升团队备场效率。",
+    "tags": ["Vue3", "JavaScript", "Vite"],
+    "highlights": [
+      "Vue3响应式排班系统，支持多队伍、多时段灵活调度",
+      "冲突检测算法确保无重复预定"
+    ],
+    "results": [
+      { "label": "效率提升", "value": "80%" },
+      { "label": "用户数", "value": "30+" }
+    ]
+  }
+]

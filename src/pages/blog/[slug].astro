@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({
+    params: { slug: post.id.replace(/\.md$/, '') },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<SiteLayout>
+  <article class="max-w-none">
+    <header class="mb-10 pb-8 border-b border-[hsl(var(--border))]">
+      <h1 class="text-3xl font-bold mb-3 leading-tight tracking-tight">
+        {post.data.title}
+      </h1>
+      {post.data.description && (
+        <p class="text-[hsl(var(--muted-foreground))] mb-4 leading-relaxed text-lg">
+          {post.data.description}
+        </p>
+      )}
+      <div class="flex items-center gap-3 flex-wrap">
+        <time class="text-sm text-[hsl(var(--muted-foreground))] font-mono">
+          {new Date(post.data.date).toLocaleDateString('zh-CN', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })}
+        </time>
+        {post.data.tags && post.data.tags.length > 0 && (
+          <div class="flex gap-2 flex-wrap">
+            {post.data.tags.map(tag => (
+              <a
+                href={`/blog/tag/${encodeURIComponent(tag)}`}
+                class="rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--muted))] px-3 py-1 text-xs font-medium text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--foreground))] hover:text-[hsl(var(--background))] transition-colors"
+              >
+                {tag}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </header>
+
+    <div class="article-content">
+      <Content />
+    </div>
+  </article>
+
+  <div class="mt-16 pt-8 border-t border-[hsl(var(--border))]">
+    <a href="/blog" class="inline-flex items-center gap-1 text-sm text-[hsl(var(--muted-foreground))] hover:text-[hsl(var(--foreground))] transition-colors">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      回到文章列表
+    </a>
+  </div>
+</SiteLayout>

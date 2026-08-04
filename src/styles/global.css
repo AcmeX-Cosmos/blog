@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+/* ===== Tell Tailwind v4 to use class-based dark mode ===== */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ===== Design Tokens (shadcn-inspired HSL system) ===== */
+:root {
+  --background: 0 0% 98%;
+  --foreground: 0 0% 8%;
+  --muted: 0 0% 94%;
+  --muted-foreground: 0 0% 45%;
+  --border: 0 0% 88%;
+  --accent: 0 0% 8%;
+  --card: 0 0% 100%;
+  --radius: 0.75rem;
+}
+
+html.dark {
+  --background: 0 0% 5%;
+  --foreground: 0 0% 90%;
+  --muted: 0 0% 12%;
+  --muted-foreground: 0 0% 55%;
+  --border: 0 0% 16%;
+  --accent: 0 0% 90%;
+  --card: 0 0% 8%;
+}
+
+/* ===== Base ===== */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ===== Typography ===== */
+h1 { font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; }
+h2 { font-size: 1.5rem; font-weight: 600; }
+h3 { font-size: 1.25rem; font-weight: 600; }
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 99px; }
+
+/* ===== Article Content ===== */
+.article-content h1 { font-size: 1.875rem; font-weight: 700; margin-top: 2.5rem; margin-bottom: 1rem; }
+.article-content h2 { font-size: 1.5rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid hsl(var(--border)); }
+.article-content h3 { font-size: 1.25rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+.article-content p { margin-bottom: 1.25rem; }
+.article-content ul { list-style: disc; margin-bottom: 1.25rem; padding-left: 1.5rem; }
+.article-content ol { list-style: decimal; margin-bottom: 1.25rem; padding-left: 1.5rem; }
+.article-content li { margin-bottom: 0.5rem; }
+.article-content blockquote { border-left: 3px solid hsl(var(--muted-foreground)); padding-left: 1rem; color: hsl(var(--muted-foreground)); margin: 1.5rem 0; font-style: italic; }
+.article-content code { font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace; font-size: 0.875em; background: hsl(var(--muted)); padding: 0.15em 0.4em; border-radius: 4px; }
+.article-content pre { background: #1e1e1e; border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.5rem; font-size: 0.875rem; line-height: 1.6; }
+.article-content pre code { background: transparent; padding: 0; color: #d4d4d4; }
+.article-content img { max-width: 100%; border-radius: 8px; margin: 1.5rem 0; display: inline-block; vertical-align: top; }
+.article-content a { text-decoration: underline; text-underline-offset: 2px; }
+.article-content strong { font-weight: 600; }
+.article-content table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.article-content th, .article-content td { border: 1px solid hsl(var(--border)); padding: 0.5rem 0.75rem; text-align: left; }
+.article-content th { background: hsl(var(--muted)); font-weight: 600; }

@@ -1,0 +1,101 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+---
+
+<SiteLayout>
+  <section>
+    <div class="mb-10 mt-6 sm:mt-10">
+      <h1 class="inline-block text-3xl font-semibold tracking-tight mb-2">关于我</h1>
+      <p class="mt-1 text-sm text-[hsl(var(--muted-foreground))]">
+        机器人视觉算法工程师 · RoboMaster 三年实战
+      </p>
+    </div>
+
+    <div class="space-y-12">
+      <!-- Intro -->
+      <div>
+        <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
+          <span class="inline-block w-1.5 h-5 rounded-full bg-[hsl(var(--foreground))]"></span>
+          简介
+        </h2>
+        <p class="text-[hsl(var(--muted-foreground))] leading-relaxed">
+          我是陈泽欣，深圳职业技术大学人工智能技术应用专业2026届毕业生。专注于<strong class="text-[hsl(var(--foreground))]">机器人视觉算法</strong>与ROS2系统开发，拥有3年RoboMaster竞赛实战经验，多次带队晋级全国赛并获得一、二等奖。核心方向是机器人视觉感知管线——从相机标定、目标检测到PnP位姿解算、多传感器融合跟踪。
+        </p>
+      </div>
+
+      <!-- Education -->
+      <div>
+        <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
+          <span class="inline-block w-1.5 h-5 rounded-full bg-[hsl(var(--foreground))]"></span>
+          教育背景
+        </h2>
+        <div class="space-y-4">
+          <div class="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4">
+            <h3 class="font-medium">深圳职业技术大学</h3>
+            <p class="text-sm text-[hsl(var(--muted-foreground))] mt-1">人工智能技术应用 · 2023-2026 (专科) · 国家励志奖学金</p>
+          </div>
+          <div class="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4">
+            <h3 class="font-medium">深圳信息职业技术学院</h3>
+            <p class="text-sm text-[hsl(var(--muted-foreground))] mt-1">智能控制技术 · 2022-2023</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills -->
+      <div>
+        <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
+          <span class="inline-block w-1.5 h-5 rounded-full bg-[hsl(var(--foreground))]"></span>
+          核心技能
+        </h2>
+        <div class="flex flex-wrap gap-2">
+          {['ROS2', 'OpenCV', 'PnP 位姿解算', 'Ceres BA', 'EKF 融合', 'YOLO', 'PyTorch', 'C++', 'Python', 'Docker', 'UE5'].map(s => (
+            <span class="rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--muted))] px-3 py-1 text-xs font-medium text-[hsl(var(--muted-foreground))]">
+              {s}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <!-- Awards -->
+      <div>
+        <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
+          <span class="inline-block w-1.5 h-5 rounded-full bg-[hsl(var(--foreground))]"></span>
+          竞赛获奖
+        </h2>
+        <div class="space-y-2">
+          {[
+            'RoboMaster 2025 全国赛 团队一等奖',
+            'RoboMaster 2024 全国赛 团队二等奖',
+            'RoboMaster 2024 区域赛 一等奖',
+            'RoboMaster 2023 区域赛 二等奖',
+            '2023 全国大学生电子设计竞赛 省级一等奖',
+          ].map(a => (
+            <div class="rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-4 py-2.5 text-sm text-[hsl(var(--muted-foreground))]">
+              {a}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Experience -->
+      <div>
+        <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
+          <span class="inline-block w-1.5 h-5 rounded-full bg-[hsl(var(--foreground))]"></span>
+          企业实践
+        </h2>
+        <div class="space-y-4">
+          <div class="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4">
+            <h3 class="font-medium">卓翼科技</h3>
+            <p class="text-xs text-[hsl(var(--muted-foreground))] mt-0.5">相机标定视觉工程师 · 2025.06</p>
+            <p class="text-sm text-[hsl(var(--muted-foreground))] mt-2">独立完成各类双目相机标定任务，熟悉产线级标定流程。</p>
+          </div>
+          <div class="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4">
+            <h3 class="font-medium">大恒图像</h3>
+            <p class="text-xs text-[hsl(var(--muted-foreground))] mt-0.5">机器视觉工程师 · 2024.07</p>
+            <p class="text-sm text-[hsl(var(--muted-foreground))] mt-2">独立配单 40+ 镜头/相机/光源至产线，部署 10+ 自动化视觉检测软件。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</SiteLayout>

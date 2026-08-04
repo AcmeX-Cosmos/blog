@@ -1,0 +1,59 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import projects from '../data/projects.json';
+---
+
+<SiteLayout>
+  <section>
+    <div class="mb-10 mt-6 sm:mt-10">
+      <h1 class="inline-block text-3xl font-semibold tracking-tight mb-2">项目</h1>
+      <p class="mt-1 text-sm text-[hsl(var(--muted-foreground))]">
+        机器人视觉与算法工程实践 — {projects.length} 个项目
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      {projects.map(project => (
+        <div class="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-5 py-5 transition-colors hover:bg-[hsl(var(--muted))]">
+          <div class="flex justify-between items-start gap-3 mb-2">
+            <h2 class="font-medium text-lg">{project.name}</h2>
+            <span class="text-xs text-[hsl(var(--muted-foreground))] font-mono shrink-0">{project.role}</span>
+          </div>
+
+          <p class="text-sm text-[hsl(var(--muted-foreground))] mb-4 leading-relaxed">
+            {project.description}
+          </p>
+
+          {project.highlights && project.highlights.length > 0 && (
+            <ul class="mb-4 space-y-1">
+              {project.highlights.map(h => (
+                <li class="text-sm text-[hsl(var(--muted-foreground))] pl-3 relative before:content-[''] before:absolute before:left-0 before:top-2 before:w-1 before:h-1 before:rounded-full before:bg-[hsl(var(--muted-foreground))]">
+                  {h}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <div class="flex flex-wrap gap-2 mb-3">
+            {project.tags.map(tag => (
+              <span class="rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--muted))] px-3 py-1 text-xs font-medium text-[hsl(var(--muted-foreground))]">
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          {project.results && project.results.length > 0 && (
+            <div class="flex gap-6 flex-wrap pt-3 border-t border-[hsl(var(--border))]">
+              {project.results.map(r => (
+                <div class="text-sm">
+                  <span class="font-semibold">{r.value}</span>
+                  <span class="text-[hsl(var(--muted-foreground))] ml-1 text-xs">{r.label}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </section>
+</SiteLayout>

@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Astro
+.astro/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.sublime-*
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Env
+.env
+.env.*
+
+# Debug
+npm-debug.log*
+*.log
+
+# Local notes
+QuickStart.md
+
+# Archive
+*.zip
+*.tar.gz
+*.rar
+
+# Coverage
+coverage/
