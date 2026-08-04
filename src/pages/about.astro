@@ -1,101 +1,1558 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+
+const personalityTagsLeft = [
+  { text: '穷究理探机微' },
+  { text: '秉性简厌虚文' },
+  { text: '遇挫死磕疑难' },
+  { text: '志广兴至则迁' },
+];
+
+const personalityTagsRight = [
+  { text: '沉心俗务罔闻' },
+  { text: '重践以规自守' },
+  { text: '智思敛不情泄' },
+  { text: '察解持守边界' },
+];
+
+const pursuitWords = ['优秀', '出色', '高效', '心动'];
+
+const skills = [
+  'ROS2', 'OpenCV', 'YOLO', 'PyTorch', 'C++', 'Python', 'Docker',
+  'Ceres', 'EKF', 'UE5', 'PnP', 'PoseNet', 'Git', 'Linux',
+  'Vue3', 'Blender', 'PyQt5', 'CycleGAN', 'Deep Learning', 'VLA',
+];
+
+const hobbyItems = [
+  { icon: '🎮', label: '爱好游戏', value: 'CS:GO' },
+  { icon: '🎯', label: '爱好游戏', value: 'Valorant' },
+];
+
+const interestItems = [
+  { icon: '💻', label: '数码科技', desc: '机器人、嵌入式软硬件' },
+  { icon: '🎵', label: '音乐偏好', desc: '电子乐、古典、轻音乐' },
+];
+
+const tenYearStart = '2022-05-28';
+const tenYearEnd = '2032-05-28';
+const startDate = new Date(tenYearStart).getTime();
+const endDate = new Date(tenYearEnd).getTime();
+const now = Date.now();
+const progress = Math.min(100, Math.max(0, Math.round(((now - startDate) / (endDate - startDate)) * 100)));
+const daysLeft = Math.max(0, Math.ceil((endDate - now) / (1000 * 60 * 60 * 24)));
+
+const awards = [
+  'RMUC 2024 全国赛 国家二等奖',
+  'RMUC 2023 全国赛 区域赛奖',
+  'RMUL 2025 (广西站) 团体 & 哨兵',
+  'RMUL 2024 (广东站) 团体 & 哨兵',
+  '2023 全国大学生电子设计竞赛 省级二等奖',
+  '2023-2025 赛季 RM 区域赛/兵种奖 一二等奖若干',
+];
+
+const projects = [
+  {
+    title: 'RoboMaster 机器人跟踪射击系统',
+    role: '核心算法负责人',
+    period: '2023.09 至今',
+    description: '基于 ROS2 架构的自动瞄准跟踪系统，涵盖装甲板检测、PnP + Ceres BA 位姿优化、9维 EKF 多传感器融合跟踪与四阶龙格库塔弹道补偿。',
+    tags: ['ROS2', 'OpenCV', 'Ceres', 'EKF', 'UE5'],
+  },
+  {
+    title: '骰子识别与姿态估计系统',
+    role: '独立完成',
+    period: '2025.04—2025.06',
+    description: '基于 YOLOv10 + PnP + BA + PoseNet 多模型融合的骰子 6D 姿态估计系统，训练损失 MAE 低至 0.034 rad。',
+    tags: ['YOLOv10', 'PnP', 'PoseNet', 'PyQt5'],
+  },
+  {
+    title: 'CycleGAN 艺术风格迁移与 3D 纹理渲染',
+    role: '独立完成',
+    period: '2025.09—2025.10',
+    description: 'CycleGAN 实现风景到梵高风格迁移，自建 2700 张数据集。Blender Python 脚本自动化纹理映射与批量渲染。',
+    tags: ['CycleGAN', 'PyTorch', 'Blender', 'Python'],
+  },
+];
 ---
 
 <SiteLayout>
-  <section>
-    <div class="mb-10 mt-6 sm:mt-10">
-      <h1 class="inline-block text-3xl font-semibold tracking-tight mb-2">关于我</h1>
-      <p class="mt-1 text-sm text-[hsl(var(--muted-foreground))]">
-        机器人视觉算法工程师 · RoboMaster 三年实战
-      </p>
+  <article id="about-page">
+    <!-- ====== Author Box with Avatar ====== -->
+    <div class="author-box">
+      <div class="author-tag-left">
+        {personalityTagsLeft.map((tag) => (
+          <span class="author-tag">{tag.text}</span>
+        ))}
+      </div>
+      <div class="author-img">
+        <img src="/blog/avatar.jpg" alt="avatar" />
+      </div>
+      <div class="author-tag-right">
+        {personalityTagsRight.map((tag) => (
+          <span class="author-tag">{tag.text}</span>
+        ))}
+      </div>
     </div>
 
-    <div class="space-y-12">
-      <!-- Intro -->
-      <div>
-        <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
-          <span class="inline-block w-1.5 h-5 rounded-full bg-[hsl(var(--foreground))]"></span>
-          简介
-        </h2>
-        <p class="text-[hsl(var(--muted-foreground))] leading-relaxed">
-          我是陈泽欣，深圳职业技术大学人工智能技术应用专业2026届毕业生。专注于<strong class="text-[hsl(var(--foreground))]">机器人视觉算法</strong>与ROS2系统开发，拥有3年RoboMaster竞赛实战经验，多次带队晋级全国赛并获得一、二等奖。核心方向是机器人视觉感知管线——从相机标定、目标检测到PnP位姿解算、多传感器融合跟踪。
-        </p>
-      </div>
+    <p class="p center logo large">AcmeX</p>
+    <p class="p center small">追求极致, 探索未知</p>
 
-      <!-- Education -->
-      <div>
-        <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
-          <span class="inline-block w-1.5 h-5 rounded-full bg-[hsl(var(--foreground))]"></span>
-          教育背景
-        </h2>
-        <div class="space-y-4">
-          <div class="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4">
-            <h3 class="font-medium">深圳职业技术大学</h3>
-            <p class="text-sm text-[hsl(var(--muted-foreground))] mt-1">人工智能技术应用 · 2023-2026 (专科) · 国家励志奖学金</p>
+    <!-- ====== Row 1: MyInfo & Pursuit ====== -->
+    <div class="author-content">
+      <div class="author-content-item myInfoAndSayHello">
+        <div class="title1">你好，很高兴认识你 👋</div>
+        <div class="title2">我叫 <span class="inline-word">陈泽欣</span></div>
+      </div>
+      <div class="aboutsiteTips author-content-item">
+        <div class="author-content-item-tips">追求</div>
+        <h2>源于<br/>热爱而去 感受
+          <div class="mask">
+            {pursuitWords.map((word, i) => (
+              <span class:list={['first-tips' && i === 0]} data-show={i === 0 ? '' : null}>{word}</span>
+            ))}
           </div>
-          <div class="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4">
-            <h3 class="font-medium">深圳信息职业技术学院</h3>
-            <p class="text-sm text-[hsl(var(--muted-foreground))] mt-1">智能控制技术 · 2022-2023</p>
+        </h2>
+      </div>
+    </div>
+
+    <!-- ====== Hello There ====== -->
+    <div class="hello-about">
+      <div class="cursor"></div>
+      <div class="shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+      </div>
+      <div class="content">
+        <h1>Hello there!</h1>
+      </div>
+    </div>
+
+    <!-- ====== Row 2: Skills & Career ====== -->
+    <div class="author-content">
+      <div class="author-content-item skills">
+        <div class="card-content">
+          <div class="author-content-item-tips">技能</div>
+          <span class="author-content-item-title">开启创造力</span>
+          <div class="skills-style-group">
+            <div id="skills-tags-group-all">
+              <div class="tags-group-wrapper">
+                {skills.map((skill, i) => (
+                  <div class="tags-group-icon-pair">
+                    <div class="tags-group-icon" style="background: var(--about-tag-bg);">
+                      <span class="skill-icon-text">{skill}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div class="skills-list">
+              {skills.map((skill) => (
+                <div class="skill-info">
+                  <div class="skill-icon" style="background: var(--about-tag-bg);">
+                    <span class="skill-icon-text-small">{skill}</span>
+                  </div>
+                  <div class="skill-name"><span>{skill}</span></div>
+                </div>
+              ))}
+              <div class="etc">...</div>
+            </div>
           </div>
         </div>
       </div>
-
-      <!-- Skills -->
-      <div>
-        <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
-          <span class="inline-block w-1.5 h-5 rounded-full bg-[hsl(var(--foreground))]"></span>
-          核心技能
-        </h2>
-        <div class="flex flex-wrap gap-2">
-          {['ROS2', 'OpenCV', 'PnP 位姿解算', 'Ceres BA', 'EKF 融合', 'YOLO', 'PyTorch', 'C++', 'Python', 'Docker', 'UE5'].map(s => (
-            <span class="rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--muted))] px-3 py-1 text-xs font-medium text-[hsl(var(--muted-foreground))]">
-              {s}
-            </span>
-          ))}
+      <div class="author-content-item careers">
+        <div class="card-content">
+          <div class="author-content-item-tips">生涯</div>
+          <span class="author-content-item-title">无限进步</span>
+          <div class="careers-group">
+            <div class="career-item">
+              <div class="circle" style="background:#357ef5"></div>
+              <div class="name">深圳职业技术大学，人工智能技术应用</div>
+            </div>
+          </div>
+          <img class="author-content-img" alt="生涯" src="https://img.gbfun.cc/file/project/2JHQREr3.png" />
         </div>
       </div>
+    </div>
 
-      <!-- Awards -->
-      <div>
-        <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
-          <span class="inline-block w-1.5 h-5 rounded-full bg-[hsl(var(--foreground))]"></span>
-          竞赛获奖
-        </h2>
-        <div class="space-y-2">
-          {[
-            'RoboMaster 2025 全国赛 团队一等奖',
-            'RoboMaster 2024 全国赛 团队二等奖',
-            'RoboMaster 2024 区域赛 一等奖',
-            'RoboMaster 2023 区域赛 二等奖',
-            '2023 全国大学生电子设计竞赛 省级一等奖',
-          ].map(a => (
-            <div class="rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-4 py-2.5 text-sm text-[hsl(var(--muted-foreground))]">
-              {a}
+    <!-- ====== Row 3: Statistic & Map/Info ====== -->
+    <div class="author-content">
+      <div class="about-statistic author-content-item" style="background:url(https://bu.dusays.com/2023/05/01/644f4b037b930.jpg) top/cover no-repeat">
+        <div class="card-content">
+          <div class="author-content-item-tips">数据</div>
+          <span class="author-content-item-title">访问统计</span>
+          <div id="statistic">
+            <div><span>今日人数</span><span id="today_uv">--</span></div>
+            <div><span>今日访问</span><span id="today_pv">--</span></div>
+            <div><span>昨日人数</span><span id="yesterday_uv">--</span></div>
+            <div><span>昨日访问</span><span id="yesterday_pv">--</span></div>
+            <div><span>本月访问</span><span id="last_month_pv">--</span></div>
+            <div><span>本年访问</span><span id="last_year_pv">--</span></div>
+          </div>
+          <div class="post-tips">统计信息来自 <a href="https://umami.gbfun.cc/" target="_blank" rel="noopener nofollow">Umami统计</a></div>
+          <div class="banner-button-group">
+            <a class="banner-button" href="/archives">
+              <i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i>
+              <span class="banner-button-text">文章隧道</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="author-content-item-group column mapAndInfo">
+        <div class="author-content-item map single">
+          <span class="map-title">我现在住在<b>中国，深圳市南山区，科技园</b></span>
+        </div>
+        <div class="author-content-item selfInfo single">
+          <div>
+            <span class="selfInfo-title">生于</span>
+            <span class="selfInfo-content" id="selfInfo-content-year" style="color:#43a6c6">2002</span>
+          </div>
+          <div>
+            <span class="selfInfo-title">深圳职业技术大学</span>
+            <span class="selfInfo-content" style="color:#c69043">人工智能技术应用</span>
+          </div>
+          <div>
+            <span class="selfInfo-title">现在职业</span>
+            <span class="selfInfo-content" style="color:#b04fe6">学生 & 机器人视觉算法工程师</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== Row 4: Personality & Photo ====== -->
+    <div class="author-content">
+      <div class="author-content-item personalities">
+        <div class="author-content-item-tips">性格</div>
+        <span class="author-content-item-title">建筑师</span>
+        <div class="title2" style="color:#4a90d9">INTJ</div>
+        <div class="image">
+          <img src="https://img.gbfun.cc/file/project/2JHQREr3.png" alt="性格" />
+        </div>
+        <div class="post-tips">
+          在 <a href="https://www.16personalities.com/" target="_blank" rel="noopener nofollow">16personalities</a> 了解更多关于
+          <a href="https://www.16personalities.com/ch/intj-%E4%BA%BA%E6%A0%BC" target="_blank" rel="noopener nofollow">建筑师</a>
+        </div>
+      </div>
+      <div class="author-content-item myphoto">
+        <img src="https://img.gbfun.cc/file/project/2JHQREr3.png" alt="photo" />
+      </div>
+    </div>
+
+    <!-- ====== Row 5: Maxim & Buff ====== -->
+    <div class="author-content">
+      <div class="author-content-item maxim" style="background: linear-gradient(120deg, #5b27ff 0, #00d4ff 100%); color: var(--about-white);">
+        <div class="author-content-item-tips">座右铭</div>
+        <div class="maxim-title">
+          <span>低调做事，</span>
+          <span>高调做人 💕。</span>
+        </div>
+      </div>
+      <div class="author-content-item buff">
+        <div class="card-content">
+          <div class="author-content-item-tips">特长</div>
+          <span class="buff-title">
+            <span>计算机视觉</span>
+            <span>机器人系统</span>
+            <span>算法工程</span>
+            <span>小天才</span>
+            <span>瞎捣鼓</span>
+            <span>好奇心 MAX</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== Row 6: Hobbies ====== -->
+    <div class="author-content">
+      {hobbyItems.map((item) => (
+        <div class="author-content-item game-yuanshen" style="background: linear-gradient(120deg, var(--about-accent-1), var(--about-accent-2)); background-size: 200%;">
+          <div class="card-content">
+            <div class="author-content-item-tips">{item.label}</div>
+            <span class="author-content-item-title">{item.value}</span>
+            <div class="content-bottom">
+              <span class="hobby-icon">{item.icon}</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- ====== Row 7: Interests ====== -->
+    <div class="author-content">
+      {interestItems.map((item) => (
+        <div class="author-content-item like-technology" style="background: var(--about-card-bg);">
+          <div class="card-content">
+            <div class="author-content-item-tips">{item.label}</div>
+            <span class="author-content-item-title">{item.desc}</span>
+            <div class="content-bottom">
+              <span class="interest-icon">{item.icon}</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- ====== Row 8: Ten Year Pledge ====== -->
+    <div class="author-content">
+      <div class="author-content-item card-countdown single" style="background: linear-gradient(120deg, #5b27ff 0, #00d4ff 100%); background-size: 200%; color: var(--about-white);">
+        <div class="card-content">
+          <div class="author-content-item-tips">十年之约</div>
+          <span class="author-content-item-title">寻找更合适的自己。</span>
+          <div class="cd-count-left">
+            <span class="cd-count-num">{daysLeft}</span>
+            <span class="cd-count-text">DAYS</span>
+          </div>
+          <div class="post-tips">
+            <span>{tenYearStart}</span> ~ <span>{tenYearEnd}</span>
+          </div>
+          <div class="banner-button-group">
+            <a class="banner-button" href="https://www.foreverblog.cn/" target="_blank" rel="noopener">
+              <i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i>
+              <span class="banner-button-text">十年之约</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== Row 9: Awards ====== -->
+    <div class="author-content">
+      <div class="author-content-item single reward" style="background: var(--about-card-bg);">
+        <div class="author-content-item-tips">竞赛获奖</div>
+        <span class="author-content-item-title">赛场荣誉</span>
+        <div class="reward-list">
+          {awards.map((award) => (
+            <div class="reward-list-item">
+              <span class="reward-dot"></span>
+              <span>{award}</span>
             </div>
           ))}
         </div>
       </div>
+    </div>
 
-      <!-- Experience -->
-      <div>
-        <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
-          <span class="inline-block w-1.5 h-5 rounded-full bg-[hsl(var(--foreground))]"></span>
-          企业实践
-        </h2>
-        <div class="space-y-4">
-          <div class="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4">
-            <h3 class="font-medium">卓翼科技</h3>
-            <p class="text-xs text-[hsl(var(--muted-foreground))] mt-0.5">相机标定视觉工程师 · 2025.06</p>
-            <p class="text-sm text-[hsl(var(--muted-foreground))] mt-2">独立完成各类双目相机标定任务，熟悉产线级标定流程。</p>
-          </div>
-          <div class="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4">
-            <h3 class="font-medium">大恒图像</h3>
-            <p class="text-xs text-[hsl(var(--muted-foreground))] mt-0.5">机器视觉工程师 · 2024.07</p>
-            <p class="text-sm text-[hsl(var(--muted-foreground))] mt-2">独立配单 40+ 镜头/相机/光源至产线，部署 10+ 自动化视觉检测软件。</p>
-          </div>
+    <!-- ====== Row 10: Projects ====== -->
+    <div class="author-content">
+      <div class="author-content-item single reward" style="background: var(--about-card-bg);">
+        <div class="author-content-item-tips">项目经历</div>
+        <span class="author-content-item-title">工程实践</span>
+        <div class="reward-list">
+          {projects.map((project) => (
+            <div class="reward-list-item project-item">
+              <div class="project-header">
+                <strong>{project.title}</strong>
+                <span class="project-period">{project.period}</span>
+              </div>
+              <div class="project-role">{project.role}</div>
+              <div class="project-desc">{project.description}</div>
+              <div class="project-tags">
+                {project.tags.map((tag) => (
+                  <span class="project-tag">{tag}</span>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
-  </section>
+
+    <!-- ====== Footer ====== -->
+    <div class="about-footer-wrap">
+      <p>持续探索视觉感知、机器人系统与具身智能的边界。</p>
+      <span>ACMEX · 2026</span>
+    </div>
+  </article>
 </SiteLayout>
+
+<style>
+  /* ========== CSS Variables ========== */
+  #about-page {
+    --about-white: #fff;
+    --about-card-bg: hsl(var(--card));
+    --about-tag-bg: hsl(var(--muted));
+    --about-accent-1: #5b27ff;
+    --about-accent-2: #00d4ff;
+    --about-accent-3: #ff27e8;
+    --about-accent-4: #ff8000;
+    --about-border: 1px solid hsl(var(--border));
+    --about-shadow: 0 8px 32px hsl(var(--foreground) / 0.06);
+    --about-radius: 24px;
+    padding-bottom: 3rem;
+  }
+
+  /* ========== Author Box ========== */
+  .author-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0 16px 0;
+  }
+
+  .author-tag-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .author-tag-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .author-tag-left .author-tag:first-child,
+  .author-tag-left .author-tag:last-child {
+    margin-right: -16px;
+  }
+
+  .author-tag-right .author-tag:first-child,
+  .author-tag-right .author-tag:last-child {
+    margin-left: -16px;
+  }
+
+  .author-tag {
+    transform: translate(0, -4px);
+    padding: 1px 10px;
+    background: var(--about-card-bg);
+    border: var(--about-border);
+    border-radius: 40px;
+    margin-top: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    box-shadow: var(--about-shadow);
+    animation: floating 6s ease-in-out 0s infinite normal none running;
+  }
+
+  .author-tag:nth-child(1) { animation-delay: 0s; }
+  .author-tag:nth-child(2) { animation-delay: 0.6s; }
+  .author-tag:nth-child(3) { animation-delay: 1.2s; }
+  .author-tag:nth-child(4) { animation-delay: 1.8s; }
+
+  .author-img {
+    margin: 0 30px;
+    border-radius: 50%;
+    width: 210px;
+    height: 210px;
+    position: relative;
+    user-select: none;
+    animation: avatar-breathe 5s ease-in-out infinite;
+  }
+
+  .author-img::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, hsl(var(--foreground) / 0.12) 0deg, transparent 60deg, hsl(var(--foreground) / 0.12) 120deg, transparent 180deg, hsl(var(--foreground) / 0.12) 240deg, transparent 300deg, hsl(var(--foreground) / 0.12) 360deg);
+    mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 2px));
+    animation: arc-rotate 15s linear infinite;
+  }
+
+  .author-img img {
+    border-radius: 50%;
+    overflow: hidden;
+    width: 90%;
+    height: 90%;
+    object-fit: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .author-img:hover {
+    animation-play-state: paused;
+  }
+
+  .author-img:hover::after {
+    animation-play-state: paused;
+  }
+
+  .author-img:before {
+    content: '';
+    transition: 1s;
+    width: 30px;
+    height: 30px;
+    background: #5cb85c;
+    position: absolute;
+    border-radius: 50%;
+    border: 5px solid hsl(var(--background));
+    bottom: 5px;
+    right: 10px;
+    z-index: 2;
+  }
+
+  /* ========== Center Title ========== */
+  .p.center {
+    text-align: center;
+    margin: 0;
+  }
+
+  .p.center.logo.large {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.25rem;
+  }
+
+  .p.center.small {
+    font-size: 0.95rem;
+    color: hsl(var(--muted-foreground));
+    margin-bottom: 2rem;
+    letter-spacing: 0.16em;
+  }
+
+  /* ========== Author Content Grid ========== */
+  .author-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .author-content-item {
+    width: 49%;
+    border-radius: var(--about-radius);
+    background: var(--about-card-bg);
+    border: var(--about-border);
+    box-shadow: var(--about-shadow);
+    position: relative;
+    padding: 1rem 2rem;
+    overflow: hidden;
+  }
+
+  .author-content-item.single {
+    width: 100%;
+  }
+
+  .author-content-item .card-content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 2rem;
+  }
+
+  .author-content-item .card-content .author-content-item-title {
+    margin-bottom: 0.5rem;
+  }
+
+  .author-content-item .author-content-item-title {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .author-content-item .author-content-item-tips {
+    opacity: 0.8;
+    font-size: 12px;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ========== myInfoAndSayHello ========== */
+  #about-page .myInfoAndSayHello {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--about-white);
+    background: linear-gradient(120deg, #5b27ff 0, #00d4ff 100%);
+    background-size: 200%;
+    animation: gradient 15s ease infinite;
+    width: 59%;
+  }
+
+  #about-page .myInfoAndSayHello .title1 {
+    opacity: 0.8;
+    line-height: 1.3;
+  }
+
+  #about-page .myInfoAndSayHello .title2 {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0.5rem 0;
+  }
+
+  #about-page .myInfoAndSayHello .inline-word {
+    color: var(--about-white);
+  }
+
+  /* ========== aboutsiteTips (Pursuit) ========== */
+  .author-content-item.aboutsiteTips {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    width: 39%;
+    background: var(--about-card-bg) !important;
+  }
+
+  .author-content-item.aboutsiteTips h2 {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0.5rem 0 0;
+  }
+
+  .author-content-item.aboutsiteTips .mask {
+    display: inline-flex;
+    flex-direction: column;
+    height: 40px;
+    overflow: hidden;
+    vertical-align: bottom;
+    margin-left: 4px;
+  }
+
+  .author-content-item.aboutsiteTips .mask span {
+    height: 40px;
+    line-height: 40px;
+    animation: pursuit-roll 6s ease-in-out infinite;
+  }
+
+  .author-content-item.aboutsiteTips .mask span:nth-child(1) { animation-delay: 0s; }
+  .author-content-item.aboutsiteTips .mask span:nth-child(2) { animation-delay: 1.5s; }
+  .author-content-item.aboutsiteTips .mask span:nth-child(3) { animation-delay: 3s; }
+  .author-content-item.aboutsiteTips .mask span:nth-child(4) { animation-delay: 4.5s; }
+
+  /* ========== Hello There ========== */
+  .hello-about {
+    margin: 20px auto;
+    border-radius: var(--about-radius);
+    background: var(--about-card-bg);
+    border: var(--about-border);
+    box-shadow: var(--about-shadow);
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    height: 315px;
+  }
+
+  .hello-about .cursor {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #000;
+    border-radius: 50%;
+    z-index: 3;
+    animation: cursor-move 8s ease-in-out infinite;
+  }
+
+  .hello-about .shapes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  .hello-about .shape {
+    position: absolute;
+    border-radius: 50%;
+    background: #000;
+    opacity: 0.08;
+  }
+
+  .hello-about .shape-1 {
+    width: 300px;
+    height: 300px;
+    animation: shape-float 6s ease-in-out infinite;
+  }
+
+  .hello-about .shape-2 {
+    width: 200px;
+    height: 200px;
+    animation: shape-float 8s ease-in-out infinite reverse;
+  }
+
+  .hello-about .shape-3 {
+    width: 100px;
+    height: 100px;
+    animation: shape-float 10s ease-in-out infinite 2s;
+  }
+
+  .hello-about .content {
+    top: 0;
+    left: 0;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 315px;
+    width: 100%;
+    background: hsl(var(--card));
+    mix-blend-mode: screen;
+  }
+
+  :global([data-theme="dark"]) .hello-about .content {
+    background: transparent;
+  }
+
+  :global([data-theme="dark"]) .hello-about h1 {
+    color: var(--about-white);
+  }
+
+  .hello-about h1 {
+    font-size: clamp(3rem, 10vw, 12rem);
+    color: #000;
+    margin: 0;
+    text-align: center;
+    line-height: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ========== Skills ========== */
+  .author-content-item.skills {
+    width: 59%;
+    min-height: 400px;
+  }
+
+  .author-content-item.skills .skills-style-group {
+    position: relative;
+  }
+
+  .skills:hover .skills-style-group #skills-tags-group-all {
+    opacity: 0;
+  }
+
+  #skills-tags-group-all {
+    display: flex;
+    transform: rotate(0);
+    transition: 0.3s;
+  }
+
+  #skills-tags-group-all .tags-group-wrapper {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: nowrap;
+    animation: rowup 60s linear infinite;
+  }
+
+  #skills-tags-group-all .tags-group-icon-pair {
+    margin-left: 1rem;
+  }
+
+  #skills-tags-group-all .tags-group-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 66px;
+    font-weight: 700;
+    box-shadow: 0 8px 16px -4px #2c2d300c;
+    width: 120px;
+    height: 120px;
+    border-radius: 30px;
+  }
+
+  .skill-icon-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+  }
+
+  #skills-tags-group-all .tags-group-icon-pair .tags-group-icon:nth-child(even) {
+    margin-top: 1rem;
+    transform: translate(-60px);
+  }
+
+  .skills-list {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+    padding: 0 1rem;
+  }
+
+  .skills:hover .skills-list {
+    opacity: 1;
+  }
+
+  .skill-info {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    margin-top: 10px;
+    background: hsl(var(--background));
+    border-radius: 40px;
+    padding: 4px 12px 4px 8px;
+    border: var(--about-border);
+    box-shadow: var(--about-shadow);
+  }
+
+  .skill-info .skill-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 6px;
+  }
+
+  .skill-icon-text-small {
+    font-size: 10px;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+  }
+
+  .skill-name {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .skills-list .etc {
+    margin-right: 10px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* ========== Careers ========== */
+  .author-content-item.careers {
+    min-height: 400px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-x: right;
+    background-position-y: bottom;
+    width: 39%;
+  }
+
+  .author-content-item.careers .careers-group {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+
+  .author-content-item.careers .career-item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .author-content-item.careers .career-item .circle {
+    width: 16px;
+    height: 16px;
+    margin-top: 3px;
+    margin-right: 8px;
+    border-radius: 50%;
+  }
+
+  .author-content-item.careers .career-item .name {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .author-content-item.careers img {
+    position: absolute;
+    left: 0;
+    bottom: 20px;
+    width: 100%;
+    transition: 0.6s;
+    z-index: -1;
+  }
+
+  /* ========== Statistic ========== */
+  #about-page .about-statistic {
+    min-height: 380px;
+    width: 39%;
+    background-size: cover !important;
+    color: var(--about-white);
+    overflow: hidden;
+  }
+
+  #about-page .about-statistic::after {
+    box-shadow: 0 -159px 173px 71px #0c1c2c inset;
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  #statistic {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  #statistic div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #statistic div span:first-child {
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
+  #statistic div span:last-child {
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  /* ========== Post Tips ========== */
+  .post-tips {
+    color: hsl(var(--muted-foreground));
+    font-size: 14px;
+    position: absolute;
+    bottom: 1rem;
+    left: 2rem;
+  }
+
+  .post-tips a {
+    color: hsl(var(--muted-foreground)) !important;
+    border: none !important;
+  }
+
+  .post-tips a:hover {
+    color: hsl(var(--foreground)) !important;
+    background: transparent !important;
+  }
+
+  /* ========== Banner Button ========== */
+  .author-content-item .card-content .banner-button-group {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 2rem;
+  }
+
+  .author-content-item .card-content .banner-button-group .banner-button {
+    height: 40px;
+    border-radius: 20px;
+    justify-content: center;
+    background: rgba(255,255,255,0.2);
+    color: var(--about-white);
+    display: inline-flex;
+    align-items: center;
+    z-index: 1;
+    transition: .3s;
+    cursor: pointer;
+    border-bottom: 0 !important;
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transform: translateZ(0);
+    padding: 0 16px;
+    text-decoration: none;
+  }
+
+  .author-content-item .card-content .banner-button-group .banner-button i {
+    margin-right: 0.25rem;
+    font-size: 22px;
+  }
+
+  .author-content-item .card-content .banner-button-group .banner-button .banner-button-text {
+    margin-left: 4px;
+  }
+
+  .author-content-item .card-content .banner-button-group .banner-button:hover {
+    background: hsl(var(--foreground));
+    color: var(--about-white);
+    border-radius: 20px !important;
+  }
+
+  /* ========== Map & SelfInfo ========== */
+  .author-content-item-group.column {
+    display: flex;
+    flex-direction: column;
+    width: 49%;
+    justify-content: space-between;
+  }
+
+  .author-content-item-group.column.mapAndInfo {
+    width: 59%;
+  }
+
+  .author-content-item.map {
+    min-height: 160px;
+    max-height: 400px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+    height: 60%;
+    transition: 1s ease-in-out;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url(https://img.gbfun.cc/file/project/K7AkLR13.png);
+  }
+
+  :global([data-theme="dark"]) .author-content-item.map {
+    background-image: url(https://img.gbfun.cc/file/project/LcySxnRE.png);
+  }
+
+  .author-content-item.map .map-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    color: hsl(var(--foreground));
+    background: hsl(var(--card) / 0.85);
+    padding: 0.5rem 2rem;
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transform: translateZ(0);
+    transition: all 1s, color 0s ease-in-out;
+    font-size: 20px;
+  }
+
+  .author-content-item.map .map-title b {
+    color: hsl(var(--foreground));
+  }
+
+  .author-content-item.map:hover {
+    background-size: 120%;
+    transition: 4s ease-in-out;
+    background-position-x: 0;
+    background-position-y: 36%;
+  }
+
+  .author-content-item.map:hover .map-title {
+    bottom: -100%;
+  }
+
+  .author-content-item.selfInfo {
+    display: flex;
+    min-height: 100px;
+    max-height: 400px;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    height: 40%;
+  }
+
+  .author-content-item.selfInfo div {
+    display: flex;
+    flex-direction: column;
+    margin: 0.5rem 2rem 0.5rem 0;
+    min-width: 120px;
+  }
+
+  .author-content-item.selfInfo .selfInfo-title {
+    opacity: 0.8;
+    font-size: 12px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .author-content-item.selfInfo .selfInfo-content {
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  /* ========== Personalities ========== */
+  .author-content-item.personalities {
+    width: 59%;
+  }
+
+  .author-content-item.personalities .title2 {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-top: 1rem;
+  }
+
+  .author-content-item.personalities .image {
+    position: absolute;
+    right: 30px;
+    top: 10px;
+    width: 220px;
+    transition: transform 2s cubic-bezier(.13,.45,.21,1.02);
+  }
+
+  .author-content-item.personalities .image img {
+    display: block;
+    margin: 0 auto 20px;
+    max-width: 100%;
+    transition: filter 375ms ease-in .2s;
+  }
+
+  .author-content-item.personalities:hover .image {
+    transform: rotate(-10deg);
+  }
+
+  .author-content-item.personalities .post-tips {
+    color: hsl(var(--muted-foreground));
+    font-size: 14px;
+    position: absolute;
+    bottom: 1rem;
+    left: 2rem;
+  }
+
+  /* ========== MyPhoto ========== */
+  .author-content-item.myphoto {
+    height: 60%;
+    min-height: 240px;
+    position: relative;
+    overflow: hidden;
+    width: 39%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .author-content-item.myphoto img {
+    position: absolute;
+    min-width: 100%;
+    object-fit: cover;
+    transition: 0.6s;
+    animation: coverIn 2s ease-out forwards;
+    transition: transform 2s ease-out !important;
+  }
+
+  .author-content-item.myphoto:hover img {
+    transform: scale(1.1);
+  }
+
+  /* ========== Maxim ========== */
+  .author-content-item.maxim {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.1;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    width: 39%;
+    border-radius: var(--about-radius);
+    border: var(--about-border);
+    box-shadow: var(--about-shadow);
+    padding: 1rem 2rem;
+    background-size: 200% !important;
+    animation: gradient 15s ease infinite;
+  }
+
+  .author-content-item.maxim .maxim-title {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ========== Buff ========== */
+  .author-content-item.buff {
+    height: 200px;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.1;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(120deg, #ff27e8 0, #ff8000 100%);
+    color: var(--about-white);
+    background-size: 200%;
+    animation: gradient 15s ease infinite;
+    min-height: 200px;
+    height: fit-content;
+    width: 59%;
+  }
+
+  .author-content-item.buff .card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .author-content-item.buff .buff-title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  /* ========== Game Yuanshen / Hobbies ========== */
+  .author-content-item.game-yuanshen {
+    background-size: cover;
+    min-height: 300px;
+    overflow: hidden;
+    color: var(--about-white);
+    width: 49%;
+    background-size: 200% !important;
+    animation: gradient 15s ease infinite;
+  }
+
+  .author-content-item.game-yuanshen::after {
+    box-shadow: 0 -69px 203px 11px #575d8b inset;
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+
+  .author-content-item .content-bottom {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .author-content-item .content-bottom .hobby-icon,
+  .author-content-item .content-bottom .interest-icon {
+    font-size: 3rem;
+  }
+
+  .author-content-item.game-yuanshen .author-content-item-tips,
+  .author-content-item.game-yuanshen .author-content-item-title {
+    z-index: 2;
+    color: var(--about-white);
+    position: relative;
+  }
+
+  /* ========== Like Technology / Music ========== */
+  .author-content-item.like-technology {
+    min-height: 240px;
+    width: 49%;
+  }
+
+  /* ========== Card Countdown (Ten Year) ========== */
+  .author-content-item.card-countdown {
+    min-height: 300px;
+    background-size: 200% !important;
+    animation: gradient 15s ease infinite;
+  }
+
+  .author-content-item.card-countdown .card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .cd-count-left {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-right: 0.8rem;
+    line-height: 1.5;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  .cd-count-num {
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .cd-count-text {
+    font-size: 1rem;
+    font-weight: 600;
+    opacity: 0.7;
+    letter-spacing: 0.2em;
+  }
+
+  /* ========== Reward List (Awards & Projects) ========== */
+  .author-content-item.single.reward {
+    min-height: auto;
+    padding: 1.5rem 2rem;
+  }
+
+  .reward-list {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .reward-list-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    font-size: 0.88rem;
+    border-bottom: 1px dashed hsl(var(--border));
+  }
+
+  .reward-list-item:last-child {
+    border-bottom: none;
+  }
+
+  .reward-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: hsl(var(--foreground));
+    flex: none;
+  }
+
+  .reward-list-updateDate {
+    color: hsl(var(--muted-foreground));
+    font-size: 14px;
+    margin-top: 0.5rem;
+  }
+
+  .project-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .project-item .project-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    width: 100%;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .project-item .project-header strong {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .project-item .project-period {
+    font-size: 0.7rem;
+    color: hsl(var(--muted-foreground));
+    white-space: nowrap;
+  }
+
+  .project-item .project-role {
+    font-size: 0.76rem;
+    color: hsl(var(--muted-foreground));
+  }
+
+  .project-item .project-desc {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: hsl(var(--muted-foreground));
+    margin: 0;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.3rem;
+  }
+
+  .project-tag {
+    border: 1px solid hsl(var(--border));
+    border-radius: 999px;
+    background: hsl(var(--muted));
+    padding: 0.2rem 0.55rem;
+    font-size: 0.68rem;
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* ========== Footer ========== */
+  .about-footer-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-top: 4rem;
+    border-top: 1px solid hsl(var(--border));
+    padding-top: 1.5rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.75rem;
+  }
+
+  .about-footer-wrap p {
+    margin: 0;
+  }
+
+  .about-footer-wrap span {
+    flex: none;
+    font-family: ui-monospace, monospace;
+    letter-spacing: 0.18em;
+  }
+
+  /* ========== Animations ========== */
+  @keyframes floating {
+    0% { transform: translate(0, -4px); }
+    50% { transform: translate(0, 4px); }
+    100% { transform: translate(0, -4px); }
+  }
+
+  @keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes rowup {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  @keyframes avatar-breathe {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes arc-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  @keyframes cursor-move {
+    0%, 100% { transform: translate(100px, 50px); }
+    25% { transform: translate(500px, 100px); }
+    50% { transform: translate(400px, 200px); }
+    75% { transform: translate(200px, 150px); }
+  }
+
+  @keyframes shape-float {
+    0%, 100% { transform: translate(100px, 50px) scale(1); }
+    50% { transform: translate(400px, 200px) scale(1.5); }
+  }
+
+  @keyframes pursuit-roll {
+    0%, 10% { transform: translateY(0); }
+    25%, 35% { transform: translateY(-40px); }
+    50%, 60% { transform: translateY(-80px); }
+    75%, 85% { transform: translateY(-120px); }
+    100% { transform: translateY(0); }
+  }
+
+  /* ========== Responsive ========== */
+  @media (max-width: 900px) {
+    .author-tag-left,
+    .author-tag-right {
+      display: none;
+    }
+
+    .author-img {
+      width: 140px;
+      height: 140px;
+    }
+
+    .author-img img {
+      width: 90%;
+      height: 90%;
+    }
+
+    .author-img:before {
+      bottom: -5px;
+      right: -5px;
+    }
+
+    .author-content {
+      flex-direction: column;
+    }
+
+    .author-content-item,
+    .author-content-item.skills,
+    .author-content-item.careers,
+    .author-content-item.personalities,
+    .author-content-item.myphoto,
+    .author-content-item.maxim,
+    .author-content-item.buff,
+    .author-content-item.game-yuanshen,
+    .author-content-item.like-technology,
+    .author-content-item.aboutsiteTips,
+    #about-page .myInfoAndSayHello,
+    #about-page .about-statistic,
+    .author-content-item-group.column,
+    .author-content-item-group.column.mapAndInfo {
+      width: 100% !important;
+      margin-bottom: 1rem;
+    }
+
+    .hello-about {
+      height: 200px;
+    }
+
+    .hello-about .content {
+      height: 200px;
+    }
+
+    .hello-about h1 {
+      font-size: clamp(2rem, 8vw, 6rem);
+    }
+
+    .author-content-item .author-content-item-title {
+      font-size: 28px;
+    }
+
+    .author-content-item.personalities .image {
+      width: 120px;
+      right: 10px;
+    }
+
+    .author-content-item.selfInfo {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .author-content-item.selfInfo .selfInfo-content {
+      font-size: 22px;
+    }
+
+    .author-content-item.map {
+      min-height: 200px;
+    }
+
+    #statistic {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    #statistic div span:last-child {
+      font-size: 20px;
+    }
+
+    .post-tips {
+      left: 1rem;
+    }
+
+    .author-content-item .card-content .banner-button-group {
+      right: 1rem;
+      bottom: 1rem;
+    }
+
+    .author-content-item .card-content .banner-button-group .banner-button-text {
+      display: none;
+    }
+
+    .author-content-item .card-content .banner-button-group .banner-button {
+      background: transparent;
+      padding: 0;
+      width: auto;
+      backdrop-filter: unset;
+    }
+
+    .author-content-item .card-content .banner-button-group .banner-button i {
+      font-size: 1.5rem;
+      background: hsl(var(--card));
+      border-radius: 50%;
+      padding: 6px;
+      height: 40px;
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: hsl(var(--foreground));
+    }
+  }
+
+  @media (max-width: 480px) {
+    #statistic {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .author-content-item.personalities .image {
+      width: 100px;
+      right: 0;
+    }
+  }
+</style>
