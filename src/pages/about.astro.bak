@@ -1,0 +1,120 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+---
+
+<SiteLayout>
+  <section>
+    <div class="mb-10 mt-6 sm:mt-10">
+      <h1 class="inline-block text-3xl font-semibold tracking-tight mb-2">关于我</h1>
+      <p class="mt-1 text-sm text-[hsl(var(--muted-foreground))]">
+        机器人视觉算法 / ROS2 系统开发 · 具身智能探索
+      </p>
+    </div>
+
+    <div class="space-y-12">
+      <!-- Intro -->
+      <div>
+        <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
+          <span class="inline-block w-1.5 h-5 rounded-full bg-[hsl(var(--foreground))]"></span>
+          简介
+        </h2>
+        <p class="text-[hsl(var(--muted-foreground))] leading-relaxed">
+          我是陈泽欣，深圳职业技术大学人工智能技术应用专业2026届毕业生（2022-2026），<strong class="text-[hsl(var(--foreground))]">机器人视觉算法</strong>与ROS2系统开发方向。累计3年RoboMaster视觉算法实战经验，独立攻克装甲板检测、能量机关预测击打等核心模块，在极限压力下1个月内完成系统开发与调试，带领战队击败深大、大连理工、中科大等强队晋级全国赛。主导团队视觉技术栈重构与标准化开发流程建设，密切关注VLA、世界模型等具身智能前沿技术及其工程化落地。
+        </p>
+      </div>
+
+      <!-- Education -->
+      <div>
+        <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
+          <span class="inline-block w-1.5 h-5 rounded-full bg-[hsl(var(--foreground))]"></span>
+          教育背景
+        </h2>
+        <div class="space-y-4">
+          <div class="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4">
+            <h3 class="font-medium">深圳职业技术大学</h3>
+            <p class="text-sm text-[hsl(var(--muted-foreground))] mt-1">人工智能技术应用 · 2022.09-2026.06</p>
+            <p class="text-xs text-[hsl(var(--muted-foreground))] mt-1.5 leading-relaxed">主修课程：计算机视觉、深度学习、C++/Python、Linux 系统、高等数学、线性代数</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills -->
+      <div>
+        <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
+          <span class="inline-block w-1.5 h-5 rounded-full bg-[hsl(var(--foreground))]"></span>
+          核心技能
+        </h2>
+        <div class="flex flex-wrap gap-2">
+          {['ROS2', 'OpenCV', 'PnP 位姿解算', 'Ceres BA', 'EKF 融合', 'YOLO', 'PyTorch', 'C++', 'Python', 'Docker', 'UE5'].map(s => (
+            <span class="rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--muted))] px-3 py-1 text-xs font-medium text-[hsl(var(--muted-foreground))]">
+              {s}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <!-- Awards -->
+      <div>
+        <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
+          <span class="inline-block w-1.5 h-5 rounded-full bg-[hsl(var(--foreground))]"></span>
+          竞赛获奖
+        </h2>
+        <div class="space-y-2">
+          {[
+            'RMUC 2024 全国赛 国家二等奖',
+            'RMUC 2023 全国赛 区域赛奖',
+            'RMUL 2025 (广西站) 团体 & 哨兵',
+            'RMUL 2024 (广东站) 团体 & 哨兵',
+            '2023 全国大学生电子设计竞赛 省级二等奖',
+            '2023-2025 赛季 RM 区域赛/兵种奖 一二等奖若干',
+          ].map(a => (
+            <div class="rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-4 py-2.5 text-sm text-[hsl(var(--muted-foreground))]">
+              {a}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Experience -->
+      <div>
+        <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
+          <span class="inline-block w-1.5 h-5 rounded-full bg-[hsl(var(--foreground))]"></span>
+          企业实践
+        </h2>
+        <div class="space-y-4">
+          <div class="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4">
+            <h3 class="font-medium">深圳大疆创新 · RoboMaster 全国赛</h3>
+            <p class="text-xs text-[hsl(var(--muted-foreground))] mt-0.5">备场组组长 · 2025.08</p>
+            <p class="text-sm text-[hsl(var(--muted-foreground))] mt-2">负责 10 人团队及 30+ 队伍备场协调。独立开发 Vue3 调度系统，集成人员排班与高校赛程任务管理（预检录、训练、瑞士轮等三级节点预警）。系统应用于赛事全程，排班耗时由 15 分钟降至 3 分钟，效率提升 80%，冲突与遗漏清零。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <!-- Projects -->
+      <div>
+        <h2 class="text-lg font-semibold mb-3 flex items-center gap-2">
+          <span class="inline-block w-1.5 h-5 rounded-full bg-[hsl(var(--foreground))]"></span>
+          项目经历
+        </h2>
+        <div class="space-y-4">
+          <div class="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4">
+            <h3 class="font-medium">RoboMaster 机器人跟踪射击系统</h3>
+            <p class="text-xs text-[hsl(var(--muted-foreground))] mt-0.5">核心算法负责人 · 2023.09 至今</p>
+            <p class="text-sm text-[hsl(var(--muted-foreground))] mt-2">基于 ROS2 架构的自动瞄准跟踪系统，涵盖装甲板检测、PnP + Ceres BA 位姿优化、9维 EKF 多传感器融合跟踪与四阶龙格库塔弹道补偿。同时负责 UE5 虚实仿真环境搭建，实现算法双向闭环验证。</p>
+          </div>
+          <div class="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4">
+            <h3 class="font-medium">骰子识别与姿态估计系统</h3>
+            <p class="text-xs text-[hsl(var(--muted-foreground))] mt-0.5">独立完成 · 2025.04-2025.06</p>
+            <p class="text-sm text-[hsl(var(--muted-foreground))] mt-2">基于 YOLOv10 + PnP + BA + PoseNet 多模型融合的骰子 6D 姿态估计系统，支持图像/视频/屏幕实时检测，集成 PyQt5 GUI，训练损失 MAE 低至 0.034 rad。</p>
+          </div>
+          <div class="rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4">
+            <h3 class="font-medium">CycleGAN 艺术风格迁移与 3D 纹理渲染</h3>
+            <p class="text-xs text-[hsl(var(--muted-foreground))] mt-0.5">独立完成 · 2025.09-2025.10</p>
+            <p class="text-sm text-[hsl(var(--muted-foreground))] mt-2">CycleGAN (U-Net + PatchGAN) 实现风景→梵高风格迁移，自建 2700 张数据集，250 轮余弦退火训练。Blender Python 脚本自动化纹理映射与批量渲染，验证无监督风格迁移在游戏资产生成中的可行性。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</SiteLayout>

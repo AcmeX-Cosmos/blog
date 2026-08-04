@@ -13,7 +13,7 @@ const { title, href, date, description, tags } = Astro.props;
 <!-- Card-style post preview like reference site -->
 <a
   href={href}
-  class="group/card block relative rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-5 py-4 sm:py-5 transition-colors hover:bg-[hsl(var(--muted))] mb-3"
+  class="group/card block relative rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-5 py-2.5 sm:py-5 transition-all duration-200 hover:border-[hsl(var(--foreground))/20 hover:bg-[hsl(var(--muted))] mb-3"
 >
   <div class="group/link flex flex-col transition-colors hover:text-[hsl(var(--foreground))]">
     <!-- Title row with arrow -->
@@ -24,9 +24,9 @@ const { title, href, date, description, tags } = Astro.props;
       <!-- Animated arrow -->
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-        class="shrink-0 my-1 text-[hsl(var(--muted-foreground))] group-hover/link:text-[hsl(var(--foreground))] transition-colors">
-        <line x1="5" y1="12" x2="19" y2="12" class="transition-all duration-300 group-hover/link:translate-x-1"/>
-        <polyline points="12 5 19 12 12 19" class="transition-all duration-300 group-hover/link:translate-x-1"/>
+        class="shrink-0 my-1 stroke-[hsl(var(--muted-foreground))] group-hover/link:stroke-[hsl(var(--foreground))] transition-colors">
+        <line x1="5" y1="12" x2="19" y2="12" class="translate-x-0 transition-all duration-300 ease-in-out group-hover/link:translate-x-1"/>
+        <polyline points="12 5 19 12 12 19" class="transition-all duration-300 ease-in-out group-hover/link:translate-x-1"/>
       </svg>
     </div>
 

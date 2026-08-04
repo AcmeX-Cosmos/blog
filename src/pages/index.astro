@@ -14,8 +14,8 @@ const allTags = [...new Set(posts.flatMap(p => p.data.tags || []))].sort();
   <section>
     <!-- Category nav header like reference -->
     <div class="mb-6 mt-6 sm:mt-10">
-      <h1 class="inline-block text-3xl font-semibold tracking-tight">文章</h1>
-      <p class="mt-1 text-sm text-[hsl(var(--muted-foreground))]">
+      <h1 class="inline-block text-3xl font-semibold tracking-tight animate" id="content-header">文章</h1>
+      <p class="mt-1 text-sm text-[hsl(var(--muted-foreground))] animate" id="content">
         机器人视觉、ROS2 开发与算法学习 — {posts.length} 篇
       </p>
     </div>
@@ -23,7 +23,7 @@ const allTags = [...new Set(posts.flatMap(p => p.data.tags || []))].sort();
     <TagFilter allTags={allTags} />
 
     <!-- Post list as cards -->
-    <div class="flex flex-col gap-y-2">
+    <div class="flex flex-col gap-y-2 animate" id="content-list">
       {posts.length === 0 ? (
         <p class="text-[hsl(var(--muted-foreground))] py-12 text-center">暂无文章</p>
       ) : (

@@ -1,0 +1,140 @@
+<div class="hello-field" data-hello-field aria-hidden="true">
+  <span class="hello-field__grid"></span>
+  <span class="hello-field__shape hello-field__shape--blue"></span>
+  <span class="hello-field__shape hello-field__shape--pink"></span>
+  <span class="hello-field__shape hello-field__shape--yellow"></span>
+  <span class="hello-field__copy">Hello there!</span>
+  <span class="hello-field__cursor"></span>
+</div>
+
+<script>
+  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  document.querySelectorAll<HTMLElement>('[data-hello-field]').forEach((field) => {
+    let frame = 0;
+    let x = 0;
+    let y = 0;
+
+    const render = () => {
+      field.style.setProperty('--pointer-x', `${x}px`);
+      field.style.setProperty('--pointer-y', `${y}px`);
+      frame = 0;
+    };
+
+    const reset = () => {
+      x = 0;
+      y = 0;
+      if (!frame) frame = requestAnimationFrame(render);
+    };
+
+    field.addEventListener('pointermove', (event) => {
+      if (motionQuery.matches || event.pointerType === 'touch') return;
+      const rect = field.getBoundingClientRect();
+      x = event.clientX - rect.left - rect.width / 2;
+      y = event.clientY - rect.top - rect.height / 2;
+      if (!frame) frame = requestAnimationFrame(render);
+    });
+
+    field.addEventListener('pointerleave', reset);
+    motionQuery.addEventListener('change', reset);
+  });
+</script>
+
+<style>
+  .hello-field {
+    --pointer-x: 0px;
+    --pointer-y: 0px;
+    position: relative;
+    min-height: 315px;
+    overflow: hidden;
+    border-radius: 24px;
+    background: #2128bd;
+    isolation: isolate;
+  }
+
+  .hello-field__grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.12;
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.5) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+
+  .hello-field__shape {
+    position: absolute;
+    display: block;
+    border-radius: 50%;
+    transition: transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .hello-field__shape--blue {
+    width: clamp(230px, 34vw, 390px);
+    aspect-ratio: 1;
+    top: -44%;
+    left: -5%;
+    background: #005ffe;
+    transform: translate(calc(var(--pointer-x) * 0.05), calc(var(--pointer-y) * 0.05));
+  }
+
+  .hello-field__shape--pink {
+    width: clamp(190px, 29vw, 330px);
+    aspect-ratio: 1;
+    right: 13%;
+    bottom: -55%;
+    background: #ffe5e3;
+    transform: translate(calc(var(--pointer-x) * 0.09), calc(var(--pointer-y) * 0.09));
+  }
+
+  .hello-field__shape--yellow {
+    width: clamp(130px, 19vw, 220px);
+    aspect-ratio: 1;
+    top: -24%;
+    right: -3%;
+    background: #ffcc57;
+    transform: translate(calc(var(--pointer-x) * 0.14), calc(var(--pointer-y) * 0.14));
+  }
+
+  .hello-field__copy {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: clamp(3.3rem, 10vw, 8.5rem);
+    font-weight: 800;
+    line-height: 0.9;
+    text-align: center;
+    letter-spacing: 0;
+    mix-blend-mode: screen;
+  }
+
+  .hello-field__cursor {
+    position: absolute;
+    z-index: 4;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    aspect-ratio: 1;
+    border: 2px solid white;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(calc(-50% + var(--pointer-x)), calc(-50% + var(--pointer-y)));
+    transition: transform 80ms linear;
+  }
+
+  @media (max-width: 768px), (hover: none) {
+    .hello-field { min-height: 260px; }
+    .hello-field__cursor { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hello-field__shape,
+    .hello-field__cursor {
+      transition: none;
+      transform: none;
+    }
+  }
+</style>
