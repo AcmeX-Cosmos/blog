@@ -9,13 +9,13 @@ export interface Props {
 }
 
 const { title, description } = Astro.props;
-const pageTitle = title ? `${title} — 陈泽欣的技术博客` : '陈泽欣的技术博客';
+const pageTitle = title ? `${title} — AcmeX的技术博客` : 'AcmeX的技术博客';
 ---
 
 <BaseLayout>
   <head>
     <title>{pageTitle}</title>
-    <meta name="description" content={description || '陈泽欣的技术博客 - 机器人视觉算法 / ROS2系统开发'} />
+    <meta name="description" content={description || 'AcmeX的技术博客 - 机器人视觉算法 / ROS2系统开发'} />
   </head>
   <slot />
 </BaseLayout>
