@@ -128,27 +128,33 @@ const projects = [
           <span class="aim-kpm">KPM: <strong id="aim-kpm">0</strong></span>
         </div>
         <div class="aim-controls">
+          <button id="aim-auto-toggle" class="aim-btn">自瞄: 关</button>
           <button id="aim-move-toggle" class="aim-btn">动态: 关</button>
-          <button id="aim-reset" class="aim-btn">重置</button>
         </div>
       </div>
       <div class="aim-ui aim-ui-bottom">
-        <div class="aim-mode-bar">
-          <button id="aim-mode-mouse" class="aim-mode-btn">鼠标</button>
-          <button id="aim-mode-auto" class="aim-mode-btn active">自瞄</button>
-        </div>
         <div class="aim-panel" id="aim-panel-auto">
           <div class="aim-pid-row"><span>PID-Kp</span><input type="range" id="pid-kp" min="0.01" max="0.5" step="0.01" value="0.08"><span id="val-kp">0.08</span></div>
           <div class="aim-pid-row"><span>PID-Ki</span><input type="range" id="pid-ki" min="0" max="0.1" step="0.001" value="0.01"><span id="val-ki">0.01</span></div>
           <div class="aim-pid-row"><span>PID-Kd</span><input type="range" id="pid-kd" min="0" max="0.3" step="0.01" value="0.05"><span id="val-kd">0.05</span></div>
-          <div class="aim-pid-row"><span>KF-Q</span><input type="range" id="kf-q" min="0.001" max="0.5" step="0.001" value="0.01"><span id="val-q">0.01</span></div>
-          <div class="aim-pid-row"><span>KF-R</span><input type="range" id="kf-r" min="0.01" max="2" step="0.01" value="0.5"><span id="val-r">0.5</span></div>
+          <div class="aim-pid-row"><span>CV-帧间隔</span><input type="range" id="cv-interval" min="1" max="10" step="1" value="3"><span id="val-interval">3</span></div>
+          <div class="aim-pid-row"><span>CV-缩放</span><input type="range" id="cv-scale" min="0.25" max="1" step="0.05" value="0.5"><span id="val-scale">0.5</span></div>
         </div>
         <div class="aim-panel" id="aim-panel-mouse" style="display:none">
           <div class="aim-pid-row"><span>灵敏度</span><input type="range" id="mouse-sens" min="0.1" max="2" step="0.1" value="0.5"><span id="val-sens">0.5</span></div>
         </div>
+        <div class="aim-settings-row">
+          <button id="aim-settings-mouse" class="aim-icon-btn" title="鼠标灵敏度">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="M13 13l6 6"/></svg>
+          </button>
+          <button id="aim-settings-auto" class="aim-icon-btn active" title="自瞄参数">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+          </button>
+        </div>
       </div>
-      <div class="aim-lock-hint" id="aim-lock-hint">点击画布锁定鼠标</div>
+      <div class="aim-ui aim-ui-top-left">
+        <span class="aim-fps" id="aim-fps">FPS: --</span>
+      </div>
     </div>
 
     <!-- ====== Row 2: Skills & Career ====== -->
@@ -721,6 +727,33 @@ const projects = [
   .aim-ui-bottom {
     bottom: 12px;
     right: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+
+  .aim-settings-row {
+    display: flex;
+    gap: 4px;
+    pointer-events: auto;
+  }
+
+  .aim-ui-top-left {
+    top: 12px;
+    left: 16px;
+  }
+
+  .aim-fps {
+    font-size: 12px;
+    font-weight: 600;
+    color: hsl(var(--foreground) / 0.5);
+    background: hsl(var(--card) / 0.8);
+    backdrop-filter: blur(8px);
+    padding: 3px 8px;
+    border-radius: 6px;
+    border: 1px solid hsl(var(--border));
+    pointer-events: auto;
   }
 
   .aim-stats {
@@ -780,49 +813,38 @@ const projects = [
     background: hsl(var(--card) / 0.9);
     backdrop-filter: blur(8px);
     padding: 8px 10px;
-    border-radius: 0 0 10px 10px;
+    border-radius: 10px 10px 0 0;
     border: 1px solid hsl(var(--border));
-    border-top: none;
+    border-bottom: none;
     pointer-events: auto;
   }
 
-  .aim-mode-bar {
+  .aim-icon-btn {
+    width: 30px;
+    height: 30px;
     display: flex;
-    gap: 0;
-    width: 200px;
-    pointer-events: auto;
-  }
-
-  .aim-mode-btn {
-    flex: 1;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 5px 0;
+    align-items: center;
+    justify-content: center;
     border: 1px solid hsl(var(--border));
     background: hsl(var(--card) / 0.8);
     color: hsl(var(--foreground) / 0.5);
     cursor: pointer;
+    border-radius: 8px;
     transition: all 0.15s;
-    text-align: center;
+    padding: 0;
+    pointer-events: auto;
   }
 
-  .aim-mode-btn:first-child {
-    border-radius: 10px 0 0 0;
-  }
-
-  .aim-mode-btn:last-child {
-    border-radius: 0 10px 0 0;
-  }
-
-  .aim-mode-btn:hover {
+  .aim-icon-btn:hover {
     background: hsl(var(--muted));
     color: hsl(var(--foreground) / 0.8);
   }
 
-  .aim-mode-btn.active {
-    background: hsl(var(--card) / 0.9);
+  .aim-icon-btn.active {
+    background: hsl(var(--card) / 0.95);
     color: hsl(var(--foreground));
-    border-bottom-color: transparent;
+    border-color: hsl(var(--border));
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.3);
   }
 
   .aim-pid-row {
@@ -873,22 +895,6 @@ const projects = [
     background: #ef4444;
     border: none;
     cursor: pointer;
-  }
-
-  .aim-lock-hint {
-    position: absolute;
-    bottom: 50%;
-    left: 50%;
-    transform: translate(-50%, 50%);
-    font-size: 14px;
-    font-weight: 600;
-    color: hsl(var(--foreground) / 0.4);
-    pointer-events: none;
-    transition: opacity 0.3s;
-  }
-
-  .aim-game.locked .aim-lock-hint {
-    opacity: 0;
   }
 
   /* ========== Skills ========== */
@@ -1738,6 +1744,7 @@ const projects = [
   }
 </style>
 
+<script async src="https://docs.opencv.org/4.x/opencv.js" onload="window._cvLoaded=1"></script>
 <script>
   (function() {
     const canvas = document.getElementById('aim-canvas');
@@ -1748,10 +1755,8 @@ const projects = [
     const kpmEl = document.getElementById('aim-kpm');
     const autoToggle = document.getElementById('aim-auto-toggle');
     const moveToggle = document.getElementById('aim-move-toggle');
-    const resetBtn = document.getElementById('aim-reset');
-    const pidPanel = document.getElementById('aim-pid-panel');
-    const modeMouseBtn = document.getElementById('aim-mode-mouse');
-    const modeAutoBtn = document.getElementById('aim-mode-auto');
+    const settingsMouseBtn = document.getElementById('aim-settings-mouse');
+    const settingsAutoBtn = document.getElementById('aim-settings-auto');
     const panelAuto = document.getElementById('aim-panel-auto');
     const panelMouse = document.getElementById('aim-panel-mouse');
     const mouseSens = document.getElementById('mouse-sens');
@@ -1760,8 +1765,8 @@ const projects = [
       kp: document.getElementById('pid-kp'),
       ki: document.getElementById('pid-ki'),
       kd: document.getElementById('pid-kd'),
-      q: document.getElementById('kf-q'),
-      r: document.getElementById('kf-r'),
+      interval: document.getElementById('cv-interval'),
+      scale: document.getElementById('cv-scale'),
     };
 
     const BALL_COUNT = 12;
@@ -1771,12 +1776,18 @@ const projects = [
 
     let balls = [];
     let hits = 0;
+    let prevHits = 0;
     let roundStart = 0;
-    let autoAim = true; // default: 自瞄模式
+    let autoAim = false; // default: 关闭
     let moving = false;
     let mouseSensitivity = 0.5;
     let animId;
     let w, h;
+
+    // FPS tracking
+    let frameCount = 0;
+    let fpsLastTime = 0;
+    const fpsEl = document.getElementById('aim-fps');
 
     // PID state
     let crossX = 0, crossY = 0;
@@ -1786,8 +1797,11 @@ const projects = [
     let autoShootTimer = 0;
     const AUTO_SHOOT_INTERVAL = 8; // frames between shots
 
-    // Kalman state per ball (indexed by ball array index)
-    let kfStates = [];
+    // CV state
+    let cvReady = false;
+    let cvDetected = []; // [{x, y}, ...]
+    let cvFrameCounter = 0;
+    let cvLastTarget = null; // index into cvDetected
 
     function resize() {
       const rect = game.getBoundingClientRect();
@@ -1799,11 +1813,13 @@ const projects = [
       canvas.style.width = w + 'px';
       canvas.style.height = h + 'px';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.imageSmoothingEnabled = false;
     }
 
     function spawnBalls() {
       balls = [];
-      kfStates = [];
+      cvDetected = [];
+      cvLastTarget = null;
       for (let i = 0; i < BALL_COUNT; i++) {
         const x = BALL_RADIUS + Math.random() * (w - BALL_RADIUS * 2);
         const y = BALL_RADIUS + Math.random() * (h - BALL_RADIUS * 2);
@@ -1813,9 +1829,9 @@ const projects = [
           vy: (Math.random() - 0.5) * BALL_SPEED * 2,
           alive: true,
         });
-        kfStates.push({ x, y, vx: 0, vy: 0, p: 1, pv: 1 });
       }
       hits = 0;
+      prevHits = 0;
       roundStart = performance.now();
       crossX = w / 2;
       crossY = h / 2;
@@ -1823,6 +1839,8 @@ const projects = [
       pidPrevErr = { x: 0, y: 0 };
       targetIdx = -1;
       autoShootTimer = 0;
+      frameCount = 0;
+      fpsLastTime = 0;
       updateUI();
     }
 
@@ -1830,29 +1848,71 @@ const projects = [
       hitsEl.textContent = hits;
       const elapsed = (performance.now() - roundStart) / 1000;
       const kpm = elapsed > 0 ? Math.round((hits / elapsed) * 60) : 0;
-      kpmEl.textContent = hits === BALL_COUNT ? kpm : (elapsed > 0.1 ? kpm : 0);
+      kpmEl.textContent = kpm;
     }
 
-    // Kalman filter update for a single ball
-    function kalmanPredict(idx) {
-      const s = kfStates[idx];
-      const q = parseFloat(sliders.q.value);
-      s.x += s.vx;
-      s.y += s.vy;
-      s.p += q;
-      s.pv += q;
-    }
+    // OpenCV ball detection – returns [{x, y}, ...] in logical coordinates
+    function detectBallsCV() {
+      if (!cvReady || typeof cv === 'undefined') return [];
+      const dpr = window.devicePixelRatio || 1;
+      const scale = parseFloat(sliders.scale.value);
+      const sw = Math.round(w * scale);
+      const sh = Math.round(h * scale);
 
-    function kalmanUpdate(idx, mx, my) {
-      const s = kfStates[idx];
-      const r = parseFloat(sliders.r.value);
-      const k = s.p / (s.p + r);
-      s.x += k * (mx - s.x);
-      const kv = s.pv / (s.pv + r);
-      s.vx += kv * ((mx - kfStates[idx].x) - s.vx);
-      s.vy += kv * ((my - kfStates[idx].y) - s.vy);
-      s.p *= (1 - k);
-      s.pv *= (1 - kv);
+      try {
+        // read canvas, resize for speed
+        const src = cv.imread(canvas);
+        const small = new cv.Mat();
+        cv.resize(src, small, new cv.Size(sw, sh), 0, 0, cv.INTER_NEAREST);
+        src.delete();
+
+        // HSV
+        const hsv = new cv.Mat();
+        cv.cvtColor(small, hsv, cv.COLOR_RGB2HSV);
+        small.delete();
+
+        // red mask (two hue ranges in OpenCV: 0-10 and 160-180)
+        const mask1 = new cv.Mat();
+        const mask2 = new cv.Mat();
+        const low1 = new cv.Mat(hsv.rows, hsv.cols, hsv.type(), [0, 80, 80, 0]);
+        const high1 = new cv.Mat(hsv.rows, hsv.cols, hsv.type(), [10, 255, 255, 255]);
+        cv.inRange(hsv, low1, high1, mask1);
+        const low2 = new cv.Mat(hsv.rows, hsv.cols, hsv.type(), [160, 80, 80, 0]);
+        const high2 = new cv.Mat(hsv.rows, hsv.cols, hsv.type(), [180, 255, 255, 255]);
+        cv.inRange(hsv, low2, high2, mask2);
+        hsv.delete();
+        low1.delete(); high1.delete(); low2.delete(); high2.delete();
+
+        const mask = new cv.Mat();
+        cv.bitwise_or(mask1, mask2, mask);
+        mask1.delete(); mask2.delete();
+
+        // contours
+        const contours = new cv.MatVector();
+        const hierarchy = new cv.Mat();
+        cv.findContours(mask, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
+        mask.delete(); hierarchy.delete();
+
+        const minArea = Math.PI * (BALL_RADIUS * scale * 0.5) ** 2;
+        const detected = [];
+        for (let i = 0; i < contours.size(); i++) {
+          const cnt = contours.get(i);
+          const area = cv.contourArea(cnt, false);
+          if (area < minArea) continue;
+          const m = cv.moments(cnt, false);
+          if (m.m00 === 0) continue;
+          // scale back to logical coords
+          detected.push({
+            x: (m.m10 / m.m00) / scale,
+            y: (m.m01 / m.m00) / scale,
+          });
+        }
+        contours.delete();
+        return detected;
+      } catch (e) {
+        console.warn('CV detection error:', e);
+        return [];
+      }
     }
 
     function draw() {
@@ -1878,8 +1938,16 @@ const projects = [
         ctx.fill();
       });
 
-      // crosshair (auto-aim or pointer locked)
-      if (autoAim || pointerLocked) {
+      // crosshair (auto-aim only)
+      if (autoAim) {
+        // CV detection boxes
+        ctx.strokeStyle = 'rgba(0, 255, 100, 0.4)';
+        ctx.lineWidth = 1.5;
+        for (let i = 0; i < cvDetected.length; i++) {
+          const d = cvDetected[i];
+          ctx.strokeRect(d.x - BALL_RADIUS, d.y - BALL_RADIUS, BALL_RADIUS * 2, BALL_RADIUS * 2);
+        }
+
         ctx.beginPath();
         ctx.arc(crossX, crossY, 6, 0, Math.PI * 2);
         ctx.fillStyle = 'rgba(239, 68, 68, 0.8)';
@@ -1900,64 +1968,76 @@ const projects = [
     }
 
     function update() {
-      // Kalman predict + update with measurements
+      // cache slider values once per frame
+      const kp = +sliders.kp.value;
+      const ki = +sliders.ki.value;
+      const kd = +sliders.kd.value;
+
+      // CV detection: run every N frames
       if (autoAim) {
-        balls.forEach((b, i) => {
-          if (!b.alive) return;
-          kalmanPredict(i);
-          kalmanUpdate(i, b.x, b.y);
-        });
+        cvFrameCounter++;
+        const interval = parseInt(sliders.interval.value) || 3;
+        if (cvFrameCounter >= interval) {
+          cvFrameCounter = 0;
+          cvDetected = detectBallsCV();
+        }
       }
 
       if (moving) {
-        balls.forEach(b => {
-          if (!b.alive) return;
+        for (let i = 0; i < balls.length; i++) {
+          const b = balls[i];
+          if (!b.alive) continue;
           b.x += b.vx;
           b.y += b.vy;
           if (b.x < BALL_RADIUS) { b.x = BALL_RADIUS; b.vx *= -1; }
           if (b.x > w - BALL_RADIUS) { b.x = w - BALL_RADIUS; b.vx *= -1; }
           if (b.y < BALL_RADIUS) { b.y = BALL_RADIUS; b.vy *= -1; }
           if (b.y > h - BALL_RADIUS) { b.y = h - BALL_RADIUS; b.vy *= -1; }
-        });
+        }
       }
 
-      if (autoAim && balls.some(b => b.alive)) {
-        pidAutoAim();
+      if (autoAim) {
+        cvAutoAim(kp, ki, kd);
       }
-      updateUI();
+
+      // only update UI when hits change
+      if (hits !== prevHits) {
+        updateUI();
+        prevHits = hits;
+      }
+
+      // toggle UI based on game state (cache DOM refs once)
+      if (!window._aimTopControls) window._aimTopControls = document.querySelector('.aim-ui-top .aim-controls');
+      if (!window._aimBottomPanel) window._aimBottomPanel = document.querySelector('.aim-ui-bottom');
+      const inProgress = balls.some(b => b.alive) && (hits > 0 || autoAim);
+      if (inProgress) {
+        if (window._aimTopControls) window._aimTopControls.style.display = 'none';
+        if (window._aimBottomPanel) window._aimBottomPanel.style.display = 'none';
+      } else {
+        if (window._aimTopControls) window._aimTopControls.style.display = '';
+        if (window._aimBottomPanel) window._aimBottomPanel.style.display = '';
+      }
     }
 
-    function pidAutoAim() {
-      const alive = balls.filter(b => b.alive);
-      if (alive.length === 0) return;
+    function cvAutoAim(kp, ki, kd) {
+      if (cvDetected.length === 0) return;
 
-      // pick closest alive ball (using Kalman prediction if available)
-      if (targetIdx < 0 || !balls[targetIdx] || !balls[targetIdx].alive) {
-        let bestDist = Infinity;
-        alive.forEach(b => {
-          const idx = balls.indexOf(b);
-          const px = kfStates[idx].x;
-          const py = kfStates[idx].y;
-          const d = (crossX - px) ** 2 + (crossY - py) ** 2;
-          if (d < bestDist) { bestDist = d; targetIdx = idx; }
-        });
+      // find closest CV-detected ball to crosshair
+      let bestDist = Infinity;
+      let bestIdx = -1;
+      for (let i = 0; i < cvDetected.length; i++) {
+        const d = cvDetected[i];
+        const dx = crossX - d.x;
+        const dy = crossY - d.y;
+        const dist = dx * dx + dy * dy;
+        if (dist < bestDist) { bestDist = dist; bestIdx = i; }
       }
+      if (bestIdx < 0) return;
+      cvLastTarget = bestIdx;
 
-      if (targetIdx < 0 || !balls[targetIdx] || !balls[targetIdx].alive) {
-        targetIdx = balls.findIndex(b => b.alive);
-      }
-      if (targetIdx < 0) return;
-
-      const kf = kfStates[targetIdx];
-      const targetX = kf.x;
-      const targetY = kf.y;
-
-      const kp = parseFloat(sliders.kp.value);
-      const ki = parseFloat(sliders.ki.value);
-      const kd = parseFloat(sliders.kd.value);
-
-      const errX = targetX - crossX;
-      const errY = targetY - crossY;
+      const target = cvDetected[bestIdx];
+      const errX = target.x - crossX;
+      const errY = target.y - crossY;
 
       pidIntegral.x += errX;
       pidIntegral.y += errY;
@@ -1968,49 +2048,69 @@ const projects = [
       crossX += kp * errX + ki * pidIntegral.x + kd * derX;
       crossY += kp * errY + ki * pidIntegral.y + kd * derY;
 
-      // clamp
-      crossX = Math.max(0, Math.min(w, crossX));
-      crossY = Math.max(0, Math.min(h, crossY));
+      crossX = crossX < 0 ? 0 : crossX > w ? w : crossX;
+      crossY = crossY < 0 ? 0 : crossY > h ? h : crossY;
 
-      pidPrevErr = { x: errX, y: errY };
+      pidPrevErr.x = errX;
+      pidPrevErr.y = errY;
 
-      // check if crosshair is on target
+      // check if crosshair is on a real ball
       autoShootTimer++;
       if (autoShootTimer >= AUTO_SHOOT_INTERVAL) {
         autoShootTimer = 0;
-        const b = balls[targetIdx];
-        if (b && b.alive) {
+        for (let i = 0; i < balls.length; i++) {
+          const b = balls[i];
+          if (!b.alive) continue;
           const dx = crossX - b.x;
           const dy = crossY - b.y;
           if (dx * dx + dy * dy < HIT_RADIUS * HIT_RADIUS) {
             b.alive = false;
             hits++;
-            targetIdx = -1;
-            pidIntegral = { x: 0, y: 0 };
-            pidPrevErr = { x: 0, y: 0 };
-            if (hits === BALL_COUNT) updateUI();
+            pidIntegral.x = 0;
+            pidIntegral.y = 0;
+            pidPrevErr.x = 0;
+            pidPrevErr.y = 0;
+            break;
           }
         }
       }
     }
 
-    function loop() {
+    function loop(now) {
+      // FPS tracking
+      frameCount++;
+      if (!fpsLastTime) fpsLastTime = now;
+      if (now - fpsLastTime >= 3000) {
+        const fps = Math.round(frameCount / ((now - fpsLastTime) / 1000));
+        fpsEl.textContent = 'FPS: ' + fps;
+        frameCount = 0;
+        fpsLastTime = now;
+      }
+
       update();
       draw();
       if (balls.every(b => !b.alive)) {
         updateUI();
-        ctx.clearRect(0, 0, w, h);
-        draw();
+        const elapsed = (performance.now() - roundStart) / 1000;
+        const finalKpm = Math.round((BALL_COUNT / elapsed) * 60);
+        const text = '全部击中! KPM: ' + finalKpm + '  |  点击画布重新开始';
         ctx.fillStyle = 'hsl(var(--foreground) / 0.6)';
-        ctx.font = 'bold 24px "Inter", sans-serif';
+        ctx.font = 'bold 20px "Inter", sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('全部击中 — 点击「重置」再来一局', w / 2, h / 2);
+        ctx.fillText(text, w / 2, h / 2);
         return;
       }
       animId = requestAnimationFrame(loop);
     }
 
     canvas.addEventListener('click', (e) => {
+      // if all balls dead, click to reset
+      if (balls.every(b => !b.alive)) {
+        cancelAnimationFrame(animId);
+        spawnBalls();
+        animId = requestAnimationFrame(loop);
+        return;
+      }
       const rect = canvas.getBoundingClientRect();
       const mx = e.clientX - rect.left;
       const my = e.clientY - rect.top;
@@ -2031,38 +2131,42 @@ const projects = [
       }
     });
 
-    // Mode switching
-    function switchMode(aim) {
-      autoAim = aim;
-      modeMouseBtn.classList.toggle('active', !aim);
-      modeAutoBtn.classList.toggle('active', aim);
-      panelAuto.style.display = aim ? 'flex' : 'none';
-      panelMouse.style.display = aim ? 'none' : 'flex';
-      if (aim) {
+    // Auto-aim toggle (top-right)
+    autoToggle.addEventListener('click', () => {
+      if (!cvReady) {
+        autoToggle.textContent = '自瞄: 加载中...';
+        return;
+      }
+      autoAim = !autoAim;
+      autoToggle.textContent = '自瞄: ' + (autoAim ? 'CV开' : '关');
+      autoToggle.classList.toggle('active', autoAim);
+      if (autoAim) {
         crossX = w / 2; crossY = h / 2;
         pidIntegral = { x: 0, y: 0 };
         pidPrevErr = { x: 0, y: 0 };
-        targetIdx = -1;
+        cvDetected = [];
+        cvFrameCounter = 0;
+        cvLastTarget = null;
         autoShootTimer = 0;
-        balls.forEach((b, i) => {
-          kfStates[i] = { x: b.x, y: b.y, vx: 0, vy: 0, p: 1, pv: 1 };
-        });
       }
+    });
+
+    // Settings panel switching (bottom-right icons)
+    function switchSettingsPanel(panelName) {
+      const isAuto = panelName === 'auto';
+      settingsMouseBtn.classList.toggle('active', !isAuto);
+      settingsAutoBtn.classList.toggle('active', isAuto);
+      panelAuto.style.display = isAuto ? 'flex' : 'none';
+      panelMouse.style.display = isAuto ? 'none' : 'flex';
     }
 
-    modeMouseBtn.addEventListener('click', () => switchMode(false));
-    modeAutoBtn.addEventListener('click', () => switchMode(true));
+    settingsMouseBtn.addEventListener('click', () => switchSettingsPanel('mouse'));
+    settingsAutoBtn.addEventListener('click', () => switchSettingsPanel('auto'));
 
     moveToggle.addEventListener('click', () => {
       moving = !moving;
       moveToggle.textContent = '动态: ' + (moving ? '开' : '关');
       moveToggle.classList.toggle('active', moving);
-    });
-
-    resetBtn.addEventListener('click', () => {
-      cancelAnimationFrame(animId);
-      spawnBalls();
-      animId = requestAnimationFrame(loop);
     });
 
     // slider value display
@@ -2079,76 +2183,36 @@ const projects = [
       document.getElementById('val-sens').textContent = mouseSens.value;
     });
 
-    // ===== Pointer Lock API =====
-    let pointerLocked = false;
-    const lockHint = document.getElementById('aim-lock-hint');
-
-    function requestLock() {
-      canvas.requestPointerLock();
-    }
-
-    function onPointerLockChange() {
-      pointerLocked = document.pointerLockElement === canvas;
-      if (pointerLocked) {
-        game.classList.add('locked');
-        lockHint.style.display = 'none';
-      } else {
-        game.classList.remove('locked');
-        lockHint.style.display = '';
-      }
-    }
-
-    function onMouseMove(e) {
-      if (!pointerLocked || autoAim) return;
-      crossX += e.movementX * mouseSensitivity;
-      crossY += e.movementY * mouseSensitivity;
-      crossX = Math.max(0, Math.min(w, crossX));
-      crossY = Math.max(0, Math.min(h, crossY));
-    }
-
-    document.addEventListener('pointerlockchange', onPointerLockChange);
-
-    canvas.addEventListener('click', (e) => {
-      if (!pointerLocked && !autoAim) {
-        requestLock();
+    // OpenCV init
+    function initCV() {
+      if (typeof cv !== 'undefined' && cv.Mat) {
+        cvReady = true;
+        autoToggle.textContent = '自瞄: 关';
         return;
       }
-      // shoot
-      const rect = canvas.getBoundingClientRect();
-      const mx = pointerLocked ? crossX : (e.clientX - rect.left);
-      const my = pointerLocked ? crossY : (e.clientY - rect.top);
-      let hit = false;
-      for (const b of balls) {
-        if (!b.alive) continue;
-        const dx = mx - b.x;
-        const dy = my - b.y;
-        if (dx * dx + dy * dy < HIT_RADIUS * HIT_RADIUS) {
-          b.alive = false;
-          hits++;
-          hit = true;
-          break;
-        }
+      if (window._cvLoaded && typeof cv !== 'undefined') {
+        // wait for WASM runtime init
+        const prev = cv['onRuntimeInitialized'];
+        cv['onRuntimeInitialized'] = () => {
+          if (prev) prev();
+          cvReady = true;
+          autoToggle.textContent = '自瞄: 关';
+        };
+      } else {
+        setTimeout(initCV, 500);
       }
-      if (hit && hits === BALL_COUNT) {
-        updateUI();
+    }
+    // also handle if cv already loaded
+    if (typeof cv !== 'undefined') {
+      if (cv.Mat) {
+        cvReady = true;
+      } else {
+        const prev = cv['onRuntimeInitialized'];
+        cv['onRuntimeInitialized'] = () => { if (prev) prev(); cvReady = true; };
       }
-    });
-
-    canvas.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-      if (pointerLocked) {
-        document.exitPointerLock();
-      }
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && pointerLocked) {
-        // handled by browser by default, but we clean up
-        pointerLocked = false;
-      }
-    });
-
-    document.addEventListener('mousemove', onMouseMove, false);
+    } else {
+      setTimeout(initCV, 800);
+    }
 
     const ro = new ResizeObserver(() => {
       resize();
