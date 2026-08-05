@@ -134,14 +134,14 @@ const projects = [
       </div>
       <div class="aim-ui aim-ui-bottom">
         <div class="aim-panel" id="aim-panel-auto">
-          <div class="aim-pid-row"><span>PID-Kp</span><input type="range" id="pid-kp" min="0.01" max="0.5" step="0.01" value="0.08"><span id="val-kp">0.08</span></div>
-          <div class="aim-pid-row"><span>PID-Ki</span><input type="range" id="pid-ki" min="0" max="0.1" step="0.001" value="0.01"><span id="val-ki">0.01</span></div>
-          <div class="aim-pid-row"><span>PID-Kd</span><input type="range" id="pid-kd" min="0" max="0.3" step="0.01" value="0.05"><span id="val-kd">0.05</span></div>
-          <div class="aim-pid-row"><span>CV-帧间隔</span><input type="range" id="cv-interval" min="1" max="10" step="1" value="3"><span id="val-interval">3</span></div>
-          <div class="aim-pid-row"><span>CV-缩放</span><input type="range" id="cv-scale" min="0.25" max="1" step="0.05" value="0.5"><span id="val-scale">0.5</span></div>
+          <div class="aim-pid-row"><label>PID-Kp <output id="val-kp">0.15</output></label><input type="range" id="pid-kp" min="0.01" max="0.5" step="0.01" value="0.15"></div>
+          <div class="aim-pid-row"><label>PID-Ki <output id="val-ki">0.005</output></label><input type="range" id="pid-ki" min="0" max="0.05" step="0.001" value="0.005"></div>
+          <div class="aim-pid-row"><label>PID-Kd <output id="val-kd">0.10</output></label><input type="range" id="pid-kd" min="0" max="0.3" step="0.01" value="0.10"></div>
+          <div class="aim-pid-row"><label>KF-Q <output id="val-q">0.08</output></label><input type="range" id="kf-q" min="0.001" max="0.5" step="0.001" value="0.08"></div>
+          <div class="aim-pid-row"><label>KF-R <output id="val-r">0.24</output></label><input type="range" id="kf-r" min="0.01" max="1" step="0.01" value="0.24"></div>
         </div>
         <div class="aim-panel" id="aim-panel-mouse" style="display:none">
-          <div class="aim-pid-row"><span>灵敏度</span><input type="range" id="mouse-sens" min="0.1" max="2" step="0.1" value="0.5"><span id="val-sens">0.5</span></div>
+          <div class="aim-pid-row"><label>灵敏度 <output id="val-sens">0.5</output></label><input type="range" id="mouse-sens" min="0.1" max="2" step="0.1" value="0.5"></div>
         </div>
         <div class="aim-settings-row">
           <button id="aim-settings-mouse" class="aim-icon-btn" title="鼠标灵敏度">
@@ -849,27 +849,34 @@ const projects = [
 
   .aim-pid-row {
     display: flex;
-    align-items: center;
-    gap: 4px;
+    flex-direction: column;
+    gap: 2px;
     font-size: 11px;
     font-weight: 600;
     color: hsl(var(--foreground) / 0.7);
   }
 
-  .aim-pid-row span:first-child {
-    width: 42px;
-    flex-shrink: 0;
+  .aim-pid-row label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: hsl(var(--foreground) / 0.7);
+    cursor: default;
   }
 
-  .aim-pid-row span:last-child {
-    width: 32px;
+  .aim-pid-row output {
+    font-size: 11px;
+    font-weight: 700;
+    color: #ef4444;
+    font-variant-numeric: tabular-nums;
+    min-width: 44px;
     text-align: right;
-    color: hsl(var(--foreground));
-    flex-shrink: 0;
   }
 
   .aim-pid-row input[type="range"] {
-    flex: 1;
+    width: 100%;
     height: 4px;
     -webkit-appearance: none;
     appearance: none;
@@ -1744,7 +1751,7 @@ const projects = [
   }
 </style>
 
-<script async src="https://docs.opencv.org/4.x/opencv.js" onload="window._cvLoaded=1"></script>
+<script async src="/blog/opencv.js" onload="window._cvLoaded=1"></script>
 <script>
   (function() {
     const canvas = document.getElementById('aim-canvas');
@@ -1765,8 +1772,8 @@ const projects = [
       kp: document.getElementById('pid-kp'),
       ki: document.getElementById('pid-ki'),
       kd: document.getElementById('pid-kd'),
-      interval: document.getElementById('cv-interval'),
-      scale: document.getElementById('cv-scale'),
+      q: document.getElementById('kf-q'),
+      r: document.getElementById('kf-r'),
     };
 
     const BALL_COUNT = 12;
@@ -1801,7 +1808,26 @@ const projects = [
     let cvReady = false;
     let cvDetected = []; // [{x, y}, ...]
     let cvFrameCounter = 0;
-    let cvLastTarget = null; // index into cvDetected
+    const CV_DETECT_INTERVAL = 3; // frames between CV detections
+    const CV_SCALE = 0.5; // resize scale for detection
+
+    // Kalman state per detected ball (EKF: 4-state [x,y,vx,vy] with 4x4 covariance)
+    let kfStates = [];
+
+    // EKF helpers: 2x2 matrix inverse
+    function matInv2(A) {
+      const det = A[0][0] * A[1][1] - A[0][1] * A[1][0];
+      if (Math.abs(det) < 1e-15) return [[1, 0], [0, 1]];
+      const inv = 1 / det;
+      return [[A[1][1] * inv, -A[0][1] * inv], [-A[1][0] * inv, A[0][0] * inv]];
+    }
+
+    function kfInit(x, y) {
+      return {
+        x: [x, y, 0, 0],
+        P: [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]],
+      };
+    }
 
     function resize() {
       const rect = game.getBoundingClientRect();
@@ -1819,7 +1845,7 @@ const projects = [
     function spawnBalls() {
       balls = [];
       cvDetected = [];
-      cvLastTarget = null;
+      kfStates = [];
       for (let i = 0; i < BALL_COUNT; i++) {
         const x = BALL_RADIUS + Math.random() * (w - BALL_RADIUS * 2);
         const y = BALL_RADIUS + Math.random() * (h - BALL_RADIUS * 2);
@@ -1854,8 +1880,7 @@ const projects = [
     // OpenCV ball detection – returns [{x, y}, ...] in logical coordinates
     function detectBallsCV() {
       if (!cvReady || typeof cv === 'undefined') return [];
-      const dpr = window.devicePixelRatio || 1;
-      const scale = parseFloat(sliders.scale.value);
+      const scale = CV_SCALE;
       const sw = Math.round(w * scale);
       const sh = Math.round(h * scale);
 
@@ -1972,14 +1997,107 @@ const projects = [
       const kp = +sliders.kp.value;
       const ki = +sliders.ki.value;
       const kd = +sliders.kd.value;
+      const kfQ = +sliders.q.value;
+      const kfR = +sliders.r.value;
 
       // CV detection: run every N frames
       if (autoAim) {
         cvFrameCounter++;
-        const interval = parseInt(sliders.interval.value) || 3;
-        if (cvFrameCounter >= interval) {
+        if (cvFrameCounter >= CV_DETECT_INTERVAL) {
           cvFrameCounter = 0;
           cvDetected = detectBallsCV();
+          // match KF states to detected positions
+          const newKf = [];
+          for (let i = 0; i < cvDetected.length; i++) {
+            let bestJ = -1, bestDist = Infinity;
+            for (let j = 0; j < kfStates.length; j++) {
+              const dx = kfStates[j].x[0] - cvDetected[i].x;
+              const dy = kfStates[j].x[1] - cvDetected[i].y;
+              const d = dx * dx + dy * dy;
+              if (d < bestDist && d < 2500) { bestDist = d; bestJ = j; }
+            }
+            if (bestJ >= 0) {
+              newKf.push(kfStates[bestJ]);
+            } else {
+              newKf.push(kfInit(cvDetected[i].x, cvDetected[i].y));
+            }
+          }
+          kfStates = newKf;
+        }
+
+        // EKF predict + update for each tracked ball
+        for (let i = 0; i < kfStates.length; i++) {
+          const s = kfStates[i];
+          // --- Predict ---
+          // State: x += vx*dt, y += vy*dt (dt=1)
+          s.x[0] += s.x[2];
+          s.x[1] += s.x[3];
+          // F * P * F^T: row/col 0+=2, row/col 1+=3
+          s.P[0][0] += s.P[0][2] + s.P[2][0] + s.P[2][2];
+          s.P[0][1] += s.P[0][3] + s.P[2][1] + s.P[2][3];
+          s.P[0][2] += s.P[2][2];
+          s.P[0][3] += s.P[2][3];
+          s.P[1][0] += s.P[1][2] + s.P[3][0] + s.P[3][2];
+          s.P[1][1] += s.P[1][3] + s.P[3][1] + s.P[3][3];
+          s.P[1][2] += s.P[3][2];
+          s.P[1][3] += s.P[3][3];
+          s.P[2][0] += s.P[2][2];
+          s.P[2][1] += s.P[2][3];
+          s.P[3][0] += s.P[3][2];
+          s.P[3][1] += s.P[3][3];
+          // + Q = kfQ * [[0.25,0,0.5,0],[0,0.25,0,0.5],[0.5,0,1,0],[0,0.5,0,1]]
+          s.P[0][0] += kfQ * 0.25;
+          s.P[0][2] += kfQ * 0.5;
+          s.P[2][0] += kfQ * 0.5;
+          s.P[2][2] += kfQ;
+          s.P[1][1] += kfQ * 0.25;
+          s.P[1][3] += kfQ * 0.5;
+          s.P[3][1] += kfQ * 0.5;
+          s.P[3][3] += kfQ;
+
+          // --- Update with CV measurement ---
+          if (i < cvDetected.length) {
+            const mx = cvDetected[i].x, my = cvDetected[i].y;
+            // S = P[0:2,0:2] + R*I
+            const S = [
+              [s.P[0][0] + kfR, s.P[0][1]],
+              [s.P[1][0], s.P[1][1] + kfR],
+            ];
+            const invS = matInv2(S);
+            // K = P[:,0:2] * invS (4x2)
+            const K00 = s.P[0][0] * invS[0][0] + s.P[0][1] * invS[1][0];
+            const K01 = s.P[0][0] * invS[0][1] + s.P[0][1] * invS[1][1];
+            const K10 = s.P[1][0] * invS[0][0] + s.P[1][1] * invS[1][0];
+            const K11 = s.P[1][0] * invS[0][1] + s.P[1][1] * invS[1][1];
+            const K20 = s.P[2][0] * invS[0][0] + s.P[2][1] * invS[1][0];
+            const K21 = s.P[2][0] * invS[0][1] + s.P[2][1] * invS[1][1];
+            const K30 = s.P[3][0] * invS[0][0] + s.P[3][1] * invS[1][0];
+            const K31 = s.P[3][0] * invS[0][1] + s.P[3][1] * invS[1][1];
+            // innovation
+            const y0 = mx - s.x[0], y1 = my - s.x[1];
+            // x += K * y
+            s.x[0] += K00 * y0 + K01 * y1;
+            s.x[1] += K10 * y0 + K11 * y1;
+            s.x[2] += K20 * y0 + K21 * y1;
+            s.x[3] += K30 * y0 + K31 * y1;
+            // P = P - K * P[0:2,:]
+            s.P[0][0] -= K00 * s.P[0][0] + K01 * s.P[1][0];
+            s.P[0][1] -= K00 * s.P[0][1] + K01 * s.P[1][1];
+            s.P[0][2] -= K00 * s.P[0][2] + K01 * s.P[1][2];
+            s.P[0][3] -= K00 * s.P[0][3] + K01 * s.P[1][3];
+            s.P[1][0] -= K10 * s.P[0][0] + K11 * s.P[1][0];
+            s.P[1][1] -= K10 * s.P[0][1] + K11 * s.P[1][1];
+            s.P[1][2] -= K10 * s.P[0][2] + K11 * s.P[1][2];
+            s.P[1][3] -= K10 * s.P[0][3] + K11 * s.P[1][3];
+            s.P[2][0] -= K20 * s.P[0][0] + K21 * s.P[1][0];
+            s.P[2][1] -= K20 * s.P[0][1] + K21 * s.P[1][1];
+            s.P[2][2] -= K20 * s.P[0][2] + K21 * s.P[1][2];
+            s.P[2][3] -= K20 * s.P[0][3] + K21 * s.P[1][3];
+            s.P[3][0] -= K30 * s.P[0][0] + K31 * s.P[1][0];
+            s.P[3][1] -= K30 * s.P[0][1] + K31 * s.P[1][1];
+            s.P[3][2] -= K30 * s.P[0][2] + K31 * s.P[1][2];
+            s.P[3][3] -= K30 * s.P[0][3] + K31 * s.P[1][3];
+          }
         }
       }
 
@@ -2020,24 +2138,24 @@ const projects = [
     }
 
     function cvAutoAim(kp, ki, kd) {
-      if (cvDetected.length === 0) return;
+      if (kfStates.length === 0) return;
 
-      // find closest CV-detected ball to crosshair
+      // find closest EKF-smoothed ball to crosshair
       let bestDist = Infinity;
       let bestIdx = -1;
-      for (let i = 0; i < cvDetected.length; i++) {
-        const d = cvDetected[i];
-        const dx = crossX - d.x;
-        const dy = crossY - d.y;
+      for (let i = 0; i < kfStates.length; i++) {
+        const s = kfStates[i];
+        const dx = crossX - s.x[0];
+        const dy = crossY - s.x[1];
         const dist = dx * dx + dy * dy;
         if (dist < bestDist) { bestDist = dist; bestIdx = i; }
       }
       if (bestIdx < 0) return;
-      cvLastTarget = bestIdx;
+      targetIdx = bestIdx;
 
-      const target = cvDetected[bestIdx];
-      const errX = target.x - crossX;
-      const errY = target.y - crossY;
+      const target = kfStates[bestIdx];
+      const errX = target.x[0] - crossX;
+      const errY = target.x[1] - crossY;
 
       pidIntegral.x += errX;
       pidIntegral.y += errY;
@@ -2145,8 +2263,8 @@ const projects = [
         pidIntegral = { x: 0, y: 0 };
         pidPrevErr = { x: 0, y: 0 };
         cvDetected = [];
+        kfStates = [];
         cvFrameCounter = 0;
-        cvLastTarget = null;
         autoShootTimer = 0;
       }
     });
