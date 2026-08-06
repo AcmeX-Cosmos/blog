@@ -20,11 +20,17 @@ const pursuitWords = [
   { text: '激极尽志', color: '#ff27e8' },
 ];
 
-const skills = [
-  'ROS2', 'OpenCV', 'YOLO', 'PyTorch', 'C++', 'Python', 'Docker',
-  'Ceres', 'EKF', 'UE5', 'PnP', 'PoseNet', 'Git', 'Linux',
-  'Vue3', 'Blender', 'PyQt5', 'CycleGAN', 'Deep Learning', 'VLA',
+const skillCategories = [
+  { name: 'VLA', items: ['Qwen-VL', 'Nemotron-VL', 'LLM Agent'] },
+  { name: 'Robotics', items: ['ROS2', 'Isaac Sim', 'Isaac Lab', 'Franka', 'GraspNet'] },
+  { name: 'Robot Learning', items: ['ACT', 'BC', 'Diffusion Policy', 'PPO'] },
+  { name: 'Vision', items: ['OpenCV', 'YOLO', 'SAM', 'RGB-D', 'Point Cloud'] },
+  { name: 'Deep Learning', items: ['PyTorch', 'CUDA', 'TensorRT', 'Transformer'] },
+  { name: 'Simulation', items: ['Omniverse', 'USD', 'Blender', 'UE5'] },
+  { name: 'Optimization', items: ['Ceres', 'EKF', 'SLAM', 'SE(3)'] },
+  { name: 'Engineering', items: ['Linux', 'Docker', 'Git', 'C++', 'Python'] },
 ];
+const skills = skillCategories.flatMap(c => c.items);
 
 const hobbyItems = [
   { icon: '🎮', label: '爱好游戏', value: 'CS:GO' },
@@ -79,6 +85,7 @@ const projects = [
 ---
 
 <SiteLayout>
+  <div id="web_bg_about"></div>
   <article id="about-page">
     <!-- ====== Author Box with Avatar ====== -->
     <div class="author-box">
@@ -137,8 +144,8 @@ const projects = [
           <div class="aim-pid-row"><label>PID-Kp <output id="val-kp">0.15</output></label><input type="range" id="pid-kp" min="0.01" max="0.5" step="0.01" value="0.15"></div>
           <div class="aim-pid-row"><label>PID-Ki <output id="val-ki">0.005</output></label><input type="range" id="pid-ki" min="0" max="0.05" step="0.001" value="0.005"></div>
           <div class="aim-pid-row"><label>PID-Kd <output id="val-kd">0.10</output></label><input type="range" id="pid-kd" min="0" max="0.3" step="0.01" value="0.10"></div>
-          <div class="aim-pid-row"><label>KF-Q <output id="val-q">0.08</output></label><input type="range" id="kf-q" min="0.001" max="0.5" step="0.001" value="0.08"></div>
-          <div class="aim-pid-row"><label>KF-R <output id="val-r">0.24</output></label><input type="range" id="kf-r" min="0.01" max="1" step="0.01" value="0.24"></div>
+          <div class="aim-pid-row"><label>EKF-Q <output id="val-q">0.08</output></label><input type="range" id="kf-q" min="0.001" max="0.5" step="0.001" value="0.08"></div>
+          <div class="aim-pid-row"><label>EKF-R <output id="val-r">0.24</output></label><input type="range" id="kf-r" min="0.01" max="1" step="0.01" value="0.24"></div>
         </div>
         <div class="aim-panel" id="aim-panel-mouse" style="display:none">
           <div class="aim-pid-row"><label>灵敏度 <output id="val-sens">0.5</output></label><input type="range" id="mouse-sens" min="0.1" max="2" step="0.1" value="0.5"></div>
@@ -176,15 +183,18 @@ const projects = [
               </div>
             </div>
             <div class="skills-list">
-              {skills.map((skill) => (
-                <div class="skill-info">
-                  <div class="skill-icon" style="background: var(--about-tag-bg);">
-                    <span class="skill-icon-text-small">{skill}</span>
+              {skillCategories.map((cat) => (
+                <div class="skill-category">
+                  <div class="skill-category-header">{cat.name}</div>
+                  <div class="skill-category-items">
+                    {cat.items.map((skill) => (
+                      <div class="skill-info">
+                        <span class="skill-icon-text-small">{skill}</span>
+                      </div>
+                    ))}
                   </div>
-                  <div class="skill-name"><span>{skill}</span></div>
                 </div>
               ))}
-              <div class="etc">...</div>
             </div>
           </div>
         </div>
@@ -220,7 +230,7 @@ const projects = [
           </div>
           <div class="post-tips">统计信息来自 <a href="https://umami.gbfun.cc/" target="_blank" rel="noopener nofollow">Umami统计</a></div>
           <div class="banner-button-group">
-            <a class="banner-button" href="/archives">
+            <a class="banner-button" href="https://acmex-cosmos.github.io/archives" target="_blank" rel="noopener nofollow">
               <i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i>
               <span class="banner-button-text">文章隧道</span>
             </a>
@@ -229,20 +239,16 @@ const projects = [
       </div>
       <div class="author-content-item-group column mapAndInfo">
         <div class="author-content-item map single">
-          <span class="map-title">我现在住在<b>中国，深圳市南山区，科技园</b></span>
+          <span class="map-title">我在<b>中国，深圳市南山区，科技园</b></span>
         </div>
         <div class="author-content-item selfInfo single">
-          <div>
-            <span class="selfInfo-title">生于</span>
-            <span class="selfInfo-content" id="selfInfo-content-year" style="color:#43a6c6">2002</span>
-          </div>
           <div>
             <span class="selfInfo-title">深圳职业技术大学</span>
             <span class="selfInfo-content" style="color:#c69043">人工智能技术应用</span>
           </div>
           <div>
-            <span class="selfInfo-title">现在职业</span>
-            <span class="selfInfo-content" style="color:#b04fe6">学生 & 机器人视觉算法工程师</span>
+            <span class="selfInfo-title">职业</span>
+            <span class="selfInfo-content" style="color:#b04fe6">机器人视觉算法</span>
           </div>
         </div>
       </div>
@@ -253,7 +259,7 @@ const projects = [
       <div class="author-content-item personalities">
         <div class="author-content-item-tips">性格</div>
         <span class="author-content-item-title">建筑师</span>
-        <div class="title2" style="color:#4a90d9">INTJ</div>
+        <div class="title2" style="color:#8b5cf6">INTJ</div>
         <div class="image">
           <img src="https://img.gbfun.cc/file/project/2JHQREr3.png" alt="性格" />
         </div>
@@ -272,38 +278,65 @@ const projects = [
       <div class="author-content-item maxim" style="background: linear-gradient(120deg, #5b27ff 0, #00d4ff 100%); color: var(--about-white);">
         <div class="author-content-item-tips">座右铭</div>
         <div class="maxim-title">
-          <span>低调做事，</span>
-          <span>高调做人 💕。</span>
+          <span>减少犯错的方式，</span>
+          <span>是建立系统并遵守纪律。</span>
         </div>
       </div>
       <div class="author-content-item buff">
-        <div class="card-content">
-          <div class="author-content-item-tips">特长</div>
-          <span class="buff-title">
-            <span>计算机视觉</span>
-            <span>机器人系统</span>
-            <span>算法工程</span>
-            <span>小天才</span>
-            <span>瞎捣鼓</span>
-            <span>好奇心 MAX</span>
-          </span>
-        </div>
+        <div class="card-content"></div>
+        <div class="author-content-item-tips">特长</div>
+        <span class="buff-title">
+          <span style="opacity:.6;margin-bottom:8px">机器人 脑洞大开 小天才</span>
+          <span>探索不止 死磕不休 从0到1的践行者</span>
+        </span>
+        <div class="card-background-icon"><i class="anzhiyufont anzhiyu-icon-dice-d20"></i></div>
       </div>
     </div>
 
     <!-- ====== Row 6: Hobbies ====== -->
     <div class="author-content">
-      {hobbyItems.map((item) => (
-        <div class="author-content-item game-yuanshen" style="background: linear-gradient(120deg, var(--about-accent-1), var(--about-accent-2)); background-size: 200%;">
-          <div class="card-content">
-            <div class="author-content-item-tips">{item.label}</div>
-            <span class="author-content-item-title">{item.value}</span>
-            <div class="content-bottom">
-              <span class="hobby-icon">{item.icon}</span>
+      <!-- Game card: skew layout like comic -->
+      <div class="author-content-item comic-content game-dual">
+        <div class="card-content">
+          <div class="author-content-item-tips">爱好游戏</div>
+          <span class="author-content-item-title">脑洞创造 战术竞技</span>
+          <div class="comic-box">
+            <div class="comic-item" style="background: url(/blog/images/Minecraft.jpg) center/cover no-repeat;" title="我的世界">
+              <span class="game-dual-label">我的世界</span>
+            </div>
+            <div class="comic-item" style="background: url(/blog/images/CSGO.jpg) center/cover no-repeat;" title="CS:GO">
+              <span class="game-dual-label">CS:GO</span>
+            </div>
+            <div class="comic-item" style="background: url(/blog/images/Valorant.jpg) center/cover no-repeat;" title="Valorant">
+              <span class="game-dual-label">Valorant</span>
             </div>
           </div>
         </div>
-      ))}
+      </div>
+      <!-- Movie/Fanju card -->
+      <div class="author-content-item comic-content">
+        <div class="card-content">
+          <div class="author-content-item-tips">爱好电影</div>
+          <span class="author-content-item-title">看剧</span>
+          <div class="comic-box">
+            <a class="comic-item" href="https://movie.douban.com/subject/26683290/" target="_blank" rel="noopener nofollow" title="你的名字">
+              <div class="comic-item-cover"><img src="https://img.gbfun.cc/file/project/Sla6QkMi.webp" alt="你的名字" loading="lazy" /></div>
+            </a>
+            <a class="comic-item" href="https://movie.douban.com/subject/35267208/" target="_blank" rel="noopener nofollow" title="流浪地球2">
+              <div class="comic-item-cover"><img src="https://img.gbfun.cc/file/project/8EPGkTMq.jpg" alt="流浪地球2" loading="lazy" /></div>
+            </a>
+            <a class="comic-item" href="https://movie.douban.com/subject/36171155/" target="_blank" rel="noopener nofollow" title="胆大党">
+              <div class="comic-item-cover"><img src="https://img.gbfun.cc/file/project/6VV5wgFf.webp" alt="胆大党" loading="lazy" /></div>
+            </a>
+            <a class="comic-item" href="https://movie.douban.com/subject/30402296/" target="_blank" rel="noopener nofollow" title="天气之子">
+              <div class="comic-item-cover"><img src="https://img.gbfun.cc/file/project/3rGQM7Dd.webp" alt="天气之子" loading="lazy" /></div>
+            </a>
+            <a class="comic-item" href="https://www.bilibili.com/bangumi/media/md21231256" target="_blank" rel="noopener nofollow" title="怪兽八号">
+              <div class="comic-item-cover"><img src="https://img.gbfun.cc/file/project/5hlDzEtF.webp" alt="怪兽八号" loading="lazy" /></div>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ====== Row 7: Interests ====== -->
@@ -391,6 +424,26 @@ const projects = [
       <span>ACMEX · 2026</span>
     </div>
   </article>
+  <style is:inline>
+    #web_bg_about {
+      position: fixed;
+      z-index: 0;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+      background-image: url(/blog/img-bg-day.svg);
+      background-position: 0 0;
+      background-size: 20rem;
+      background-repeat: repeat;
+      pointer-events: none;
+    }
+    [data-theme="dark"] #web_bg_about {
+      background-size: 100rem;
+      opacity: 0.15;
+    }
+  </style>
 </SiteLayout>
 
 <style>
@@ -399,6 +452,8 @@ const projects = [
     --about-white: #fff;
     --about-card-bg: hsl(var(--card));
     --about-tag-bg: hsl(var(--muted));
+    position: relative;
+    z-index: 1;
     --about-accent-1: #5b27ff;
     --about-accent-2: #00d4ff;
     --about-accent-3: #ff27e8;
@@ -588,19 +643,20 @@ const projects = [
   }
 
   .author-content-item .card-content .author-content-item-title {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.1rem;
   }
 
   .author-content-item .author-content-item-title {
-    font-size: 36px;
+    font-size: 28px;
     font-weight: 700;
+    font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
     line-height: 1;
   }
 
   .author-content-item .author-content-item-tips {
     opacity: 0.8;
     font-size: 12px;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.1rem;
   }
 
   /* ========== myInfoAndSayHello ========== */
@@ -965,47 +1021,65 @@ const projects = [
     left: 0;
     width: 100%;
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     opacity: 0;
     transition: opacity 0.3s;
     padding: 0 1rem;
+    gap: 0.4rem;
   }
 
   .skills:hover .skills-list {
     opacity: 1;
   }
 
+  .skill-category {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .skill-category-header {
+    font-size: 11px;
+    font-weight: 700;
+    color: hsl(var(--muted-foreground));
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    min-width: 80px;
+  }
+
+  .skill-category-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
   .skill-info {
     display: flex;
     align-items: center;
-    margin-right: 10px;
-    margin-top: 10px;
     background: hsl(var(--background));
-    border-radius: 40px;
-    padding: 4px 12px 4px 8px;
+    border-radius: 20px;
+    padding: 3px 10px;
     border: var(--about-border);
     box-shadow: var(--about-shadow);
+    cursor: default;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
   }
 
-  .skill-info .skill-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 6px;
+  .skill-info:hover {
+    background: hsl(var(--primary));
+    transform: translateY(-2px);
+  }
+
+  .skill-info:hover .skill-icon-text-small {
+    color: hsl(var(--primary-foreground));
   }
 
   .skill-icon-text-small {
-    font-size: 10px;
-    font-weight: 700;
-    color: hsl(var(--foreground));
-  }
-
-  .skill-name {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
+    color: hsl(var(--foreground));
   }
 
   .skills-list .etc {
@@ -1367,22 +1441,153 @@ const projects = [
   .author-content-item.buff .buff-title {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
   }
 
-  /* ========== Game Yuanshen / Hobbies ========== */
-  .author-content-item.game-yuanshen {
-    background-size: cover;
+  .card-background-icon {
+    font-size: 12rem;
+    opacity: .2;
+    position: absolute;
+    right: 0;
+    bottom: -40%;
+    transform: rotate(30deg);
+    transition: 2s ease-in-out;
+  }
+
+  .author-content-item:hover .card-background-icon {
+    transform: rotate(20deg);
+  }
+
+  /* ========== Game Dual (skew layout like comic) ========== */
+  .author-content-item.game-dual .game-dual-label {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: skew(10deg, 0deg) translateX(-50%);
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    padding: 3px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    z-index: 2;
+    transition: all 0.8s;
+    pointer-events: none;
+  }
+
+  .author-content-item.game-dual .comic-item:hover .game-dual-label {
+    background: rgba(0, 0, 0, 0.75);
+    font-size: 1rem;
+    bottom: 18px;
+  }
+
+  .author-content-item.game-dual::after {
+    box-shadow: 0 -48px 203px 11px rgba(0, 0, 0, 0.55) inset;
+    position: absolute;
+    content: '';
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .game-dual-label {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--about-white);
+  }
+
+  /* ========== Comic/Movie ========== */
+  .author-content-item.comic-content {
+    width: 49%;
     min-height: 300px;
     overflow: hidden;
-    color: var(--about-white);
-    width: 49%;
-    background-size: 200% !important;
-    animation: gradient 15s ease infinite;
   }
 
-  .author-content-item.game-yuanshen::after {
-    box-shadow: 0 -69px 203px 11px #575d8b inset;
+  .author-content-item.comic-content .comic-box {
+    display: flex;
+    width: 120%;
+    height: 100%;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+  }
+
+  .author-content-item.comic-content.game-dual .comic-box {
+    width: 120% !important;
+  }
+
+  .author-content-item.comic-content.game-dual .comic-item {
+    width: 33.33% !important;
+    flex-shrink: 0;
+  }
+
+  .author-content-item.comic-content.game-dual .comic-box:has(.comic-item:hover) .comic-item:not(:hover) {
+    width: 20% !important;
+  }
+
+  .author-content-item.comic-content.game-dual .comic-item:hover {
+    width: 60% !important;
+  }
+
+  .author-content-item.comic-content .author-content-item-tips,
+  .author-content-item.comic-content .author-content-item-title {
+    z-index: 2;
+    color: var(--about-white);
+    pointer-events: none;
+    position: relative;
+  }
+
+  .author-content-item.comic-content .comic-item {
+    height: 100%;
+    color: #fff;
+    width: 20%;
+    transform: skew(-10deg, 0deg);
+    transition: .8s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .author-content-item.comic-content:not(.game-dual) .comic-item {
+    width: 20% !important;
+    flex-shrink: 0;
+  }
+
+  .author-content-item.comic-content:not(.game-dual) .comic-item:hover {
+    width: 40% !important;
+  }
+
+  .author-content-item.comic-content:not(.game-dual) .comic-box:has(.comic-item:hover) .comic-item:not(:hover) {
+    width: 15% !important;
+  }
+
+  .author-content-item.comic-content .comic-item:hover .comic-item-cover {
+    left: 16%;
+    transform: skew(10deg, 0deg) scale(1.6);
+  }
+
+  .author-content-item.comic-content .comic-item .comic-item-cover {
+    position: absolute;
+    top: 0;
+    left: -50%;
+    height: 100%;
+    transform: skew(10deg, 0deg);
+    object-fit: cover;
+    transition: scale .2s, all .8s;
+  }
+
+  .author-content-item.comic-content .comic-item .comic-item-cover img {
+    height: 100%;
+    transition: .8s;
+    max-width: none;
+    border-radius: 0;
+  }
+
+  .author-content-item.comic-content::after {
+    box-shadow: 0 -48px 203px 11px #fbe9b8 inset;
     position: absolute;
     content: '';
     width: 100%;
@@ -1403,8 +1608,8 @@ const projects = [
     font-size: 3rem;
   }
 
-  .author-content-item.game-yuanshen .author-content-item-tips,
-  .author-content-item.game-yuanshen .author-content-item-title {
+  .author-content-item.game-dual .author-content-item-tips,
+  .author-content-item.game-dual .author-content-item-title {
     z-index: 2;
     color: var(--about-white);
     position: relative;
@@ -1652,7 +1857,8 @@ const projects = [
     .author-content-item.myphoto,
     .author-content-item.maxim,
     .author-content-item.buff,
-    .author-content-item.game-yuanshen,
+    .author-content-item.game-dual,
+    .author-content-item.comic-content,
     .author-content-item.like-technology,
     .author-content-item.aboutsiteTips,
     #about-page .myInfoAndSayHello,
@@ -1676,7 +1882,7 @@ const projects = [
     }
 
     .author-content-item .author-content-item-title {
-      font-size: 28px;
+      font-size: 22px;
     }
 
     .author-content-item.personalities .image {
