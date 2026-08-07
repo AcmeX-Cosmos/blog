@@ -834,9 +834,9 @@ const projects = [
   }
 
   .aim-reset-btn {
-    width: 24px;
-    height: 24px;
-    font-size: 11px;
+    width: 28.8px;
+    height: 28.8px;
+    font-size: 13.2px;
     font-weight: 700;
     color: hsl(var(--foreground) / 0.8);
     background: hsl(var(--card) / 0.6);
@@ -857,21 +857,21 @@ const projects = [
 
   .aim-stats {
     display: flex;
-    gap: 16px;
-    font-size: 14px;
+    gap: 19.2px;
+    font-size: 16.8px;
     font-weight: 600;
     color: hsl(var(--foreground));
     background: hsl(var(--card) / 0.85);
     backdrop-filter: blur(6px);
-    padding: 6px 14px;
-    border-radius: 10px;
+    padding: 7.2px 16.8px;
+    border-radius: 12px;
     border: 1px solid hsl(var(--border));
     pointer-events: none;
   }
 
   .aim-stats strong {
     color: #ef4444;
-    font-size: 16px;
+    font-size: 19.2px;
   }
 
   .aim-controls {
@@ -881,10 +881,10 @@ const projects = [
   }
 
   .aim-btn {
-    font-size: 12px;
+    font-size: 14.4px;
     font-weight: 600;
-    padding: 5px 12px;
-    border-radius: 8px;
+    padding: 6px 14.4px;
+    border-radius: 9.6px;
     border: 1px solid hsl(var(--border));
     background: hsl(var(--card) / 0.85);
     backdrop-filter: blur(6px);
@@ -2498,19 +2498,6 @@ const projects = [
     }
 
     function loop(now) {
-      // FPS tracking
-      if (!gameRunning) {
-        // draw start overlay
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawBackground();
-        drawBalls();
-        ctx.fillStyle = 'hsl(var(--foreground) / 0.5)';
-        ctx.font = 'bold 18px "Inter", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('点击画布开始游戏', w / 2, h / 2);
-        animId = requestAnimationFrame(loop);
-        return;
-      }
       frameCount++;
       if (!fpsLastTime) fpsLastTime = now;
       if (now - fpsLastTime >= 3000) {
@@ -2520,22 +2507,14 @@ const projects = [
         fpsLastTime = now;
       }
 
-      update();
-      draw();
-      updateUI();
-      if (balls.every(b => !b.alive)) {
-        gameRunning = false;
-        const t0 = firstHitTime >= 0 ? firstHitTime : roundStart;
-        const elapsed = (performance.now() - t0) / 1000;
-        const finalKpm = Math.round((BALL_COUNT / elapsed) * 60);
-        const text = '全部击中! KPM: ' + finalKpm + '  |  点击画布重新开始';
-        ctx.fillStyle = 'hsl(var(--foreground) / 0.6)';
-        ctx.font = 'bold 20px "Inter", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(text, w / 2, h / 2);
-        animId = requestAnimationFrame(loop);
-        return;
+      if (gameRunning) {
+        update();
+        updateUI();
+        if (balls.every(b => !b.alive)) {
+          gameRunning = false;
+        }
       }
+      draw();
       animId = requestAnimationFrame(loop);
     }
 
@@ -2610,16 +2589,28 @@ const projects = [
     // reset button
     document.getElementById('aim-reset').addEventListener('click', () => {
       cancelAnimationFrame(animId);
+      hits = 0;
+      prevHits = 0;
+      firstHitTime = -1;
+      roundStart = performance.now();
       spawnBalls();
       gameRunning = false;
+      hitsEl.textContent = '0';
+      kpmEl.textContent = '0';
       animId = requestAnimationFrame(loop);
     });
     window.addEventListener('keydown', (e) => {
       if (e.key === 'r' || e.key === 'R') {
         if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
         cancelAnimationFrame(animId);
+        hits = 0;
+        prevHits = 0;
+        firstHitTime = -1;
+        roundStart = performance.now();
         spawnBalls();
         gameRunning = false;
+        hitsEl.textContent = '0';
+        kpmEl.textContent = '0';
         animId = requestAnimationFrame(loop);
       }
     });
@@ -2671,14 +2662,11 @@ const projects = [
 
     const ro = new ResizeObserver(() => {
       resize();
-      spawnBalls();
-      cancelAnimationFrame(animId);
-      animId = requestAnimationFrame(loop);
     });
     ro.observe(game);
     resize();
     spawnBalls();
-    gameRunning = true;
+    gameRunning = false;
     animId = requestAnimationFrame(loop);
   })();
 </script>
