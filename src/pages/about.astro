@@ -2519,12 +2519,9 @@ const projects = [
     }
 
     canvas.addEventListener('click', (e) => {
-      // if not running or all dead, click to start/reset
-      if (!gameRunning || balls.every(b => !b.alive)) {
-        cancelAnimationFrame(animId);
+      if (!gameRunning) {
         spawnBalls();
         gameRunning = true;
-        animId = requestAnimationFrame(loop);
         return;
       }
       const rect = canvas.getBoundingClientRect();
@@ -2665,7 +2662,6 @@ const projects = [
     });
     ro.observe(game);
     resize();
-    spawnBalls();
     gameRunning = false;
     animId = requestAnimationFrame(loop);
   })();
