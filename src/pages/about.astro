@@ -327,20 +327,25 @@ const projects = [
           <div class="author-content-item-tips">爱好电影</div>
           <span class="author-content-item-title">看剧</span>
           <div class="comic-box">
-            <a class="comic-item" href="https://movie.douban.com/subject/26683290/" target="_blank" rel="noopener nofollow" title="你的名字" style="--poster: url(/blog/images/movie-nikonoha.webp);">
-              <span class="game-dual-label">你的名字</span>
+            <a class="comic-item" href="https://movie.douban.com/subject/1292052/" target="_blank" rel="noopener nofollow" title="肖申克的救赎" style="--poster: url(/blog/images/movie-shawshank.webp);">
+              <span class="comic-poster"></span>
+              <span class="game-dual-label">肖申克的救赎</span>
             </a>
-            <a class="comic-item" href="https://movie.douban.com/subject/35267208/" target="_blank" rel="noopener nofollow" title="流浪地球2" style="--poster: url(/blog/images/movie-wandering-earth-2.webp);">
-              <span class="game-dual-label">流浪地球2</span>
+            <a class="comic-item" href="https://movie.douban.com/subject/1292720/" target="_blank" rel="noopener nofollow" title="阿甘正传" style="--poster: url(/blog/images/movie-forrestgump.webp);">
+              <span class="comic-poster"></span>
+              <span class="game-dual-label">阿甘正传</span>
             </a>
-            <a class="comic-item" href="https://movie.douban.com/subject/36171155/" target="_blank" rel="noopener nofollow" title="胆大党" style="--poster: url(/blog/images/movie-dandadan.webp);">
-              <span class="game-dual-label">胆大党</span>
+            <a class="comic-item" href="https://movie.douban.com/subject/3073124/" target="_blank" rel="noopener nofollow" title="月球" style="--poster: url(/blog/images/movie-moon.webp);">
+              <span class="comic-poster"></span>
+              <span class="game-dual-label">月球</span>
             </a>
-            <a class="comic-item" href="https://movie.douban.com/subject/30402296/" target="_blank" rel="noopener nofollow" title="天气之子" style="--poster: url(/blog/images/movie-tenki-no-ko.webp);">
-              <span class="game-dual-label">天气之子</span>
+            <a class="comic-item" href="https://movie.douban.com/subject/3075287/" target="_blank" rel="noopener nofollow" title="源代码" style="--poster: url(/blog/images/movie-sourcecode.webp);">
+              <span class="comic-poster"></span>
+              <span class="game-dual-label">源代码</span>
             </a>
-            <a class="comic-item" href="https://www.bilibili.com/bangumi/media/md21231256" target="_blank" rel="noopener nofollow" title="怪兽八号" style="--poster: url(/blog/images/movie-kaiju-no-8.webp);">
-              <span class="game-dual-label">怪兽八号</span>
+            <a class="comic-item" href="https://movie.douban.com/subject/26266893/" target="_blank" rel="noopener nofollow" title="流浪地球" style="--poster: url(/blog/images/movie-wandering-earth.webp);">
+              <span class="comic-poster"></span>
+              <span class="game-dual-label">流浪地球</span>
             </a>
           </div>
         </div>
@@ -426,11 +431,6 @@ const projects = [
       </div>
     </div>
 
-    <!-- ====== Footer ====== -->
-    <div class="about-footer-wrap">
-      <p>持续探索视觉感知、机器人系统与具身智能的边界。</p>
-      <span>ACMEX · 2026</span>
-    </div>
   </article>
   <style is:inline>
     #web_bg_about {
@@ -1693,6 +1693,8 @@ const projects = [
     color: var(--about-white);
     pointer-events: none;
     position: relative;
+    /* 海报有亮底（如阿甘正传），单靠底部黑渐变压不住标题，补一层文字投影 */
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.5);
   }
 
   .author-content-item.comic-content .comic-item {
@@ -1714,9 +1716,23 @@ const projects = [
 
   /* 海报放在独立图层上，悬浮时用 transform 缩放（走合成器，不重新光栅化）；
      直接动 background-size 会让整格每帧重绘 */
+  /* 海报单独一层来裁剪：格子本身不再 overflow:hidden，
+     否则斜切后底边只剩 66px 可见宽度，会把标签切掉 */
+  .author-content-item.comic-content:not(.game-dual) .comic-item {
+    overflow: visible;
+    contain: none;
+  }
+
+  .author-content-item.comic-content:not(.game-dual) .comic-poster {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    contain: paint;
+  }
+
   /* 斜切会把上下边各横移约 26px，inset:0 盖不住斜出去的角，
-     左右各外扩 30px（父级 overflow 兜住） */
-  .author-content-item.comic-content:not(.game-dual) .comic-item::before {
+     左右各外扩 30px（由 .comic-poster 兜住） */
+  .author-content-item.comic-content:not(.game-dual) .comic-poster::before {
     content: '';
     position: absolute;
     top: 0;
@@ -1727,7 +1743,7 @@ const projects = [
     transition: transform 0.5s cubic-bezier(.25,.46,.45,.94);
   }
 
-  .author-content-item.comic-content:not(.game-dual) .comic-item:hover::before {
+  .author-content-item.comic-content:not(.game-dual) .comic-item:hover .comic-poster::before {
     transform: scale(1.15);
   }
 
@@ -1916,29 +1932,6 @@ const projects = [
     padding: 0.2rem 0.55rem;
     font-size: 0.68rem;
     color: hsl(var(--muted-foreground));
-  }
-
-  /* ========== Footer ========== */
-  .about-footer-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-    margin-top: 4rem;
-    border-top: 1px solid hsl(var(--border));
-    padding-top: 1.5rem;
-    color: hsl(var(--muted-foreground));
-    font-size: 0.75rem;
-  }
-
-  .about-footer-wrap p {
-    margin: 0;
-  }
-
-  .about-footer-wrap span {
-    flex: none;
-    font-family: ui-monospace, monospace;
-    letter-spacing: 0.18em;
   }
 
   /* ========== Animations ========== */
