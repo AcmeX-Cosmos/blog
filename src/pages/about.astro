@@ -804,6 +804,17 @@ const projects = [
     flex-direction: column;
     align-items: flex-end;
     gap: 6px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .aim-ui-bottom.settings-emerge {
+    animation: settings-pop 0.6s ease;
+  }
+
+  @keyframes settings-pop {
+    0% { transform: translateY(20px); opacity: 0.6; }
+    50% { transform: translateY(-4px); opacity: 1; }
+    100% { transform: translateY(0); opacity: 1; }
   }
 
   .aim-settings-row {
@@ -2111,6 +2122,7 @@ const projects = [
     let firstHitTime = -1;
     let gameRunning = false;
     let autoAim = false; // default: 关闭
+    let autoPaused = false; // R 之后暂停自瞄（开关保持开），下一次点击恢复
     let moving = false;
     let mouseSensitivity = 0.5;
     let animId;
@@ -2194,6 +2206,20 @@ const projects = [
       frameCount = 0;
       fpsLastTime = 0;
       updateUI();
+    }
+
+    // 顶部按钮 + 底部参数面板（设置模式可见，游戏中隐藏）
+    let topControlsEl, bottomPanelEl;
+    function settingsUI() {
+      if (!topControlsEl) topControlsEl = document.querySelector('.aim-ui-top .aim-controls');
+      if (!bottomPanelEl) bottomPanelEl = document.querySelector('.aim-ui-bottom');
+      return [topControlsEl, bottomPanelEl];
+    }
+    function showSettingsUI() {
+      settingsUI().forEach(el => { if (el) el.style.display = ''; });
+    }
+    function hideSettingsUI() {
+      settingsUI().forEach(el => { if (el) el.style.display = 'none'; });
     }
 
     function updateUI() {
@@ -2291,7 +2317,7 @@ const projects = [
       });
 
       // crosshair (auto-aim only)
-      if (autoAim) {
+      if (autoActive()) {
         // CV detection boxes
         ctx.strokeStyle = 'rgba(0, 255, 100, 0.4)';
         ctx.lineWidth = 1.5;
@@ -2328,7 +2354,7 @@ const projects = [
       const kfR = +sliders.r.value;
 
       // CV detection: run every N frames
-      if (autoAim) {
+      if (autoActive()) {
         cvFrameCounter++;
         if (cvFrameCounter >= CV_DETECT_INTERVAL) {
           cvFrameCounter = 0;
@@ -2441,7 +2467,7 @@ const projects = [
         }
       }
 
-      if (autoAim) {
+      if (autoActive()) {
         cvAutoAim(kp, ki, kd);
       }
 
@@ -2451,17 +2477,9 @@ const projects = [
         prevHits = hits;
       }
 
-      // toggle UI based on game state (cache DOM refs once)
-      if (!window._aimTopControls) window._aimTopControls = document.querySelector('.aim-ui-top .aim-controls');
-      if (!window._aimBottomPanel) window._aimBottomPanel = document.querySelector('.aim-ui-bottom');
-      const inProgress = balls.some(b => b.alive) && (hits > 0 || autoAim);
-      if (inProgress) {
-        if (window._aimTopControls) window._aimTopControls.style.display = 'none';
-        if (window._aimBottomPanel) window._aimBottomPanel.style.display = 'none';
-      } else {
-        if (window._aimTopControls) window._aimTopControls.style.display = '';
-        if (window._aimBottomPanel) window._aimBottomPanel.style.display = '';
-      }
+      // toggle UI based on game state
+      const inProgress = balls.some(b => b.alive) && (hits > 0 || autoActive());
+      if (inProgress) hideSettingsUI(); else showSettingsUI();
     }
 
     function cvAutoAim(kp, ki, kd) {
@@ -2545,9 +2563,26 @@ const projects = [
 
     canvas.addEventListener('click', (e) => {
       if (!gameRunning) {
-        spawnBalls();
+        // 空场已有小球，直接沿用开局；上一轮打完了才补新球
+        if (!balls.some(b => b.alive)) {
+          spawnBalls();
+        } else {
+          hits = 0;
+          prevHits = 0;
+          firstHitTime = -1;
+          roundStart = performance.now();
+          updateUI();
+        }
         gameRunning = true;
-        return;
+        // 自瞄开关还开着的话，这一下点击解除暂停并交给它打
+        if (autoPaused) {
+          autoPaused = false;
+          if (autoAim) {
+            resetAutoState();
+            return;
+          }
+        }
+        // 不 return，这一下点击同时算一枪
       }
       const rect = canvas.getBoundingClientRect();
       const mx = e.clientX - rect.left;
@@ -2570,6 +2605,21 @@ const projects = [
       }
     });
 
+    // 自瞄开关开着且没被 R 暂停时才真正接管
+    function autoActive() {
+      return autoAim && !autoPaused;
+    }
+
+    function resetAutoState() {
+      crossX = w / 2; crossY = h / 2;
+      pidIntegral = { x: 0, y: 0 };
+      pidPrevErr = { x: 0, y: 0 };
+      cvDetected = [];
+      kfStates = [];
+      cvFrameCounter = 0;
+      autoShootTimer = 0;
+    }
+
     // Auto-aim toggle (top-right)
     autoToggle.addEventListener('click', () => {
       if (!cvReady) {
@@ -2577,17 +2627,10 @@ const projects = [
         return;
       }
       autoAim = !autoAim;
+      autoPaused = false;
       autoToggle.textContent = '自瞄: ' + (autoAim ? 'CV开' : '关');
       autoToggle.classList.toggle('active', autoAim);
-      if (autoAim) {
-        crossX = w / 2; crossY = h / 2;
-        pidIntegral = { x: 0, y: 0 };
-        pidPrevErr = { x: 0, y: 0 };
-        cvDetected = [];
-        kfStates = [];
-        cvFrameCounter = 0;
-        autoShootTimer = 0;
-      }
+      if (autoAim) resetAutoState();
     });
 
     // Settings panel switching (bottom-right icons)
@@ -2608,32 +2651,35 @@ const projects = [
       moveToggle.classList.toggle('active', moving);
     });
 
-    // reset button
-    document.getElementById('aim-reset').addEventListener('click', () => {
+    // 回到设置面板：铺一屏新球但不开局，自瞄暂停到下一次点击
+    function resetToSettings(emerge) {
       cancelAnimationFrame(animId);
-      hits = 0;
-      prevHits = 0;
-      firstHitTime = -1;
-      roundStart = performance.now();
+      // 自瞄开关保持原样，只暂停接管，下一次点击恢复
+      autoPaused = true;
+      balls = [];
+      cvDetected = [];
+      kfStates = [];
       spawnBalls();
       gameRunning = false;
-      hitsEl.textContent = '0';
-      kpmEl.textContent = '0';
+      // 恢复顶部按钮和底部参数面板
+      if (panelAuto.style.display !== 'flex') {
+        switchSettingsPanel('auto');
+      }
+      showSettingsUI();
+      if (emerge) {
+        const bottom = document.querySelector('.aim-ui-bottom');
+        bottom.classList.add('settings-emerge');
+        setTimeout(() => bottom.classList.remove('settings-emerge'), 600);
+      }
       animId = requestAnimationFrame(loop);
-    });
+    }
+
+    // reset button
+    document.getElementById('aim-reset').addEventListener('click', () => resetToSettings(true));
     window.addEventListener('keydown', (e) => {
       if (e.key === 'r' || e.key === 'R') {
         if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
-        cancelAnimationFrame(animId);
-        hits = 0;
-        prevHits = 0;
-        firstHitTime = -1;
-        roundStart = performance.now();
-        spawnBalls();
-        gameRunning = false;
-        hitsEl.textContent = '0';
-        kpmEl.textContent = '0';
-        animId = requestAnimationFrame(loop);
+        resetToSettings(true);
       }
     });
 
@@ -2687,6 +2733,7 @@ const projects = [
     });
     ro.observe(game);
     resize();
+    spawnBalls();
     gameRunning = false;
     animId = requestAnimationFrame(loop);
   })();

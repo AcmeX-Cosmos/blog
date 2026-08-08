@@ -8,7 +8,7 @@ npm run build && npm run preview
 git add . ':!.gitignore' && git commit -m "" && git push origin main
 ```
 
-git add . ':!.gitignore' && git commit -m "主题响应式地图切换，INTP卡片重构，全局悬浮交互" && git push origin main
+git add . ':!.gitignore' && git commit -m "优化关于页关键词滚动动效，滑入滑出更流畅" && git push origin main
 
 
-把刚才修改总结成commit
+把刚才修改总结成20字的commit
