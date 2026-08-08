@@ -1,0 +1,63 @@
+---
+import { getNeighbors } from '../data/categories';
+
+interface Props {
+  slug: string;
+  title: string;
+}
+
+const { slug, title } = Astro.props;
+const { prev, next } = getNeighbors(slug);
+---
+
+<div id="content-header" class="animate">
+  <div class="category-nav-wrapper mb-6 mt-6 sm:mt-10">
+    <h1 class="inline-block text-3xl font-medium tracking-tight">{title}</h1>
+    <div class="category-nav-arrows ml-3 inline-flex gap-1 align-middle">
+      {prev && (
+        <a
+          href={`/blog/${prev.slug}`}
+          class="flex h-8 w-8 items-center justify-center text-[hsl(var(--muted-foreground))] transition-colors hover:text-[hsl(var(--foreground))]"
+          title={`Previous: ${prev.title}`}
+          aria-label={`Go to ${prev.title}`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </a>
+      )}
+      {next && (
+        <a
+          href={`/blog/${next.slug}`}
+          class="flex h-8 w-8 items-center justify-center text-[hsl(var(--muted-foreground))] transition-colors hover:text-[hsl(var(--foreground))]"
+          title={`Next: ${next.title}`}
+          aria-label={`Go to ${next.title}`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </a>
+      )}
+    </div>
+  </div>
+</div>

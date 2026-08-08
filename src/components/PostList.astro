@@ -1,0 +1,75 @@
+---
+import PostCard from './PostCard.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+  /** 分页信息，省略则不显示分页与 "Page N" 文案 */
+  page?: { current: number; total: number; size: number; baseUrl: string };
+  totalCount?: number;
+}
+
+const { posts, page, totalCount = posts.length } = Astro.props;
+
+/** 按中英文混排估算阅读时长：中文 400 字/分，英文 200 词/分 */
+function readingTime(body: string): number {
+  const cjk = (body.match(/[一-龥]/g) || []).length;
+  const words = (body.replace(/[一-龥]/g, ' ').match(/\b[\w'-]+\b/g) || []).length;
+  return Math.max(1, Math.round(cjk / 400 + words / 200));
+}
+
+const pageNumbers = page ? Array.from({ length: page.total }, (_, i) => i + 1) : [];
+const pageHref = (n: number) => (n === 1 ? page!.baseUrl : `${page!.baseUrl}/${n}`);
+---
+
+<div class="mb-3 flex flex-col justify-between text-sm sm:mb-5 sm:flex-row">
+  <span class="text-[hsl(var(--muted-foreground))]">
+    {page && page.total > 1
+      ? `Page ${page.current} - Showing ${posts.length} of ${totalCount} posts`
+      : `Showing ${posts.length} of ${totalCount} posts`}
+  </span>
+  <a class="hover:underline underline-offset-4" href="/blog">View all posts →</a>
+</div>
+
+{posts.length === 0 ? (
+  <p class="py-12 text-center text-[hsl(var(--muted-foreground))]">暂无文章</p>
+) : (
+  <ul class="flex flex-col gap-y-4 text-start">
+    {posts.map((post, i) => (
+      <PostCard
+        href={`/blog/${post.id.replace(/\.md$/, '')}`}
+        title={post.data.title}
+        date={post.data.date}
+        description={post.data.description}
+        tags={post.data.tags}
+        cover={post.data.cover}
+        readingTime={readingTime(post.body)}
+        eager={i < 3}
+      />
+    ))}
+  </ul>
+)}
+
+{page && page.total > 1 && (
+  <nav class="mt-8 flex flex-wrap items-center justify-center gap-1" aria-label="Pagination">
+    {pageNumbers.map((n) =>
+      n === page.current ? (
+        <span
+          aria-current="page"
+          aria-label={`Page ${n}, Current Page`}
+          class="flex h-9 min-w-[36px] cursor-default items-center justify-center rounded bg-[hsl(var(--foreground))] px-2 text-sm font-semibold text-[hsl(var(--background))]"
+        >
+          {n}
+        </span>
+      ) : (
+        <a
+          href={pageHref(n)}
+          aria-label={`Go to page ${n}`}
+          class="flex h-9 min-w-[36px] items-center justify-center rounded px-2 text-sm text-[hsl(var(--muted-foreground))] transition-colors duration-150 ease-in-out hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
+        >
+          {n}
+        </a>
+      )
+    )}
+  </nav>
+)}

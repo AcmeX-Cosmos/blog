@@ -1,9 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { categories } from '../data/categories';
 import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+const onBlogCategory = categories.some((c) => currentPath.includes(`/blog/${c.slug}`));
 ---
 
-<BaseLayout>
+<BaseLayout title={title} description={description}>
   <!-- Inline theme flash prevention -->
   <script is:inline>
     (function() {
@@ -24,7 +34,40 @@ import '../styles/global.css';
       </a>
 
       <nav class="hidden sm:flex items-center gap-6 text-sm font-medium">
-        <a href="/blog" class="hover:underline underline-offset-4">文章</a>
+        <!-- 文章 + 分类下拉 -->
+        <div class="menu-item-with-dropdown relative">
+          <a
+            href="/blog/research"
+            class:list={[
+              'blog-menu-link flex items-center gap-1 py-2 transition-colors hover:underline underline-offset-4',
+              onBlogCategory && 'text-[hsl(var(--foreground))]',
+            ]}
+          >
+            文章
+            <svg
+              class="chevron-icon size-4 transition-transform"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path d="M12.707 15.707a1 1 0 0 1-1.414 0L5.636 10.05A1 1 0 1 1 7.05 8.636l4.95 4.95l4.95-4.95a1 1 0 0 1 1.414 1.414z" />
+            </svg>
+          </a>
+          <div
+            class="dropdown-menu invisible absolute left-0 top-full z-40 w-48 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--background))]/80 opacity-0 shadow-lg backdrop-blur-md transition-opacity dark:bg-[hsl(var(--muted))]/80"
+          >
+            <div class="py-1">
+              {categories.map((cat) => (
+                <a
+                  href={`/blog/${cat.slug}`}
+                  class="category-link block px-4 py-2 text-sm transition-colors hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
+                >
+                  {cat.title}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
         <a href="/blog/projects" class="hover:underline underline-offset-4">项目</a>
         <a href="/blog/about" class="hover:underline underline-offset-4">关于</a>
         <!-- <a href="/blog/rss.xml" class="hover:underline underline-offset-4">RSS</a> -->
@@ -50,6 +93,11 @@ import '../styles/global.css';
     <!-- Mobile menu -->
     <div id="mobile-menu" class="hidden sm:hidden mb-8 -mt-8 rounded-xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] p-4 flex flex-col gap-3 text-sm font-medium">
       <a href="/blog" class="py-1">文章</a>
+      {categories.map((cat) => (
+        <a href={`/blog/${cat.slug}`} class="py-1 ps-4 text-[hsl(var(--muted-foreground))]">
+          {cat.title}
+        </a>
+      ))}
       <a href="/blog/projects" class="py-1">项目</a>
       <a href="/blog/about" class="py-1">关于</a>
     </div>

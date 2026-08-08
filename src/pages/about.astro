@@ -1376,8 +1376,9 @@ const projects = [
   }
 
   /* ========== Personalities ========== */
+  /* 该行 6:4 分栏，减去 .author-content 的 1.5rem gap 再按比例分配 */
   .author-content-item.personalities {
-    width: 49%;
+    width: calc((100% - 1.5rem) * 0.55);
     flex: none;
     min-height: 180px;
     transition: all 0.4s cubic-bezier(.25,.46,.45,.94);
@@ -1394,11 +1395,13 @@ const projects = [
     font-weight: 700;
     line-height: 1.1;
     margin-top: 1rem;
-    transition: all 0.3s ease;
+    /* 左上角为锚点，放大时朝右下扩张 */
+    transform-origin: left top;
+    transition: transform 0.35s cubic-bezier(.25,.46,.45,.94), text-shadow 0.3s ease;
   }
 
   .author-content-item.personalities:hover .title2 {
-    transform: scale(1.05);
+    transform: translate(10px, 8px) scale(1.18);
     text-shadow: 0 0 12px rgba(139, 92, 246, 0.4);
   }
 
@@ -1407,6 +1410,8 @@ const projects = [
     right: 30px;
     top: 10px;
     width: 220px;
+    /* 放大并往左下偏移，百分比位移让窄屏下自动等比收敛 */
+    transform: translate(-8%, 25%) scale(1.08);
     transition: transform 0.6s cubic-bezier(.13,.45,.21,1.02), filter 0.4s ease;
   }
 
@@ -1418,7 +1423,7 @@ const projects = [
   }
 
   .author-content-item.personalities:hover .image {
-    transform: rotate(-10deg) scale(1.1);
+    transform: translate(-8%, 25%) rotate(-10deg) scale(1.19);
   }
 
   .author-content-item.personalities:hover .image img {
@@ -1440,8 +1445,11 @@ const projects = [
 
   /* ========== MBTI ========== */
   .author-content-item.mbti {
-    width: 49%;
-    min-height: 135px;
+    width: calc((100% - 1.5rem) * 0.45);
+    /* 跟随 INTP-b.svg 的 900x500，变窄时等比缩高，不被拉伸也不多裁切 */
+    aspect-ratio: 9 / 5;
+    align-self: flex-start;
+    min-height: 0;
     padding: 1%;
     background: #fffffff8;
     box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
@@ -1596,8 +1604,9 @@ const projects = [
   }
 
   /* ========== Comic/Movie ========== */
+  /* 49% + 1.5rem gap 会溢出换行，按 gap 折算成两等分 */
   .author-content-item.comic-content {
-    width: 49%;
+    width: calc((100% - 1.5rem) / 2);
     min-height: 300px;
     overflow: hidden;
   }
@@ -1665,21 +1674,30 @@ const projects = [
     transform: skew(10deg, 0deg) scale(1.6);
   }
 
+  /* 斜切后需要横向留出余量，宽度固定才不会让各海报因原始比例不同而错位 */
   .author-content-item.comic-content .comic-item .comic-item-cover {
     position: absolute;
     top: 0;
     left: -50%;
+    width: 200%;
     height: 100%;
     transform: skew(10deg, 0deg);
-    object-fit: cover;
-    transition: scale .2s, all .8s;
+    /* 只过渡 left/transform，避免 all 把 width 等触发布局的属性也带进来 */
+    transition: left .8s, transform .8s;
   }
 
   .author-content-item.comic-content .comic-item .comic-item-cover img {
+    width: 100%;
     height: 100%;
-    transition: .8s;
+    object-fit: cover;
+    object-position: center top;
     max-width: none;
     border-radius: 0;
+    /* 海报原图极大（最大 8858x12402），缩放时逐帧重采样会卡；
+       提升为合成层并降采样，让缩放走 GPU 而不是重新光栅化 */
+    will-change: transform;
+    transform: translateZ(0);
+    image-rendering: auto;
   }
 
   .author-content-item.comic-content::after {
@@ -1994,6 +2012,12 @@ const projects = [
     .author-content-item-group.column.mapAndInfo {
       width: 100% !important;
       margin-bottom: 1rem;
+    }
+
+    /* 单列时不锁比例，沿用原来的固定高度 */
+    .author-content-item.mbti {
+      aspect-ratio: auto;
+      min-height: 135px;
     }
 
     .hello-about {

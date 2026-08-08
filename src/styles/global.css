@@ -51,10 +51,41 @@ body {
 
 a { color: inherit; text-decoration: none; }
 
+/* ===== Header 分类下拉 ===== */
+.menu-item-with-dropdown:hover .dropdown-menu,
+.menu-item-with-dropdown:focus-within .dropdown-menu {
+  visibility: visible;
+  opacity: 1;
+}
+.menu-item-with-dropdown:hover .chevron-icon,
+.menu-item-with-dropdown:focus-within .chevron-icon {
+  transform: rotate(180deg);
+}
+/* 悬停时鼠标从触发器移到菜单不会掉出 hover 区 */
+.dropdown-menu::before {
+  content: '';
+  position: absolute;
+  inset: -0.5rem 0 auto 0;
+  height: 0.5rem;
+}
+
+/* ===== 卡片封面图渐隐，保证文字可读 ===== */
+.post-preview .cover-image {
+  mask-image: linear-gradient(to bottom, #000 30%, transparent 100%);
+}
+@media (min-width: 768px) {
+  .post-preview .cover-image {
+    mask-image: linear-gradient(to left, #000 30%, transparent 100%);
+  }
+}
+
 /* ===== Typography ===== */
-h1 { font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; }
-h2 { font-size: 1.5rem; font-weight: 600; }
-h3 { font-size: 1.25rem; font-weight: 600; }
+/* 放进 base 层，这样组件里的 Tailwind 工具类（text-3xl / font-medium）能覆盖默认值 */
+@layer base {
+  h1 { font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; }
+  h2 { font-size: 1.5rem; font-weight: 600; }
+  h3 { font-size: 1.25rem; font-weight: 600; }
+}
 
 /* ===== Scrollbar ===== */
 body::-webkit-scrollbar { height: 0; }

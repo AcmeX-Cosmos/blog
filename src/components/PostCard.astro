@@ -5,62 +5,120 @@ interface Props {
   date?: string;
   tags?: string[];
   description?: string;
+  cover?: string;
+  readingTime?: number;
+  eager?: boolean;
 }
 
-const { title, href, date, description, tags } = Astro.props;
+const { title, href, date, description, tags = [], cover, readingTime, eager = false } = Astro.props;
+
+const dateLabel = date
+  ? new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+  : undefined;
 ---
 
-<!-- Card-style post preview like reference site -->
-<a
-  href={href}
-  class="group/card block relative rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-5 py-2.5 sm:py-5 transition-all duration-200 hover:border-[hsl(var(--foreground))/20 hover:bg-[hsl(var(--muted))] mb-3"
+<li
+  class:list={[
+    'post-preview group/card relative flex flex-col rounded-2xl border border-[hsl(var(--border))]',
+    'bg-[hsl(var(--card))] px-5 py-2.5 transition-colors ease-in-out hover:bg-[hsl(var(--muted))]',
+    'max-sm:px-4 sm:py-5',
+    cover && 'max-md:pt-4',
+  ]}
 >
-  <div class="group/link flex flex-col transition-colors hover:text-[hsl(var(--foreground))]">
-    <!-- Title row with arrow -->
-    <div class="flex justify-between items-start gap-3">
-      <h2 class="font-medium text-base sm:text-lg leading-snug group-hover/link:text-[hsl(var(--foreground))]">
-        {title}
-      </h2>
-      <!-- Animated arrow -->
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-        class="shrink-0 my-1 stroke-[hsl(var(--muted-foreground))] group-hover/link:stroke-[hsl(var(--foreground))] transition-colors">
-        <line x1="5" y1="12" x2="19" y2="12" class="translate-x-0 transition-all duration-300 ease-in-out group-hover/link:translate-x-1"/>
-        <polyline points="12 5 19 12 12 19" class="transition-all duration-300 ease-in-out group-hover/link:translate-x-1"/>
-      </svg>
-    </div>
-
-    <!-- Description -->
-    {description && (
-      <p class="line-clamp-2 pt-1 text-sm text-[hsl(var(--muted-foreground))] sm:me-24">
-        {description}
-      </p>
+  <a
+    class:list={[
+      'group/link flex w-full flex-col transition-all',
+      cover && 'max-md:pt-24',
+    ]}
+    href={href}
+  >
+    {cover && (
+      <img
+        src={cover}
+        alt={title}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+        class="cover-image pointer-events-none absolute end-0 top-0 z-0 h-2/3 w-full rounded-2xl object-cover opacity-50 transition-opacity duration-300 group-hover/card:opacity-70 md:h-full md:w-3/5"
+      />
     )}
 
-    <!-- Meta row: date + word count -->
-    <div class="flex items-center gap-2 pt-2 text-xs text-[hsl(var(--muted-foreground))]">
-      {date && (
-        <time class="font-mono">
-          {new Date(date).toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' })}
-        </time>
-      )}
-      {tags && tags.length > 0 && (
-        <span>&middot;</span>
-      )}
-      {tags && tags.length > 0 && (
-        <span>{tags.length} 个标签</span>
-      )}
-    </div>
+    {dateLabel && (
+      <span class="min-w-[95px] py-1 font-mono text-xs text-[hsl(var(--muted-foreground))]">
+        <time datetime={date}>{dateLabel}</time>
+      </span>
+    )}
 
-    <!-- Tags -->
-    {tags && tags.length > 0 && (
-      <div class="flex flex-wrap gap-2 mt-3">
-        {tags.map(tag => (
-          <span class="inline-flex items-center gap-x-2 rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--muted))] px-3 py-1 text-xs font-medium text-[hsl(var(--muted-foreground))] transition-colors hover:border-[hsl(var(--foreground))/20 hover:bg-[hsl(var(--muted))]/80 hover:text-[hsl(var(--foreground))]">
-            {tag}
-          </span>
-        ))}
+    <div class="z-10 flex-grow">
+      <div class="flex justify-between gap-3">
+        <div class="font-medium">{title}</div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="my-1 shrink-0 stroke-[hsl(var(--muted-foreground))] transition-colors group-hover/link:stroke-[hsl(var(--foreground))]"
+        >
+          <line
+            x1="5"
+            y1="12"
+            x2="19"
+            y2="12"
+            class="translate-x-0 transition-all duration-300 ease-in-out group-hover/link:translate-x-1"
+          />
+          <polyline
+            points="12 5 19 12 12 19"
+            class="transition-all duration-300 ease-in-out group-hover/link:translate-x-1"
+          />
+        </svg>
       </div>
-    )}
-  </div>
-</a>
+
+      {description && (
+        <p class="line-clamp-2 pt-1 text-sm text-[hsl(var(--muted-foreground))] sm:line-clamp-3 sm:me-24">
+          {description}
+        </p>
+      )}
+
+      {readingTime && (
+        <div class="flex items-center gap-2 py-1.5 text-sm italic leading-4 text-[hsl(var(--muted-foreground))] sm:py-3">
+          <span class="flex items-center gap-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <polyline points="12 7 12 12 15.5 14" />
+            </svg>
+            {readingTime} min read
+          </span>
+        </div>
+      )}
+    </div>
+  </a>
+
+  {tags.length > 0 && (
+    <ul class="tag-list z-10 mt-1 flex flex-wrap gap-2">
+      {tags.map((tag) => (
+        <li>
+          <a
+            class="inline-flex items-center rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--muted))] px-4 py-2 text-sm font-medium leading-none text-[hsl(var(--muted-foreground))] transition-all duration-200 hover:border-[hsl(var(--foreground))]/20 hover:bg-[hsl(var(--muted))]/80 hover:text-[hsl(var(--foreground))]"
+            href={`/blog/tag/${encodeURIComponent(tag)}`}
+          >
+            {tag}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+</li>

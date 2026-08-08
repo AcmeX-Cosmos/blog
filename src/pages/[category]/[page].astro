@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import CategoryPage from '../../components/CategoryPage.astro';
+import { categories } from '../../data/categories';
+import { PAGE_SIZE } from '../../utils/posts';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return categories.flatMap((cat) => {
+    const count = posts.filter((p) => p.data.category === cat.slug).length;
+    const totalPages = Math.max(1, Math.ceil(count / PAGE_SIZE));
+    // 第 1 页由 index.astro 提供，这里只生成第 2 页起
+    return Array.from({ length: totalPages - 1 }, (_, i) => ({
+      params: { category: cat.slug, page: String(i + 2) },
+      props: { cat, page: i + 2 },
+    }));
+  });
+}
+
+const { cat, page } = Astro.props;
+---
+
+<SiteLayout title={`${cat.title} - Page ${page} | AcmeX`} description={cat.description}>
+  <CategoryPage category={cat.slug} page={page} />
+</SiteLayout>

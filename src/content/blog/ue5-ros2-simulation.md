@@ -3,6 +3,7 @@ title: "UE5 与 ROS2 的虚实融合仿真：以 RoboMaster 为例"
 date: "2025-04-02"
 description: "介绍如何利用 Unreal Engine 5 搭建高保真竞技场仿真环境，并与 ROS2 实现双向闭环，用于视觉算法的开发与验证。"
 tags: ["UE5", "ROS2", "仿真", "虚拟现实"]
+category: "tech"
 ---
 
 ## 为什么需要虚实融合

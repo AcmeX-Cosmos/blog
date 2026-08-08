@@ -1,0 +1,18 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import CategoryPage from '../../components/CategoryPage.astro';
+import { categories } from '../../data/categories';
+
+export function getStaticPaths() {
+  return categories.map((cat) => ({
+    params: { category: cat.slug },
+    props: { cat },
+  }));
+}
+
+const { cat } = Astro.props;
+---
+
+<SiteLayout title={`${cat.title} | AcmeX`} description={cat.description}>
+  <CategoryPage category={cat.slug} page={1} />
+</SiteLayout>

@@ -3,6 +3,7 @@ title: "LeNet-5 手写数字识别：从零开始理解 CNN"
 date: "2024-11-05"
 description: "使用 PyTorch 从零实现 LeNet-5，理解卷积神经网络的基本原理，并在 MNIST 数据集上训练测试。"
 tags: ["PyTorch", "CNN", "LeNet-5", "深度学习", "Python"]
+category: "research"
 ---
 
 ## CNN 的直觉

@@ -1,42 +1,28 @@
 ---
 import { getCollection } from 'astro:content';
 import SiteLayout from '../layouts/SiteLayout.astro';
-import PostCard from '../components/PostCard.astro';
-import TagFilter from '../components/TagFilter.astro';
+import PostList from '../components/PostList.astro';
+import BlogSidebar from '../components/BlogSidebar.astro';
+import { countByCategory, sortedPosts } from '../utils/posts';
 
-const posts = (await getCollection('blog'))
-  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
-
-const allTags = [...new Set(posts.flatMap(p => p.data.tags || []))].sort();
+const all = await getCollection('blog');
+const posts = sortedPosts(all);
+const allTags = [...new Set(all.flatMap((p) => p.data.tags || []))].sort();
+const counts = countByCategory(all);
 ---
 
 <SiteLayout>
-  <section>
-    <!-- Category nav header like reference -->
+  <div id="content-header" class="animate">
     <div class="mb-6 mt-6 sm:mt-10">
-      <h1 class="inline-block text-3xl font-semibold tracking-tight animate" id="content-header">文章</h1>
-      <p class="mt-1 text-sm text-[hsl(var(--muted-foreground))] animate" id="content">
-        机器人视觉、ROS2 开发与算法学习 — {posts.length} 篇
-      </p>
+      <h1 class="inline-block text-3xl font-medium tracking-tight">All Posts</h1>
     </div>
+  </div>
 
-    <TagFilter allTags={allTags} />
+  <div class="grid gap-y-16 sm:grid-cols-[3fr_1fr] sm:gap-x-8">
+    <section aria-label="Blog posts list" class="animate" id="content">
+      <PostList posts={posts} />
+    </section>
 
-    <!-- Post list as cards -->
-    <div class="flex flex-col gap-y-2 animate" id="content-list">
-      {posts.length === 0 ? (
-        <p class="text-[hsl(var(--muted-foreground))] py-12 text-center">暂无文章</p>
-      ) : (
-        posts.map(post => (
-          <PostCard
-            href={`/blog/${post.id.replace(/\.md$/, '')}`}
-            title={post.data.title}
-            date={post.data.date}
-            description={post.data.description}
-            tags={post.data.tags}
-          />
-        ))
-      )}
-    </div>
-  </section>
+    <BlogSidebar counts={counts} allTags={allTags} />
+  </div>
 </SiteLayout>

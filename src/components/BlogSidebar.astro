@@ -1,0 +1,103 @@
+---
+import { categories } from '../data/categories';
+
+interface Props {
+  /** 分类 slug -> 文章数，用于 Collections 区块的计数 */
+  counts: Record<string, number>;
+  allTags: string[];
+  activeTag?: string;
+  activeCategory?: string;
+}
+
+const { counts, allTags, activeTag, activeCategory } = Astro.props;
+---
+
+<aside class="animate" id="sidebar">
+  <!-- Collections -->
+  <div class="mb-8">
+    <h2 class="mb-4 flex items-center gap-2 text-lg font-semibold">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H19a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H6.5A2.5 2.5 0 0 1 4 17.5z" />
+        <path d="M4 17.5A2.5 2.5 0 0 1 6.5 15H20" />
+      </svg>
+      Collections
+    </h2>
+    <ul class="flex flex-col gap-3">
+      {categories.map((cat) => (
+        <li>
+          <a
+            href={`/blog/${cat.slug}`}
+            aria-current={activeCategory === cat.slug ? 'page' : undefined}
+            class:list={[
+              'group block rounded-xl border p-3 transition-colors',
+              activeCategory === cat.slug
+                ? 'border-[hsl(var(--foreground))]/20 bg-[hsl(var(--muted))]'
+                : 'border-[hsl(var(--border))] bg-[hsl(var(--muted))]/40 hover:border-[hsl(var(--foreground))]/20 hover:bg-[hsl(var(--muted))]',
+            ]}
+          >
+            <p class="flex items-center justify-between text-sm font-medium">
+              <span>{cat.title}</span>
+              <span class="rounded-full border border-[hsl(var(--border))] px-2 py-0.5 text-xs text-[hsl(var(--muted-foreground))]">
+                {counts[cat.slug] ?? 0}
+              </span>
+            </p>
+            <p class="mt-1 text-xs text-[hsl(var(--muted-foreground))]">{cat.label}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <span class="mt-4 block text-end text-sm">
+      <a class="hover:underline underline-offset-4" href="/blog">View all posts →</a>
+    </span>
+  </div>
+
+  <!-- Tags -->
+  <h2 class="mb-4 flex items-center gap-2 text-lg font-semibold">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M3 11.5V5a2 2 0 0 1 2-2h6.5a2 2 0 0 1 1.4.6l7.5 7.5a2 2 0 0 1 0 2.8l-6 6a2 2 0 0 1-2.8 0l-7.5-7.5A2 2 0 0 1 3 11.5" />
+      <circle cx="7.5" cy="7.5" r="1.5" fill="currentColor" stroke="none" />
+    </svg>
+    Tags
+  </h2>
+  <ul class="flex flex-wrap gap-2">
+    {allTags.map((tag) => (
+      <li>
+        <a
+          href={`/blog/tag/${encodeURIComponent(tag)}`}
+          aria-current={activeTag === tag ? 'page' : undefined}
+          class:list={[
+            'inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium leading-none transition-all duration-200',
+            activeTag === tag
+              ? 'border-[hsl(var(--foreground))] bg-[hsl(var(--foreground))] text-[hsl(var(--background))]'
+              : 'border-[hsl(var(--border))] bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))] hover:border-[hsl(var(--foreground))]/20 hover:bg-[hsl(var(--muted))]/80 hover:text-[hsl(var(--foreground))]',
+          ]}
+        >
+          {tag}
+        </a>
+      </li>
+    ))}
+  </ul>
+  <span class="mt-4 block text-sm sm:text-end">
+    <a class="hover:underline underline-offset-4" href="/blog">View all →</a>
+  </span>
+</aside>

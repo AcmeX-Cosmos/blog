@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import PostList from '../../components/PostList.astro';
+import BlogSidebar from '../../components/BlogSidebar.astro';
+import { countByCategory, sortedPosts } from '../../utils/posts';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const allTagsSet = new Set(posts.flatMap((p) => p.data.tags || []));
+  return Array.from(allTagsSet).map((tag) => ({
+    params: { tag },
+    props: { tag },
+  }));
+}
+
+const { tag } = Astro.props;
+
+const all = await getCollection('blog');
+const posts = sortedPosts(all).filter((p) => (p.data.tags || []).includes(tag));
+const allTags = [...new Set(all.flatMap((p) => p.data.tags || []))].sort();
+const counts = countByCategory(all);
+---
+
+<SiteLayout title={`标签: ${tag} | AcmeX`} description={`标记为 ${tag} 的文章`}>
+  <div id="content-header" class="animate">
+    <div class="mb-6 mt-6 sm:mt-10">
+      <h1 class="inline-block text-3xl font-medium tracking-tight">
+        标签: <span class="text-[hsl(var(--muted-foreground))]">{tag}</span>
+      </h1>
+    </div>
+  </div>
+
+  <div class="grid gap-y-16 sm:grid-cols-[3fr_1fr] sm:gap-x-8">
+    <section aria-label="Blog posts list" class="animate" id="content">
+      <PostList posts={posts} />
+    </section>
+
+    <BlogSidebar counts={counts} allTags={allTags} activeTag={tag} />
+  </div>
+</SiteLayout>

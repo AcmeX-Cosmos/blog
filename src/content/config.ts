@@ -7,6 +7,10 @@ const blogCollection = defineCollection({
     date: z.string(),
     description: z.string().optional(),
     tags: z.array(z.string()).optional().default([]),
+    // research | tech | daily — 决定文章归入哪个分类页
+    category: z.enum(['research', 'tech', 'daily']).default('tech'),
+    // 可选封面图，卡片右侧作为背景铺开
+    cover: z.string().optional(),
   }),
 });
 
