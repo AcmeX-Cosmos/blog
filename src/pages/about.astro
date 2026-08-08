@@ -1651,9 +1651,11 @@ const projects = [
     color: #fff;
     width: 20%;
     transform: skew(-10deg, 0deg);
-    transition: .8s;
+    /* 只过渡 width，原来的 all 会把每个可动属性都纳入计算 */
+    transition: width .8s;
     position: relative;
     overflow: hidden;
+    contain: paint;
   }
 
   .author-content-item.comic-content:not(.game-dual) .comic-item {
@@ -1661,29 +1663,26 @@ const projects = [
     flex-shrink: 0;
   }
 
+  /* 悬浮项适度展开，其余向两侧压缩，总和保持 100% 不挤出容器 */
   .author-content-item.comic-content:not(.game-dual) .comic-item:hover {
-    width: 40% !important;
+    width: 32% !important;
   }
 
   .author-content-item.comic-content:not(.game-dual) .comic-box:has(.comic-item:hover) .comic-item:not(:hover) {
-    width: 15% !important;
+    width: 17% !important;
   }
 
-  .author-content-item.comic-content .comic-item:hover .comic-item-cover {
-    left: 16%;
-    transform: skew(10deg, 0deg) scale(1.6);
-  }
-
-  /* 斜切后需要横向留出余量，宽度固定才不会让各海报因原始比例不同而错位 */
+  /* 只比格子宽出斜切所需的量（298px 高 × tan10° ≈ 53px），
+     海报因此接近原始比例显示，不再像 width:200% 那样被放大一倍；
+     宽度跟着格子走，悬浮是「露出更多」而不是 scale 重采样 */
   .author-content-item.comic-content .comic-item .comic-item-cover {
     position: absolute;
     top: 0;
-    left: -50%;
-    width: 200%;
+    left: 50%;
     height: 100%;
-    transform: skew(10deg, 0deg);
-    /* 只过渡 left/transform，避免 all 把 width 等触发布局的属性也带进来 */
-    transition: left .8s, transform .8s;
+    width: auto;
+    aspect-ratio: 1.08;
+    transform: translateX(-50%) skew(10deg, 0deg);
   }
 
   .author-content-item.comic-content .comic-item .comic-item-cover img {
@@ -1693,11 +1692,14 @@ const projects = [
     object-position: center top;
     max-width: none;
     border-radius: 0;
-    /* 海报原图极大（最大 8858x12402），缩放时逐帧重采样会卡；
-       提升为合成层并降采样，让缩放走 GPU 而不是重新光栅化 */
-    will-change: transform;
-    transform: translateZ(0);
-    image-rendering: auto;
+    /* 海报原图极大（最大 8858x12402）。图片尺寸恒定，不再逐帧缩放，
+       所以不提升合成层——否则白占一张巨大的 GPU 纹理 */
+  }
+
+  /* 这张原图自带白色画框边（上下 3.4%/4.7%，左右约 5.6%），
+     静态放大 1.13 裁掉，父级 overflow 兜住溢出；不参与过渡所以只光栅化一次 */
+  .author-content-item.comic-content .comic-item .comic-item-cover img[alt='流浪地球2'] {
+    transform: scale(1.13);
   }
 
   .author-content-item.comic-content::after {
@@ -1897,6 +1899,18 @@ const projects = [
   }
 
   /* ========== Animations ========== */
+  /* 无限动画滚出视口后暂停：background-position 动画每帧都要重绘整卡，
+     离屏时白烧 CPU（实测占页面忙碌时间的大头） */
+  #about-page .anim-offscreen,
+  #about-page .anim-offscreen * {
+    animation-play-state: paused !important;
+  }
+
+  /* 卡片自身的绘制不影响外部，缩小重绘范围 */
+  .author-content-item {
+    contain: paint;
+  }
+
   @keyframes floating {
     0% { transform: translate(0, -4px); }
     50% { transform: translate(0, 4px); }
@@ -2760,6 +2774,53 @@ const projects = [
     spawnBalls();
     gameRunning = false;
     animId = requestAnimationFrame(loop);
+
+    // 画布滚出视口就停掉 rAF：之前即使看不见也在每帧清屏+画网格+12 个球
+    let visible = true;
+    const vis = new IntersectionObserver((entries) => {
+      const nowVisible = entries[0].isIntersecting;
+      if (nowVisible === visible) return;
+      visible = nowVisible;
+      if (visible) {
+        fpsLastTime = 0;
+        frameCount = 0;
+        animId = requestAnimationFrame(loop);
+      } else {
+        cancelAnimationFrame(animId);
+      }
+    }, { rootMargin: '100px' });
+    vis.observe(game);
+
+    // 切到别的标签页时也别画
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animId);
+      } else if (visible) {
+        fpsLastTime = 0;
+        frameCount = 0;
+        animId = requestAnimationFrame(loop);
+      }
+    });
+  })();
+</script>
+
+<script>
+  // 离屏卡片暂停无限 CSS 动画（gradient / rowup / floating 等）
+  (function() {
+    const animated = document.querySelectorAll(
+      '#about-page .myInfoAndSayHello, #about-page .author-content-item.maxim,' +
+      '#about-page .author-content-item.buff, #about-page .author-content-item.card-countdown,' +
+      '#about-page .author-box, #about-page .tags-group-wrapper, #about-page .aboutsiteTips'
+    );
+    if (!animated.length) return;
+    // 先全部标记为离屏，等观察器回调再放开可见的那些
+    animated.forEach(el => el.classList.add('anim-offscreen'));
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        e.target.classList.toggle('anim-offscreen', !e.isIntersecting);
+      });
+    }, { rootMargin: '120px' });
+    animated.forEach(el => io.observe(el));
   })();
 </script>
 

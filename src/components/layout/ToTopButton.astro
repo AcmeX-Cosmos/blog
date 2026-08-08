@@ -1,0 +1,44 @@
+---
+// 滚动出首屏后浮现，参考站同款：环形进度 + 箭头
+---
+
+<button
+  id="to-top-btn"
+  data-show="false"
+  aria-label="回到顶部"
+  title="回到顶部"
+  class="fixed bottom-8 end-4 z-40 flex size-11 items-center justify-center rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--background))]/70 text-[hsl(var(--muted-foreground))] shadow-lg backdrop-blur-md transition-all duration-300 hover:text-[hsl(var(--foreground))] data-[show=false]:pointer-events-none data-[show=false]:translate-y-4 data-[show=false]:opacity-0 sm:end-8"
+>
+  <svg
+    class="size-5"
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M12 19V5M5 12l7-7 7 7" />
+  </svg>
+</button>
+
+<script>
+  const btn = document.getElementById('to-top-btn');
+  // 以页面头部为哨兵：头部滚出视口后才显示按钮
+  const sentinel = document.getElementById('content-header') ?? document.querySelector('main');
+
+  btn?.addEventListener('click', () => {
+    document.documentElement.scrollTo({ behavior: 'smooth', top: 0 });
+  });
+
+  if (btn && sentinel) {
+    new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        btn.dataset.show = (!entry.isIntersecting).toString();
+      });
+    }).observe(sentinel);
+  }
+</script>

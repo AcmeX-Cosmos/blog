@@ -51,7 +51,77 @@ body {
 
 a { color: inherit; text-decoration: none; }
 
+/* ===== Header 滚动特效（参考站同款）=====
+   顶部时透明贴边；滚动后收窄成毛玻璃胶囊；向下滚动时整条上移隐藏。 */
+header-component {
+  display: flex;
+  transition:
+    padding 0.3s,
+    transform 0.3s,
+    margin-inline 0.3s,
+    border 0.15s,
+    background-color 0.15s,
+    backdrop-filter 0.15s;
+}
+
+header-component.not-top {
+  margin-inline: 8%;
+  padding-inline: 0.375rem;
+  border-color: hsl(var(--border));
+  background-color: hsl(var(--background) / 0.6);
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 0 0 1px hsl(var(--foreground) / 0.06),
+    0 10px 15px -3px hsl(var(--foreground) / 0.06),
+    0 4px 6px -4px hsl(var(--foreground) / 0.06);
+}
+
+html.dark header-component.not-top {
+  background-color: hsl(var(--muted) / 0.6);
+}
+
+/* 向下滚动收起，向上滚动/展开菜单时恢复 */
+header-component[data-show='false']:not(.expanded) {
+  transform: translateY(-5rem);
+}
+
+/* 移动端展开面板 */
+@media (max-width: 767px) {
+  header-component .expand-content {
+    transition: opacity 0.3s;
+  }
+  header-component .expand-content::after {
+    content: '';
+    box-sizing: content-box;
+    position: absolute;
+    inset-inline: calc(-1rem - 1px);
+    top: -5rem;
+    bottom: 0;
+    z-index: -1;
+    visibility: hidden;
+    opacity: 0;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s;
+  }
+  header-component.expanded .expand-content::after {
+    visibility: visible;
+    opacity: 1;
+    bottom: -1rem;
+    background-color: hsl(var(--background) / 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom-color: hsl(var(--border));
+  }
+  html.dark header-component.expanded .expand-content::after {
+    background-color: hsl(var(--muted) / 0.85);
+  }
+}
+
 /* ===== Header 分类下拉 ===== */
+.dropdown-menu {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s, visibility 0.2s;
+}
 .menu-item-with-dropdown:hover .dropdown-menu,
 .menu-item-with-dropdown:focus-within .dropdown-menu {
   visibility: visible;
