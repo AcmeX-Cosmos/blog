@@ -15,7 +15,7 @@ const personalityTagsRight = [
 
 const pursuitWords = [
   { text: '专注', color: '#5b27ff' },
-  { text: '创造', color: '#00d4ff' },
+  { text: '创新', color: '#00d4ff' },
   { text: '纯粹', color: '#22c55e' },
   { text: '激极尽志', color: '#ff27e8' },
 ];
@@ -721,18 +721,19 @@ const projects = [
   }
 
   .author-content-item.aboutsiteTips .mask {
-    display: inline-flex;
-    flex-direction: column;
-    height: 40px;
+    display: inline-grid;
+    grid-template: 40px / max-content;
     overflow: hidden;
     vertical-align: bottom;
     margin-left: 4px;
   }
 
   .author-content-item.aboutsiteTips .mask span {
+    grid-area: 1 / 1;
+    display: block;
     height: 40px;
     line-height: 40px;
-    animation: pursuit-roll 6s ease-in-out infinite;
+    white-space: nowrap;
     background-size: 100% 100%;
     -webkit-background-clip: text;
     background-clip: text;
@@ -740,25 +741,25 @@ const projects = [
     background-repeat: no-repeat;
   }
 
+  /* 第1个词 - 奇数：从上到下 */
   .author-content-item.aboutsiteTips .mask span:nth-child(1) {
-    animation-delay: 0s;
+    animation: pursuit-word-1 6s ease-in-out infinite;
     background-image: linear-gradient(45deg, #0ecffe 50%, #07a6f1);
   }
+  /* 第2个词 - 偶数：从下到上 */
   .author-content-item.aboutsiteTips .mask span:nth-child(2) {
-    animation-delay: 1.2s;
+    animation: pursuit-word-2 6s ease-in-out infinite;
     background-image: linear-gradient(45deg, #18e198 50%, #0ec15d);
   }
+  /* 第3个词 - 奇数：从上到下 */
   .author-content-item.aboutsiteTips .mask span:nth-child(3) {
-    animation-delay: 2.4s;
+    animation: pursuit-word-3 6s ease-in-out infinite;
     background-image: linear-gradient(45deg, #8a7cfb 50%, #633e9c);
   }
+  /* 第4个词 - 偶数：从下到上 */
   .author-content-item.aboutsiteTips .mask span:nth-child(4) {
-    animation-delay: 3.6s;
+    animation: pursuit-word-4 6s ease-in-out infinite;
     background-image: linear-gradient(45deg, #fa7671 50%, #f45f7f);
-  }
-  .author-content-item.aboutsiteTips .mask span:nth-child(5) {
-    animation-delay: 4.8s;
-    background-image: linear-gradient(45deg, #f9a825 50%, #f57f17);
   }
 
   /* ========== Aim Game ========== */
@@ -1906,13 +1907,37 @@ const projects = [
     50% { transform: translate(400px, 200px) scale(1.5); }
   }
 
-  @keyframes pursuit-roll {
-    0%, 8% { transform: translateY(0); }
-    20%, 28% { transform: translateY(-40px); }
-    40%, 48% { transform: translateY(-80px); }
-    60%, 68% { transform: translateY(-120px); }
-    80%, 88% { transform: translateY(-160px); }
-    100% { transform: translateY(0); }
+  /* 第1个词 - 奇数：从上到下 (0-25%) */
+  @keyframes pursuit-word-1 {
+    0% { opacity: 0; transform: translateY(-30px); }
+    5% { opacity: 1; transform: translateY(0); }
+    19% { opacity: 1; transform: translateY(0); }
+    24% { opacity: 0; transform: translateY(30px); }
+    25%, 100% { opacity: 0; transform: translateY(-30px); }
+  }
+  /* 第2个词 - 偶数：从下到上 (25-50%) */
+  @keyframes pursuit-word-2 {
+    0%, 25% { opacity: 0; transform: translateY(30px); }
+    30% { opacity: 1; transform: translateY(0); }
+    44% { opacity: 1; transform: translateY(0); }
+    49% { opacity: 0; transform: translateY(-30px); }
+    50%, 100% { opacity: 0; transform: translateY(30px); }
+  }
+  /* 第3个词 - 奇数：从上到下 (50-75%) */
+  @keyframes pursuit-word-3 {
+    0%, 50% { opacity: 0; transform: translateY(-30px); }
+    55% { opacity: 1; transform: translateY(0); }
+    69% { opacity: 1; transform: translateY(0); }
+    74% { opacity: 0; transform: translateY(30px); }
+    75%, 100% { opacity: 0; transform: translateY(-30px); }
+  }
+  /* 第4个词 - 偶数：从下到上 (75-100%) */
+  @keyframes pursuit-word-4 {
+    0%, 75% { opacity: 0; transform: translateY(30px); }
+    80% { opacity: 1; transform: translateY(0); }
+    94% { opacity: 1; transform: translateY(0); }
+    99% { opacity: 0; transform: translateY(-30px); }
+    100% { opacity: 0; transform: translateY(-30px); }
   }
 
   /* ========== Responsive ========== */
