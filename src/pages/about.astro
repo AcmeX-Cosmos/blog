@@ -327,20 +327,20 @@ const projects = [
           <div class="author-content-item-tips">爱好电影</div>
           <span class="author-content-item-title">看剧</span>
           <div class="comic-box">
-            <a class="comic-item" href="https://movie.douban.com/subject/26683290/" target="_blank" rel="noopener nofollow" title="你的名字">
-              <div class="comic-item-cover"><img src="https://img.gbfun.cc/file/project/Sla6QkMi.webp" alt="你的名字" loading="lazy" /></div>
+            <a class="comic-item" href="https://movie.douban.com/subject/26683290/" target="_blank" rel="noopener nofollow" title="你的名字" style="--poster: url(/blog/images/movie-nikonoha.webp);">
+              <span class="game-dual-label">你的名字</span>
             </a>
-            <a class="comic-item" href="https://movie.douban.com/subject/35267208/" target="_blank" rel="noopener nofollow" title="流浪地球2">
-              <div class="comic-item-cover"><img src="https://img.gbfun.cc/file/project/8EPGkTMq.jpg" alt="流浪地球2" loading="lazy" /></div>
+            <a class="comic-item" href="https://movie.douban.com/subject/35267208/" target="_blank" rel="noopener nofollow" title="流浪地球2" style="--poster: url(/blog/images/movie-wandering-earth-2.webp);">
+              <span class="game-dual-label">流浪地球2</span>
             </a>
-            <a class="comic-item" href="https://movie.douban.com/subject/36171155/" target="_blank" rel="noopener nofollow" title="胆大党">
-              <div class="comic-item-cover"><img src="https://img.gbfun.cc/file/project/6VV5wgFf.webp" alt="胆大党" loading="lazy" /></div>
+            <a class="comic-item" href="https://movie.douban.com/subject/36171155/" target="_blank" rel="noopener nofollow" title="胆大党" style="--poster: url(/blog/images/movie-dandadan.webp);">
+              <span class="game-dual-label">胆大党</span>
             </a>
-            <a class="comic-item" href="https://movie.douban.com/subject/30402296/" target="_blank" rel="noopener nofollow" title="天气之子">
-              <div class="comic-item-cover"><img src="https://img.gbfun.cc/file/project/3rGQM7Dd.webp" alt="天气之子" loading="lazy" /></div>
+            <a class="comic-item" href="https://movie.douban.com/subject/30402296/" target="_blank" rel="noopener nofollow" title="天气之子" style="--poster: url(/blog/images/movie-tenki-no-ko.webp);">
+              <span class="game-dual-label">天气之子</span>
             </a>
-            <a class="comic-item" href="https://www.bilibili.com/bangumi/media/md21231256" target="_blank" rel="noopener nofollow" title="怪兽八号">
-              <div class="comic-item-cover"><img src="https://img.gbfun.cc/file/project/5hlDzEtF.webp" alt="怪兽八号" loading="lazy" /></div>
+            <a class="comic-item" href="https://www.bilibili.com/bangumi/media/md21231256" target="_blank" rel="noopener nofollow" title="怪兽八号" style="--poster: url(/blog/images/movie-kaiju-no-8.webp);">
+              <span class="game-dual-label">怪兽八号</span>
             </a>
           </div>
         </div>
@@ -1562,27 +1562,74 @@ const projects = [
   }
 
   /* ========== Game Dual (skew layout like comic) ========== */
-  .author-content-item.game-dual .game-dual-label {
+  /* 电影卡改用同一套结构后共用这份标签样式 */
+  .author-content-item.comic-content .game-dual-label {
     position: absolute;
     bottom: 12px;
     left: 50%;
     transform: skew(10deg, 0deg) translateX(-50%);
-    background: rgba(0, 0, 0, 0.55);
-    color: #fff;
-    padding: 3px 12px;
-    border-radius: 4px;
-    font-size: 0.85rem;
+    /* 玻璃态：灰色底 + 背景模糊 + 细描边，比之前更实一点 */
+    background: rgba(105, 105, 115, 0.52);
+    backdrop-filter: blur(8px) saturate(140%);
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+    color: rgba(255, 255, 255, 0.92);
+    /* 内边距和字号都缩 20%：3/12px → 2.4/9.6px，0.85rem → 0.68rem */
+    padding: 2.4px 9.6px;
+    border-radius: 5px;
+    font-size: 0.68rem;
     font-weight: 600;
     white-space: nowrap;
     z-index: 2;
-    transition: all 0.8s;
+    /* 只动 transform / background / border，原来的 all 会把 font-size、bottom
+       这类触发布局的属性也纳入逐帧计算 */
+    transition: transform 0.5s cubic-bezier(.25,.46,.45,.94), background 0.5s ease, border-color 0.5s ease;
     pointer-events: none;
   }
 
-  .author-content-item.game-dual .comic-item:hover .game-dual-label {
-    background: rgba(0, 0, 0, 0.75);
-    font-size: 1rem;
-    bottom: 18px;
+  .author-content-item.comic-content .comic-item:hover .game-dual-label {
+    /* 悬浮时灰底稍微提亮，不回到实心黑 */
+    background: rgba(125, 125, 138, 0.62);
+    border-color: rgba(255, 255, 255, 0.28);
+    /* 等价于原来的 font-size 1rem + bottom 18px，但走合成层不触发布局 */
+    transform: skew(10deg, 0deg) translateX(-50%) translateY(-6px) scale(1.15);
+  }
+
+  /* 五个标签挤在半幅卡片里，悬浮时各项宽度变化又会把首尾标签推出卡外。
+     只保留当前悬浮项的标签，其余淡出（opacity 走合成层，不触发布局） */
+  .author-content-item.comic-content:not(.game-dual) .comic-box:has(.comic-item:hover) .comic-item:not(:hover) .game-dual-label {
+    opacity: 0;
+  }
+
+  .author-content-item.comic-content:not(.game-dual) .game-dual-label {
+    transition: transform 0.5s cubic-bezier(.25,.46,.45,.94), background 0.5s ease,
+                border-color 0.5s ease, opacity 0.35s ease;
+  }
+
+  /* 首尾两项一半在卡片外，加上父级 skew(-10deg) 在标签高度处又把子元素
+     左移约 22px，居中标签会被 overflow 切掉。改成从自身中线朝卡内展开：
+     首项左边缘对齐中线，末项右边缘对齐中线 */
+  .author-content-item.comic-content .comic-item:first-child .game-dual-label {
+    left: 50%;
+    right: auto;
+    transform: skew(10deg, 0deg);
+    transform-origin: left bottom;
+  }
+
+  .author-content-item.comic-content .comic-item:first-child:hover .game-dual-label {
+    transform: skew(10deg, 0deg) translateY(-6px) scale(1.15);
+  }
+
+  .author-content-item.comic-content .comic-item:last-child .game-dual-label {
+    left: auto;
+    right: 50%;
+    transform: skew(10deg, 0deg);
+    transform-origin: right bottom;
+  }
+
+  .author-content-item.comic-content .comic-item:last-child:hover .game-dual-label {
+    transform: skew(10deg, 0deg) translateY(-6px) scale(1.15);
   }
 
   .author-content-item.game-dual::after {
@@ -1611,9 +1658,11 @@ const projects = [
     overflow: hidden;
   }
 
+  /* 斜切把上下边各横移 tan10°×149 ≈ 26px，两侧留出这点余量就够盖住卡片角，
+     原来的 120% 多藏了两侧海报（game-dual 仍用 120%） */
   .author-content-item.comic-content .comic-box {
     display: flex;
-    width: 120%;
+    width: 111%;
     height: 100%;
     position: absolute;
     left: 50%;
@@ -1663,7 +1712,27 @@ const projects = [
     flex-shrink: 0;
   }
 
-  /* 悬浮项适度展开，其余向两侧压缩，总和保持 100% 不挤出容器 */
+  /* 海报放在独立图层上，悬浮时用 transform 缩放（走合成器，不重新光栅化）；
+     直接动 background-size 会让整格每帧重绘 */
+  /* 斜切会把上下边各横移约 26px，inset:0 盖不住斜出去的角，
+     左右各外扩 30px（父级 overflow 兜住） */
+  .author-content-item.comic-content:not(.game-dual) .comic-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -30px;
+    right: -30px;
+    background: var(--poster) center / cover no-repeat;
+    transition: transform 0.5s cubic-bezier(.25,.46,.45,.94);
+  }
+
+  .author-content-item.comic-content:not(.game-dual) .comic-item:hover::before {
+    transform: scale(1.15);
+  }
+
+  /* 跟爱好游戏同样的思路：悬浮项展开，其余向两侧压缩，
+     五项合计保持 100%（32 + 4×17）不挤出容器 */
   .author-content-item.comic-content:not(.game-dual) .comic-item:hover {
     width: 32% !important;
   }
@@ -1672,44 +1741,18 @@ const projects = [
     width: 17% !important;
   }
 
-  /* 只比格子宽出斜切所需的量（298px 高 × tan10° ≈ 53px），
-     海报因此接近原始比例显示，不再像 width:200% 那样被放大一倍；
-     宽度跟着格子走，悬浮是「露出更多」而不是 scale 重采样 */
-  .author-content-item.comic-content .comic-item .comic-item-cover {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    height: 100%;
-    width: auto;
-    aspect-ratio: 1.08;
-    transform: translateX(-50%) skew(10deg, 0deg);
-  }
-
-  .author-content-item.comic-content .comic-item .comic-item-cover img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-    max-width: none;
-    border-radius: 0;
-    /* 海报原图极大（最大 8858x12402）。图片尺寸恒定，不再逐帧缩放，
-       所以不提升合成层——否则白占一张巨大的 GPU 纹理 */
-  }
-
-  /* 这张原图自带白色画框边（上下 3.4%/4.7%，左右约 5.6%），
-     静态放大 1.13 裁掉，父级 overflow 兜住溢出；不参与过渡所以只光栅化一次 */
-  .author-content-item.comic-content .comic-item .comic-item-cover img[alt='流浪地球2'] {
-    transform: scale(1.13);
-  }
-
+  /* 跟爱好游戏一致：改成黑色内阴影压暗底部，原来的米色会把海报冲淡；
+     pointer-events/z-index 补齐，否则这层盖住下面的链接 */
   .author-content-item.comic-content::after {
-    box-shadow: 0 -48px 203px 11px #fbe9b8 inset;
+    box-shadow: 0 -48px 203px 11px rgba(0, 0, 0, 0.55) inset;
     position: absolute;
     content: '';
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
+    pointer-events: none;
+    z-index: 1;
   }
 
   .author-content-item .content-bottom {

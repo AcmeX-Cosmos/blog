@@ -1,6 +1,6 @@
 // 分类元数据 — 顺序决定分类页之间前后箭头的切换环
 export interface Category {
-  slug: 'research' | 'tech' | 'daily';
+  slug: 'research' | 'algorithm' | 'tech' | 'daily';
   title: string;
   label: string;
   description: string;
@@ -10,8 +10,14 @@ export const categories: Category[] = [
   {
     slug: 'research',
     title: 'Research',
-    label: '论文与算法研究',
-    description: '论文阅读、算法推导与研究笔记。',
+    label: '论文研究',
+    description: '论文阅读、公式推导与文献复现笔记。',
+  },
+  {
+    slug: 'algorithm',
+    title: 'Algorithm',
+    label: '算法实现',
+    description: '算法从零实现、调参与工程落地。',
   },
   {
     slug: 'tech',

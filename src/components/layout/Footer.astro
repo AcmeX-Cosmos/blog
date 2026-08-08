@@ -1,55 +1,274 @@
 ---
+// 与关于页页脚同款：左侧版权 + 打字机诗句，中间一句话，右侧 ACMEX · 年份 + github + 微信二维码
 const year = new Date().getFullYear();
-
-const socials = [
-  {
-    label: 'github',
-    href: 'https://github.com/AcmeX-Cosmos',
-    path: 'M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.744 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z',
-  },
-  {
-    label: 'rss',
-    href: '/blog/rss.xml',
-    path: 'M6.503 20.752A3.25 3.25 0 0 0 3.252 17.5a.75.75 0 0 0 0 1.5a1.75 1.75 0 0 1 1.751 1.752a.75.75 0 0 0 1.5 0M3.75 10.5a.75.75 0 0 0 0 1.5a8.25 8.25 0 0 1 8.25 8.25a.75.75 0 0 0 1.5 0c0-5.385-4.365-9.75-9.75-9.75m0-7a.75.75 0 0 0 0 1.5c8.556 0 15.5 6.944 15.5 15.5a.75.75 0 0 0 1.5 0c0-9.385-7.615-17-17-17',
-  },
-];
+const GITHUB_URL = 'https://github.com/AcmeX-Cosmos';
+const WECHAT_QR = '/blog/images/wechat-qr.png';
+const TYPED_TEXT = '行到水穷处，坐看云起时';
 ---
 
-<footer class="mx-auto mb-5 mt-16 w-full">
-  <div class="border-t border-[hsl(var(--border))] pt-5">
-    <div class="flex items-center gap-y-3 max-sm:flex-col sm:justify-between sm:gap-y-0">
-      <div
-        class="flex items-center gap-x-4 gap-y-2 text-sm text-[hsl(var(--muted-foreground))] max-sm:flex-col"
-      >
-        <span>© {year} AcmeX</span>
-        <span>
-          <a
-            class="text-[hsl(var(--foreground))] transition-colors hover:text-[hsl(var(--muted-foreground))]"
-            href="https://astro.build"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Astro
-          </a>
-          theme powered
-        </span>
-      </div>
+<footer class="site-footer w-full">
+  <div class="footer-left">
+    <span class="footer-copy">© AcmeX's Blog</span>
+    <span class="footer-typed"><span class="typed-text" data-typed-text={TYPED_TEXT}></span></span>
+  </div>
 
-      <div class="flex items-center gap-x-4">
-        {socials.map((s) => (
-          <a
-            href={s.href}
-            aria-label={s.label}
-            target={s.href.startsWith('http') ? '_blank' : undefined}
-            rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-            class="inline-block text-[hsl(var(--muted-foreground))] transition-all hover:text-[hsl(var(--foreground))]"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d={s.path} />
-            </svg>
-          </a>
-        ))}
+  <div class="footer-center">
+    <p>持续探索视觉感知、机器人系统与具身智能的边界。</p>
+  </div>
+
+  <div class="footer-meta">
+    <span class="footer-brand">ACMEX · {year}</span>
+
+    <a
+      class="footer-icon"
+      href={GITHUB_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="GitHub"
+      title="GitHub"
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path
+          d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.744 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"
+        />
+      </svg>
+    </a>
+
+    <div class="footer-wechat">
+      <button class="footer-icon" type="button" aria-label="微信" title="微信">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path
+            d="M8.69 3C4.9 3 1.83 5.53 1.83 8.65c0 1.8 1.03 3.4 2.63 4.44l-.66 1.98l2.3-1.15c.72.2 1.5.31 2.3.31c.2 0 .4 0 .6-.02a4.9 4.9 0 0 1-.24-1.5c0-3 2.87-5.42 6.42-5.42c.23 0 .46 0 .68.03C15.2 4.8 12.25 3 8.7 3M6.4 7.6a.94.94 0 1 1 0-1.88a.94.94 0 0 1 0 1.88m4.6 0a.94.94 0 1 1 0-1.88a.94.94 0 0 1 0 1.88"
+          />
+          <path
+            d="M22.17 12.7c0-2.6-2.6-4.72-5.8-4.72s-5.8 2.11-5.8 4.72s2.6 4.72 5.8 4.72c.66 0 1.3-.09 1.9-.26l1.9.96l-.54-1.65c1.6-.86 2.54-2.26 2.54-3.77m-7.7-.83a.8.8 0 1 1 0-1.6a.8.8 0 0 1 0 1.6m3.8 0a.8.8 0 1 1 0-1.6a.8.8 0 0 1 0 1.6"
+          />
+        </svg>
+      </button>
+
+      <div class="footer-qr" role="tooltip">
+        <img src={WECHAT_QR} alt="微信二维码" width="132" height="132" loading="lazy" />
+        <span>扫码加微信</span>
       </div>
     </div>
   </div>
 </footer>
+
+<style>
+  /* 三列栅格：左右等宽（1fr），中间内容因此真正居中 */
+  .site-footer {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 2rem;
+    margin-top: 4rem;
+    margin-bottom: 1.25rem;
+    border-top: 1px solid hsl(var(--border));
+    padding-top: 1.5rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.8rem;
+  }
+
+  .site-footer p {
+    margin: 0;
+  }
+
+  .footer-left {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+
+  .footer-center {
+    text-align: center;
+  }
+
+  /* ===== 诗句打字机（参考站同款：淡入上移 + 逐字打出 + 下划线光标）===== */
+  .footer-typed {
+    font-family: ui-monospace, monospace;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    opacity: 0;
+  }
+
+  .footer-typed.is-visible {
+    animation: footer-fade-in-up 0.6s ease-out forwards;
+  }
+
+  @keyframes footer-fade-in-up {
+    from { transform: translateY(0.75rem); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* 打完字后光标持续闪动，1s 一个周期。
+     光标是脚本 createElement 出来的，拿不到 astro 作用域属性，必须用 :global */
+  .footer-typed :global(.typed-cursor) {
+    margin: 0 0.2rem;
+    animation: footer-cursor-blink 1s step-end infinite;
+  }
+
+  @keyframes footer-cursor-blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .footer-typed { opacity: 1; }
+    .footer-typed.is-visible { animation: none; }
+    .footer-typed :global(.typed-cursor) { animation: none; }
+  }
+
+  .footer-meta {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+
+  .footer-copy {
+    white-space: nowrap;
+  }
+
+  .footer-brand {
+    font-family: ui-monospace, monospace;
+    letter-spacing: 0.18em;
+    white-space: nowrap;
+  }
+
+  .footer-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: hsl(var(--muted-foreground));
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .footer-icon:hover {
+    color: hsl(var(--foreground));
+  }
+
+  /* ===== 微信二维码悬浮弹窗 ===== */
+  .footer-wechat {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .footer-qr {
+    position: absolute;
+    bottom: calc(100% + 0.6rem);
+    right: 50%;
+    transform: translate(50%, 4px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.85rem;
+    background: hsl(var(--card));
+    box-shadow: 0 10px 24px hsl(var(--foreground) / 0.12);
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+    z-index: 40;
+  }
+
+  .footer-wechat:hover .footer-qr,
+  .footer-wechat:focus-within .footer-qr {
+    visibility: visible;
+    opacity: 1;
+    transform: translate(50%, 0);
+  }
+
+  /* 指针从按钮移到弹窗时不掉出 hover 区 */
+  .footer-qr::after {
+    content: '';
+    position: absolute;
+    inset: 100% 0 auto 0;
+    height: 0.6rem;
+  }
+
+  .footer-qr img {
+    display: block;
+    border-radius: 0.5rem;
+    background: #fff;
+  }
+
+  .footer-qr span {
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 1023px) {
+    .site-footer {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      gap: 1rem;
+      text-align: center;
+    }
+    .footer-left {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .footer-meta {
+      justify-content: center;
+    }
+  }
+</style>
+
+<script>
+  // 手写打字机：进入视口后逐字打出，末尾跟一个下划线光标（参考站 typeSpeed 70 / cursorChar "_"）
+  const TYPE_SPEED = 70;
+
+  function runTyping(host: HTMLElement) {
+    const text = host.dataset.typedText ?? '';
+    const line = host.closest('.footer-typed') as HTMLElement | null;
+    line?.classList.add('is-visible');
+
+    const cursor = document.createElement('span');
+    cursor.className = 'typed-cursor';
+    cursor.textContent = '_';
+    cursor.setAttribute('aria-hidden', 'true');
+    host.after(cursor);
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      host.textContent = text;
+      return;
+    }
+
+    let i = 0;
+    const tick = () => {
+      host.textContent = text.slice(0, ++i);
+      if (i < text.length) window.setTimeout(tick, TYPE_SPEED);
+    };
+    window.setTimeout(tick, 400);
+  }
+
+  function initFooterTyping() {
+    document.querySelectorAll<HTMLElement>('.footer-typed .typed-text').forEach((host) => {
+      if (host.dataset.typedDone) return;
+      host.dataset.typedDone = '1';
+      host.setAttribute('aria-label', host.dataset.typedText ?? '');
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            observer.disconnect();
+            runTyping(host);
+          });
+        },
+        { threshold: 0.4 }
+      );
+      observer.observe(host);
+    });
+  }
+
+  initFooterTyping();
+  document.addEventListener('astro:page-load', initFooterTyping);
+</script>

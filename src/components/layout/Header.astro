@@ -5,30 +5,32 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '');
 const onBlogCategory = categories.some((c) => currentPath.endsWith(`/blog/${c.slug}`));
 
 const navLinks = [
-  { href: '/blog/projects', label: '项目' },
-  { href: '/blog/about', label: '关于' },
+  { href: '/blog/projects', label: 'Projects' },
+  { href: '/blog/about', label: 'About' },
 ];
+
+const GITHUB_URL = 'https://github.com/AcmeX-Cosmos';
 ---
 
 <header-component
   id="site-header"
   data-show="true"
-  class="group sticky top-4 z-30 mb-12 flex items-center justify-between rounded-xl border border-transparent max-sm:py-1 sm:rounded-2xl"
+  class="group sticky top-4 z-30 mb-12 flex items-center justify-between rounded-xl border border-transparent py-2.5 max-sm:py-1.5 sm:rounded-2xl sm:py-3.5"
 >
   <!-- 品牌 -->
   <a
     href="/blog"
     aria-label="Brand"
-    class="brand z-30 text-xl font-semibold group-[.not-top]:ms-2 sm:group-[.not-top]:ms-3"
+    class="brand z-30 text-xl font-semibold tracking-tight group-[.not-top]:ms-3 sm:group-[.not-top]:ms-5"
   >
     AcmeX's Blog
   </a>
 
   <div class="flex items-center gap-x-2">
-    <!-- 导航（移动端折叠） -->
+    <!-- 导航：桌面端绝对居中，移动端折叠成下拉面板 -->
     <div
       id="headerExpandContent"
-      class="expand-content end-0 start-0 top-12 grid border border-transparent group-[.not-top]:rounded-xl group-[.expanded]:opacity-100 max-md:absolute max-md:pointer-events-none max-md:opacity-0 max-md:group-[.expanded]:pointer-events-auto max-md:group-[.not-top]:border-[hsl(var(--border))] max-md:group-[.not-top]:px-4 max-md:group-[.not-top]:py-2 md:grid-rows-1"
+      class="expand-content grid border border-transparent group-[.not-top]:rounded-xl group-[.expanded]:opacity-100 max-md:absolute max-md:end-0 max-md:start-0 max-md:top-12 max-md:pointer-events-none max-md:opacity-0 max-md:group-[.expanded]:pointer-events-auto max-md:group-[.not-top]:border-[hsl(var(--border))] max-md:group-[.not-top]:px-4 max-md:group-[.not-top]:py-2 md:absolute md:left-1/2 md:-translate-x-1/2 md:grid-rows-1"
     >
       <div class="flex flex-col items-center justify-center md:flex-row">
         <!-- 文章 + 分类下拉 -->
@@ -37,11 +39,11 @@ const navLinks = [
             href="/blog/research"
             aria-label="Nav menu item"
             class:list={[
-              'blog-menu-link flex w-full flex-none items-center justify-end py-2 font-medium transition-colors hover:text-[hsl(var(--foreground))] md:justify-center md:px-3',
+              'blog-menu-link flex w-full flex-none items-center justify-end py-2 font-medium transition-colors hover:text-[hsl(var(--foreground))] md:justify-center md:px-4',
               onBlogCategory ? 'text-[hsl(var(--foreground))]' : 'text-[hsl(var(--muted-foreground))]',
             ]}
           >
-            文章
+            Blog
             <svg
               aria-hidden="true"
               class="chevron-icon ms-1 size-4 transition-transform"
@@ -77,7 +79,7 @@ const navLinks = [
             href={link.href}
             aria-label="Nav menu item"
             class:list={[
-              'w-full flex-none grow py-2 text-right font-medium transition-colors hover:text-[hsl(var(--foreground))] md:w-fit md:px-3',
+              'w-full flex-none grow py-2 text-right font-medium transition-colors hover:text-[hsl(var(--foreground))] md:w-fit md:px-4',
               currentPath.endsWith(link.href)
                 ? 'text-[hsl(var(--foreground))]'
                 : 'text-[hsl(var(--muted-foreground))]',
@@ -86,49 +88,39 @@ const navLinks = [
             {link.label}
           </a>
         ))}
-
-        <div class="flex w-full grow flex-row justify-end gap-x-3 md:w-fit md:gap-x-5">
-          <a
-            class="px-1 py-2 text-[hsl(var(--muted-foreground))] transition-colors hover:text-[hsl(var(--foreground))] md:px-2"
-            href="/blog/rss.xml"
-            title="RSS"
-          >
-            <span class="sr-only">RSS</span>
-            <svg
-              aria-hidden="true"
-              class="size-5"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            >
-              <path d="M4 11a9 9 0 0 1 9 9" />
-              <path d="M4 4a16 16 0 0 1 16 16" />
-              <circle cx="5" cy="19" r="1.5" fill="currentColor" stroke="none" />
-            </svg>
-          </a>
-        </div>
       </div>
     </div>
 
     <!-- 主题 / 菜单按钮 -->
-    <div class="z-30 flex gap-x-4 group-[.not-top]:gap-x-2" style="transition:gap 0.3s">
+    <div class="z-30 flex gap-x-2 group-[.not-top]:me-3 group-[.not-top]:gap-x-1.5 sm:group-[.not-top]:me-5" style="transition:gap 0.3s, margin-inline-end 0.3s">
+      <a
+        class="box-content rounded-lg border border-transparent p-2 text-[hsl(var(--muted-foreground))] transition-colors hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))] md:group-[.not-top]:rounded-xl"
+        href={GITHUB_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        title="GitHub"
+      >
+        <span class="sr-only">GitHub</span>
+        <svg aria-hidden="true" class="size-5" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.744 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"
+          />
+        </svg>
+      </a>
+
       <button
         id="toggleDarkMode"
-        class="box-content rounded-md border border-transparent p-1.5 transition-colors hover:bg-[hsl(var(--muted))] md:group-[.not-top]:rounded-xl"
+        class="box-content rounded-lg border border-transparent p-2 transition-colors hover:bg-[hsl(var(--muted))] md:group-[.not-top]:rounded-xl"
         aria-label="切换主题"
         title="切换主题"
       >
         <span class="block dark:hidden">
-          <svg class="size-4" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg class="size-5" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
           </svg>
         </span>
         <span class="hidden dark:block">
-          <svg class="size-4" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg class="size-5" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="5" />
             <line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
             <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
@@ -140,10 +132,10 @@ const navLinks = [
 
       <button
         id="toggleMenu"
-        class="box-content rounded-md border border-transparent p-1.5 transition-colors hover:bg-[hsl(var(--muted))] md:hidden md:group-[.not-top]:rounded-xl"
+        class="box-content rounded-lg border border-transparent p-2 transition-colors hover:bg-[hsl(var(--muted))] md:hidden md:group-[.not-top]:rounded-xl"
         aria-label="菜单"
       >
-        <svg class="size-4" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="size-5" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" />
           <line x1="3" y1="18" x2="21" y2="18" />
         </svg>
