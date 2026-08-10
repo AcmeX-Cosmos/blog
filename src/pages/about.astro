@@ -44,13 +44,20 @@ const interestItems = [
   { icon: '🎵', label: '音乐偏好', desc: '电子乐、古典、轻音乐' },
 ];
 
-const tenYearStart = '2022-05-28';
+const tenYearStart = '2018-09-01';
 const tenYearEnd = '2032-05-28';
 const startDate = new Date(tenYearStart).getTime();
 const endDate = new Date(tenYearEnd).getTime();
 const now = Date.now();
 const progress = Math.min(100, Math.max(0, Math.round(((now - startDate) / (endDate - startDate)) * 100)));
 const daysLeft = Math.max(0, Math.ceil((endDate - now) / (1000 * 60 * 60 * 24)));
+
+// 计算自 2018-09-01 起经过的时间
+const elapsedMs = now - startDate;
+const elapsedDays = Math.floor(elapsedMs / (1000 * 60 * 60 * 24));
+const elapsedYears = Math.floor(elapsedDays / 365);
+const elapsedMonths = Math.floor((elapsedDays % 365) / 30);
+const elapsedRemainDays = elapsedDays - elapsedYears * 365 - elapsedMonths * 30;
 
 const awards = [
   'RMUC 2024 全国赛 国家二等奖',
@@ -367,24 +374,23 @@ const projects = [
       ))}
     </div>
 
-    <!-- ====== Row 8: Ten Year Pledge ====== -->
+    <!-- ====== Row 8: Timeline ====== -->
     <div class="author-content">
       <div class="author-content-item card-countdown single" style="background: linear-gradient(120deg, #5b27ff 0, #00d4ff 100%); background-size: 200%; color: var(--about-white);">
         <div class="card-content">
-          <div class="author-content-item-tips">十年之约</div>
-          <span class="author-content-item-title">寻找更合适的自己。</span>
+          <div class="author-content-item-tips">时间轴</div>
+          <span class="author-content-item-title">从 2018.09.01 至今</span>
           <div class="cd-count-left">
-            <span class="cd-count-num">{daysLeft}</span>
-            <span class="cd-count-text">DAYS</span>
+            <span class="cd-count-num">{progress}%</span>
           </div>
-          <div class="post-tips">
-            <span>{tenYearStart}</span> ~ <span>{tenYearEnd}</span>
+          <div class="cd-progress-bar-wrapper">
+            <div class="cd-progress-bar" style="width: {progress}%">
+              <span class="cd-progress-indicator"></span>
+            </div>
           </div>
-          <div class="banner-button-group">
-            <a class="banner-button" href="https://www.foreverblog.cn/" target="_blank" rel="noopener">
-              <i class="anzhiyufont anzhiyu-icon-arrow-circle-right"></i>
-              <span class="banner-button-text">十年之约</span>
-            </a>
+          <div class="cd-date-range">
+            <span>{tenYearStart}</span>
+            <span>{tenYearEnd}</span>
           </div>
         </div>
       </div>
@@ -1803,6 +1809,8 @@ const projects = [
     animation: gradient 15s ease infinite;
     box-shadow: 0 4px 12px rgba(46, 127, 255, 0.2);
     transition: all 0.4s cubic-bezier(.25,.46,.45,.94);
+    position: relative;
+    overflow: hidden;
   }
 
   .author-content-item.card-countdown:hover {
@@ -1814,23 +1822,26 @@ const projects = [
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+    gap: 0.3rem;
   }
 
   .cd-count-left {
     position: relative;
     display: flex;
     flex-direction: column;
-    margin-right: 0.8rem;
-    line-height: 1.5;
     align-items: center;
     justify-content: center;
-    margin-top: 1rem;
+    margin: 0.6rem 0;
   }
 
   .cd-count-num {
-    font-size: 4rem;
+    font-size: 5rem;
     font-weight: 800;
     line-height: 1;
+    letter-spacing: -0.02em;
   }
 
   .cd-count-text {
@@ -1838,6 +1849,49 @@ const projects = [
     font-weight: 600;
     opacity: 0.7;
     letter-spacing: 0.2em;
+  }
+
+  /* ========== Timeline Progress Bar ========== */
+  .cd-progress-bar-wrapper {
+    width: 70%;
+    max-width: 240px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+    margin: 0.2rem 0 0.5rem;
+    overflow: visible;
+    position: relative;
+  }
+
+  .cd-progress-bar {
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 2px;
+    position: relative;
+    transition: width 0.6s ease;
+  }
+
+  .cd-progress-indicator {
+    position: absolute;
+    right: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+  }
+
+  .cd-date-range {
+    display: flex;
+    justify-content: space-between;
+    width: 70%;
+    max-width: 240px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    opacity: 0.6;
+    letter-spacing: 0.02em;
   }
 
   /* ========== Reward List (Awards & Projects) ========== */
