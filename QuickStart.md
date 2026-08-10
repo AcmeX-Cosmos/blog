@@ -8,7 +8,7 @@ npm run build && npm run preview
 git add . ':!.gitignore' && git commit -m "" && git push origin main
 ```
 
-git add . ':!.gitignore' && git commit -m "新增三分类文章页与两列卡片排版，修复 base 路径重复导致的 404" && git push origin main
+git add . ':!.gitignore' && git commit -m "电影卡换五部新片，标签改灰玻璃态，海报独立图层修裁剪" && git push origin main
 
 
 把刚才修改总结成25字的commit
