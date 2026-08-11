@@ -2,7 +2,7 @@
 // 与关于页页脚同款：左侧版权 + 打字机诗句，中间一句话，右侧 ACMEX · 年份 + github + 微信二维码
 const year = new Date().getFullYear();
 const GITHUB_URL = 'https://github.com/AcmeX-Cosmos';
-const WECHAT_QR = '/blog/images/wechat-qr.png';
+const WECHAT_QR = '/blog/images/WeChat-QR.jpg';
 const TYPED_TEXT = '行到水穷处，坐看云起时';
 ---
 
@@ -161,14 +161,14 @@ const TYPED_TEXT = '行到水穷处，坐看云起时';
 
   .footer-qr {
     position: absolute;
-    bottom: calc(100% + 0.6rem);
+    bottom: calc(100% + 0.2rem);
     right: 50%;
     transform: translate(50%, 4px);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.6rem;
+    padding: 0rem;
     border: 1px solid hsl(var(--border));
     border-radius: 0.85rem;
     background: hsl(var(--card));
@@ -196,6 +196,9 @@ const TYPED_TEXT = '行到水穷处，坐看云起时';
 
   .footer-qr img {
     display: block;
+    width: 132px !important;
+    height: 132px !important;
+    max-width: none !important;
     border-radius: 0.5rem;
     background: #fff;
   }
@@ -223,8 +226,10 @@ const TYPED_TEXT = '行到水穷处，坐看云起时';
 </style>
 
 <script>
-  // 手写打字机：进入视口后逐字打出，末尾跟一个下划线光标（参考站 typeSpeed 70 / cursorChar "_"）
+  // 打字机：逐字打出，9秒后从右往左删除，然后重新开始
   const TYPE_SPEED = 70;
+  const DELETE_SPEED = 50;
+  const HOLD_DURATION = 3500;
 
   function runTyping(host: HTMLElement) {
     const text = host.dataset.typedText ?? '';
@@ -242,12 +247,32 @@ const TYPED_TEXT = '行到水穷处，坐看云起时';
       return;
     }
 
-    let i = 0;
-    const tick = () => {
-      host.textContent = text.slice(0, ++i);
-      if (i < text.length) window.setTimeout(tick, TYPE_SPEED);
+    let typeIndex = 0;
+    let deleteIndex = text.length;
+
+    const typeForward = () => {
+      host.textContent = text.slice(0, ++typeIndex);
+      if (typeIndex < text.length) {
+        window.setTimeout(typeForward, TYPE_SPEED);
+      } else {
+        // 打完后等待 9 秒，然后开始删除
+        window.setTimeout(deleteBackward, HOLD_DURATION);
+      }
     };
-    window.setTimeout(tick, 400);
+
+    const deleteBackward = () => {
+      host.textContent = text.slice(0, --deleteIndex);
+      if (deleteIndex > 0) {
+        window.setTimeout(deleteBackward, DELETE_SPEED);
+      } else {
+        // 删完后重新开始打字
+        typeIndex = 0;
+        deleteIndex = text.length;
+        window.setTimeout(typeForward, 500);
+      }
+    };
+
+    window.setTimeout(typeForward, 400);
   }
 
   function initFooterTyping() {

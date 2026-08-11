@@ -21,10 +21,9 @@ const pursuitWords = [
 ];
 
 const skillCategories = [
-  { name: 'VLA', items: ['Qwen-VL', 'Nemotron-VL', 'LLM Agent'] },
-  { name: 'Robotics', items: ['ROS2', 'Isaac Sim', 'Isaac Lab', 'Franka', 'GraspNet'] },
+  { name: 'Robotics', items: ['ROS2', 'Isaac Sim', 'Franka', 'GraspNet'] },
   { name: 'Robot Learning', items: ['ACT', 'BC', 'Diffusion Policy', 'PPO'] },
-  { name: 'Vision', items: ['OpenCV', 'YOLO', 'SAM', 'RGB-D', 'Point Cloud'] },
+  { name: 'Vision', items: ['OpenCV', 'YOLO', 'SAM', 'RGB-D'] },
   { name: 'Deep Learning', items: ['PyTorch', 'CUDA', 'TensorRT', 'Transformer'] },
   { name: 'Simulation', items: ['Omniverse', 'USD', 'Blender', 'UE5'] },
   { name: 'Optimization', items: ['Ceres', 'EKF', 'SLAM', 'SE(3)'] },
@@ -39,26 +38,25 @@ const hobbyItems = [
   { icon: '🎯', label: '爱好游戏', value: 'Valorant' },
 ];
 
-const interestItems = [
-  { icon: '💻', label: '数码科技', desc: '机器人、嵌入式软硬件' },
-  { icon: '🎵', label: '音乐偏好', desc: '电子乐、古典、轻音乐' },
+const techItems = [
+  { icon: '💻', label: '科技', desc: '具身智能' },
+  { icon: '🤖', label: 'RoboMaster', desc: '战队竞技 · 算法研发' },
 ];
 
-const tenYearStart = '2018-09-01';
-const tenYearEnd   = '2028-09-01';
+const musicItem = { icon: '🎵', label: '音乐偏好', desc: '电子乐、古典、轻音乐' };
+
+const bookItems = [
+  { title: '进化心理学', cover: '/blog/images/book-evolution-psychology.jpg', url: 'https://book.douban.com/subject/26683297/' },
+  { title: '道德经', cover: '/blog/images/book-tao-te-ching.jpg', url: 'https://book.douban.com/subject/35461183/' },
+  { title: '人类成功的秘密', cover: '/blog/images/book-secret-of-our-success.jpg', url: 'https://book.douban.com/subject/37652361/' },
+];
+
+const tenYearStart = '2022-09-01';
+const tenYearEnd   = '2032-09-01';
 const startDate = new Date(tenYearStart).getTime();
 const endDate   = new Date(tenYearEnd).getTime();
 const now = Date.now();
 const progress = Math.min(100, Math.max(0, Math.round(((now - startDate) / (endDate - startDate)) * 100)));
-const daysLeft = Math.max(0, Math.ceil((endDate - now) / (1000 * 60 * 60 * 24)));
-
-const timelineEvents = [
-  { year: '2018', tag: '启程', desc: '入读深圳职业技术大学，人工智能技术应用专业' },
-  { year: '2022', tag: '入队', desc: '加入 RoboMaster 战队，开启竞技机器人探索' },
-  { year: '2023', tag: '深耕', desc: '跟踪射击系统核心算法研发；RMUC 区域赛奖；全国电子设计竞赛省级二等奖' },
-  { year: '2024', tag: '突破', desc: 'RMUC 全国赛国家二等奖；RMUL 广东站团体 & 哨兵奖' },
-  { year: '2025', tag: '跃升', desc: '骰子 6D 姿态估计；CycleGAN 风格迁移；RMUL 广西站团体 & 哨兵奖' },
-];
 
 const awards = [
   'RMUC 2024 全国赛 国家二等奖',
@@ -310,7 +308,26 @@ const projects = [
       </div>
     </div>
 
-    <!-- ====== Row 6: Hobbies ====== -->
+    <!-- ====== Row 6: Tech & RoboMaster (Single Card) ====== -->
+    <div class="author-content">
+      <div class="author-content-item like-technology single" style="background: var(--about-card-bg);">
+        <div class="card-content">
+          <div class="tech-split-row">
+            <div class="tech-split-item">
+              <div class="author-content-item-tips">科技</div>
+              <span class="author-content-item-title">具身智能</span>
+            </div>
+            <div class="tech-split-divider"></div>
+            <div class="tech-split-item">
+              <div class="author-content-item-tips" style="visibility: hidden;">占位</div>
+              <span class="author-content-item-title" style="position: absolute; bottom: 1.5rem; right: 1.5rem;">RoboMaster</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== Row 7: Hobbies ====== -->
     <div class="author-content">
       <!-- Game card: skew layout like comic -->
       <div class="author-content-item comic-content game-dual">
@@ -319,7 +336,7 @@ const projects = [
           <span class="author-content-item-title">脑洞创造 战术竞技</span>
           <div class="comic-box">
             <div class="comic-item" style="background: url(/blog/images/Minecraft.jpg) center/cover no-repeat;" title="我的世界">
-              <span class="game-dual-label">我的世界</span>
+              <span class="game-dual-label first-label-offset">我的世界</span>
             </div>
             <div class="comic-item" style="background: url(/blog/images/CSGO.jpg) center/cover no-repeat;" title="CS:GO">
               <span class="game-dual-label">CS:GO</span>
@@ -338,7 +355,7 @@ const projects = [
           <div class="comic-box">
             <a class="comic-item" href="https://movie.douban.com/subject/1292720/" target="_blank" rel="noopener nofollow" title="阿甘正传" style="--poster: url(/blog/images/movie-forrestgump.webp);">
               <span class="comic-poster"></span>
-              <span class="game-dual-label">阿甘正传</span>
+              <span class="game-dual-label first-label-offset">阿甘正传</span>
             </a>
             <a class="comic-item" href="https://movie.douban.com/subject/1292052/" target="_blank" rel="noopener nofollow" title="肖申克的救赎" style="--poster: url(/blog/images/movie-shawshank.webp);">
               <span class="comic-poster"></span>
@@ -361,62 +378,49 @@ const projects = [
       </div>
     </div>
 
-    <!-- ====== Row 7: Interests ====== -->
+    <!-- ====== Row 8: Books & Music ====== -->
     <div class="author-content">
-      {interestItems.map((item) => (
-        <div class="author-content-item like-technology" style="background: var(--about-card-bg);">
-          <div class="card-content">
-            <div class="author-content-item-tips">{item.label}</div>
-            <span class="author-content-item-title">{item.desc}</span>
-            <div class="content-bottom">
-              <span class="interest-icon">{item.icon}</span>
-            </div>
+      <!-- Books card -->
+      <div class="author-content-item comic-content book-content">
+        <div class="card-content">
+          <div class="author-content-item-tips">书记偏好</div>
+          <span class="author-content-item-title">看书</span>
+          <div class="comic-box">
+            {bookItems.map((book) => (
+              <a href={book.url} target="_blank" rel="noopener noreferrer" class="comic-item book-item" style={`background: url(${book.cover}) center/cover no-repeat;`} title={book.title}>
+                <span class="game-dual-label">{book.title}</span>
+              </a>
+            ))}
           </div>
         </div>
-      ))}
+      </div>
+      <!-- Music card -->
+      <div class="author-content-item like-technology" style="background: var(--about-card-bg);">
+        <div class="card-content">
+          <div class="author-content-item-tips">{musicItem.label}</div>
+          <span class="author-content-item-title">{musicItem.desc}</span>
+          <div class="content-bottom">
+            <span class="interest-icon">{musicItem.icon}</span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- ====== Row 8: Timeline ====== -->
-    <div class="author-content">
-      <div class="author-content-item tenyear-card single" style="background: linear-gradient(135deg, #5b27ff 0%, #1a8fff 55%, #00d4ff 100%); color: var(--about-white);">
-        <div class="card-content">
-          <div class="author-content-item-tips">时间轴</div>
-          <span class="author-content-item-title">十年之约</span>
-
-          <!-- 顶部进度条 -->
-          <div class="ty-bar-row">
-            <span class="ty-pct">{progress}%</span>
-            <div class="ty-bar-wrap">
-              <div class="ty-bar" style={`width: ${progress}%`}>
-                <span class="ty-bar-dot"></span>
-              </div>
-            </div>
-            <span class="ty-end-label">2028.09</span>
+    <!-- ====== Row 9: Timeline ====== -->
+    <div class="author-content" id="tenyear">
+      <div class="create-site-post author-content-item single">
+        <div class="author-content-item-tips">十年之约</div>
+        <div class="author-content-item-title">寻找更优秀的自己</div>
+        <p></p>
+        <div class="tenyear-timeline">
+          <div class="progress" style={`--progress-percentage: ${progress}%;`}>
+            <div class="percentage-label">{progress}%</div>
           </div>
-
-          <!-- 竖向时间轴 -->
-          <div class="ty-list">
-            {timelineEvents.map((e) => (
-              <div class="ty-item">
-                <div class="ty-year">{e.year}</div>
-                <div class="ty-node"></div>
-                <div class="ty-body">
-                  <span class="ty-tag">{e.tag}</span>
-                  <span class="ty-desc">{e.desc}</span>
-                </div>
-              </div>
-            ))}
-            <div class="ty-item ty-now">
-              <div class="ty-year">今</div>
-              <div class="ty-node ty-node-pulse"></div>
-              <div class="ty-body"><span class="ty-tag">进行中</span></div>
-            </div>
-          </div>
-
-          <div class="ty-foot">
-            <span>2018.09.01</span>
-            <span>距终点还有 {daysLeft} 天</span>
-          </div>
+          <div class="past-time" style={`--past-time-percentage: ${progress}%;`}></div>
+        </div>
+        <div class="time-labels">
+          <div class="start-time" id="tenyear-start-time" data-date="2022/9/1/">2022年9月1日</div>
+          <div class="end-time" id="tenyear-end-time" data-date="2032/9/1/">2032年9月1日</div>
         </div>
       </div>
     </div>
@@ -1087,12 +1091,16 @@ const projects = [
     width: 120px;
     height: 120px;
     border-radius: 30px;
+    text-align: center;
+    line-height: 1.2;
   }
 
   .skill-icon-text {
     font-size: 16px;
     font-weight: 700;
     color: hsl(var(--foreground));
+    text-align: center;
+    width: 100%;
   }
 
   #skills-tags-group-all .tags-group-icon-pair .tags-group-icon:nth-child(even) {
@@ -1623,6 +1631,7 @@ const projects = [
     padding: 2.4px 9.6px;
     border-radius: 5px;
     font-size: 0.68rem;
+    white-space: nowrap;
     font-weight: 600;
     white-space: nowrap;
     z-index: 2;
@@ -1666,14 +1675,14 @@ const projects = [
   }
 
   .author-content-item.comic-content .comic-item:last-child .game-dual-label {
-    left: auto;
-    right: 50%;
-    transform: skew(10deg, 0deg);
-    transform-origin: right bottom;
+    left: 50%;
+    right: auto;
+    transform: skew(10deg, 0deg) translateX(-50%);
+    transform-origin: center bottom;
   }
 
   .author-content-item.comic-content .comic-item:last-child:hover .game-dual-label {
-    transform: skew(10deg, 0deg) translateY(-6px) scale(1.15);
+    transform: skew(10deg, 0deg) translateX(-50%) translateY(-6px) scale(1.15);
   }
 
   .author-content-item.game-dual::after {
@@ -1753,9 +1762,36 @@ const projects = [
     contain: paint;
   }
 
-  .author-content-item.comic-content:not(.game-dual) .comic-item {
+  .author-content-item.comic-content:not(.game-dual):not(.book-content) .comic-item {
     width: 20% !important;
     flex-shrink: 0;
+  }
+
+  /* Book items specific styling */
+  .author-content-item.comic-content.book-content .comic-box {
+    width: 120% !important;
+    gap: 0 !important;
+    display: flex;
+  }
+
+  .author-content-item.comic-content.book-content .comic-item {
+    width: 40% !important;
+    flex-shrink: 0;
+    transition: width .8s;
+  }
+
+  .author-content-item.comic-content.book-content .comic-box:has(.comic-item:hover) .comic-item:not(:hover) {
+    width: 20% !important;
+  }
+
+  .author-content-item.comic-content.book-content .comic-item:hover {
+    width: 80% !important;
+  }
+
+  .author-content-item.comic-content.book-content .book-item {
+    background-size: cover !important;
+    background-position: center !important;
+    transform: skew(-10deg, 0deg);
   }
 
   /* 海报放在独立图层上，悬浮时用 transform 缩放（走合成器，不重新光栅化）；
@@ -1840,6 +1876,43 @@ const projects = [
     width: 49%;
   }
 
+  .author-content-item.like-technology.single {
+    width: 100%;
+    min-height: 450px;
+  }
+
+  .author-content-item.like-technology.single:hover {
+    transform: translateY(-4px);
+  }
+
+  /* Tech split layout inside single card */
+  .tech-split-row {
+    display: flex;
+    align-items: stretch;
+    gap: 2rem;
+    width: 100%;
+    height: 100%;
+  }
+
+  .tech-split-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .tech-split-divider {
+    width: 2px;
+    background: linear-gradient(135deg, hsl(var(--foreground) / 0.2) 0%, hsl(var(--foreground) / 0.1) 50%, hsl(var(--foreground) / 0.2) 100%);
+    align-self: stretch;
+    transform: skewX(-15deg);
+  }
+
+  /* ========== First Item Offset for Game/Movie ========== */
+  .comic-content .comic-box .game-dual-label.first-label-offset {
+    margin-left: 5%;
+  }
+
   /* ========== Ten-Year Timeline Card ========== */
   .author-content-item.tenyear-card {
     min-height: 300px;
@@ -1854,172 +1927,75 @@ const projects = [
     box-shadow: 0 12px 32px rgba(46, 127, 255, 0.4);
   }
 
-  .author-content-item.tenyear-card .card-content {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
-    padding: 1.5rem 2rem;
+  /* ========== Ten Year Timeline ========== */
+  #tenyear {
+    margin-top: 1.5rem;
   }
 
-  /* -- 顶部进度条 -- */
-  .ty-bar-row {
+  .create-site-post {
+    background: var(--about-card-bg);
+    padding: 1.8rem 2.5rem;
+  }
+
+  .tenyear-timeline {
+    position: relative;
+    height: 2.5rem;
+    background: hsl(var(--foreground) / 0.08);
+    border-radius: 12px;
+    margin: 1.5rem 0 1rem;
+    overflow: visible;
+  }
+
+  .tenyear-timeline .progress {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: var(--progress-percentage);
+    background: linear-gradient(90deg, #5b27ff 0%, #1a8fff 55%, #00d4ff 100%);
+    border-radius: 9px;
+    transition: width 0.3s ease;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin: 0.5rem 0 0;
-    width: 100%;
+    justify-content: flex-end;
+    padding-right: 1rem;
   }
 
-  .ty-pct {
-    font-size: 0.88rem;
-    font-weight: 700;
-    opacity: 0.9;
-    min-width: 38px;
-  }
-
-  .ty-bar-wrap {
-    flex: 1;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.18);
-    border-radius: 2px;
-    overflow: visible;
-    position: relative;
-  }
-
-  .ty-bar {
+  .tenyear-timeline .past-time {
+    position: absolute;
+    left: 0;
+    top: 0;
     height: 100%;
-    background: rgba(255, 255, 255, 0.88);
-    border-radius: 2px;
-    position: relative;
+    width: var(--past-time-percentage);
+    background: transparent;
+    pointer-events: none;
   }
 
-  .ty-bar-dot {
+  .tenyear-timeline .percentage-label {
     position: absolute;
-    right: -5px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 10px;
-    height: 10px;
-    background: #fff;
-    border-radius: 50%;
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-  }
-
-  .ty-end-label {
-    font-size: 0.72rem;
-    opacity: 0.6;
+    right: 9px;
+    bottom: 3px;
+    font-size: 16px;
+    font-weight: 800;
+    color: #ffffff;
     white-space: nowrap;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   }
 
-  /* -- 竖向时间轴 -- */
-  .ty-list {
-    display: flex;
-    flex-direction: column;
-    margin: 1.25rem 0 0.5rem;
-    width: 100%;
-    position: relative;
-  }
-
-  /* 贯通竖线：从首节点到末节点中心 */
-  .ty-list::before {
-    content: '';
-    position: absolute;
-    /* 60px year 列 + 9px（节点半宽） */
-    left: 69px;
-    top: 8px;
-    bottom: 8px;
-    width: 1px;
-    border-left: 2px dashed rgba(255, 255, 255, 0.28);
-  }
-
-  .ty-item {
-    display: grid;
-    grid-template-columns: 60px 18px 1fr;
-    align-items: flex-start;
-    gap: 0 10px;
-    padding: 0.45rem 0;
-    position: relative;
-  }
-
-  .ty-year {
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.78);
-    text-align: right;
-    padding-top: 3px;
-    letter-spacing: 0.04em;
-  }
-
-  .ty-node {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.85);
-    border: 2px solid rgba(255, 255, 255, 0.4);
-    position: relative;
-    z-index: 1;
-    margin-top: 4px;
-    justify-self: center;
-    flex-shrink: 0;
-  }
-
-  .ty-node-pulse {
-    background: #fff;
-    border-color: rgba(255, 255, 255, 0.7);
-    animation: ty-pulse 2.2s ease-in-out infinite;
-  }
-
-  @keyframes ty-pulse {
-    0%, 100% { box-shadow: 0 0 0 3px rgba(255,255,255,0.25), 0 0 10px rgba(255,255,255,0.35); }
-    50%       { box-shadow: 0 0 0 7px rgba(255,255,255,0.12), 0 0 18px rgba(255,255,255,0.55); }
-  }
-
-  .ty-body {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem 0.5rem;
-    align-items: flex-start;
-    padding-top: 1px;
-  }
-
-  .ty-tag {
-    font-size: 0.72rem;
-    font-weight: 700;
-    background: rgba(255, 255, 255, 0.18);
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    border-radius: 4px;
-    padding: 1px 7px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    line-height: 1.6;
-  }
-
-  .ty-desc {
-    font-size: 0.76rem;
-    color: rgba(255, 255, 255, 0.78);
-    line-height: 1.55;
-  }
-
-  .ty-now .ty-year {
-    color: #fff;
-    font-size: 0.82rem;
-  }
-
-  .ty-now .ty-tag {
-    background: rgba(255, 255, 255, 0.28);
-    border-color: rgba(255, 255, 255, 0.45);
-  }
-
-  /* -- 底部日期行 -- */
-  .ty-foot {
+  .time-labels {
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    font-size: 0.7rem;
-    opacity: 0.5;
-    margin-top: 0.5rem;
-    letter-spacing: 0.03em;
+    align-items: center;
+    font-size: 0.9rem;
+    color: hsl(var(--foreground) / 0.7);
+    margin-top: 0.75rem;
+    font-weight: 600;
+  }
+
+  .time-labels .start-time,
+  .time-labels .end-time {
+    font-weight: 600;
+    letter-spacing: 0.02em;
   }
 
   /* ========== Reward List (Awards & Projects) ========== */
