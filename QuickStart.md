@@ -5,10 +5,10 @@
 npm run build && npm run preview
 
 # 推送到 GitHub（自动触发 Pages 部署）
-git add . ':!.gitignore' && git commit -m "" && git push origin main
+git add . && git commit -m "" && git push origin main
 ```
 
-git add . ':!.gitignore' && git commit -m "电影卡换五部新片，标签改灰玻璃态，海报独立图层修裁剪" && git push origin main
+git add . && git commit -m "十年之约改时间轴，虚线进度条居中排版" && git push origin main
 
 
 把刚才修改总结成25字的commit

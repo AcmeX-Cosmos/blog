@@ -45,19 +45,20 @@ const interestItems = [
 ];
 
 const tenYearStart = '2018-09-01';
-const tenYearEnd = '2032-05-28';
+const tenYearEnd   = '2028-09-01';
 const startDate = new Date(tenYearStart).getTime();
-const endDate = new Date(tenYearEnd).getTime();
+const endDate   = new Date(tenYearEnd).getTime();
 const now = Date.now();
 const progress = Math.min(100, Math.max(0, Math.round(((now - startDate) / (endDate - startDate)) * 100)));
 const daysLeft = Math.max(0, Math.ceil((endDate - now) / (1000 * 60 * 60 * 24)));
 
-// 计算自 2018-09-01 起经过的时间
-const elapsedMs = now - startDate;
-const elapsedDays = Math.floor(elapsedMs / (1000 * 60 * 60 * 24));
-const elapsedYears = Math.floor(elapsedDays / 365);
-const elapsedMonths = Math.floor((elapsedDays % 365) / 30);
-const elapsedRemainDays = elapsedDays - elapsedYears * 365 - elapsedMonths * 30;
+const timelineEvents = [
+  { year: '2018', tag: '启程', desc: '入读深圳职业技术大学，人工智能技术应用专业' },
+  { year: '2022', tag: '入队', desc: '加入 RoboMaster 战队，开启竞技机器人探索' },
+  { year: '2023', tag: '深耕', desc: '跟踪射击系统核心算法研发；RMUC 区域赛奖；全国电子设计竞赛省级二等奖' },
+  { year: '2024', tag: '突破', desc: 'RMUC 全国赛国家二等奖；RMUL 广东站团体 & 哨兵奖' },
+  { year: '2025', tag: '跃升', desc: '骰子 6D 姿态估计；CycleGAN 风格迁移；RMUL 广西站团体 & 哨兵奖' },
+];
 
 const awards = [
   'RMUC 2024 全国赛 国家二等奖',
@@ -296,6 +297,7 @@ const projects = [
           <span>减少犯错的方式，</span>
           <span>是建立系统并遵守纪律。</span>
         </div>
+        <div class="maxim-subtitle">The way to reduce mistakes is to build systems and follow discipline.</div>
       </div>
       <div class="author-content-item buff">
         <div class="card-content"></div>
@@ -334,13 +336,13 @@ const projects = [
           <div class="author-content-item-tips">爱好电影</div>
           <span class="author-content-item-title">看剧</span>
           <div class="comic-box">
-            <a class="comic-item" href="https://movie.douban.com/subject/1292052/" target="_blank" rel="noopener nofollow" title="肖申克的救赎" style="--poster: url(/blog/images/movie-shawshank.webp);">
-              <span class="comic-poster"></span>
-              <span class="game-dual-label">肖申克的救赎</span>
-            </a>
             <a class="comic-item" href="https://movie.douban.com/subject/1292720/" target="_blank" rel="noopener nofollow" title="阿甘正传" style="--poster: url(/blog/images/movie-forrestgump.webp);">
               <span class="comic-poster"></span>
               <span class="game-dual-label">阿甘正传</span>
+            </a>
+            <a class="comic-item" href="https://movie.douban.com/subject/1292052/" target="_blank" rel="noopener nofollow" title="肖申克的救赎" style="--poster: url(/blog/images/movie-shawshank.webp);">
+              <span class="comic-poster"></span>
+              <span class="game-dual-label">肖申克的救赎</span>
             </a>
             <a class="comic-item" href="https://movie.douban.com/subject/3073124/" target="_blank" rel="noopener nofollow" title="月球" style="--poster: url(/blog/images/movie-moon.webp);">
               <span class="comic-poster"></span>
@@ -376,21 +378,44 @@ const projects = [
 
     <!-- ====== Row 8: Timeline ====== -->
     <div class="author-content">
-      <div class="author-content-item card-countdown single" style="background: linear-gradient(120deg, #5b27ff 0, #00d4ff 100%); background-size: 200%; color: var(--about-white);">
+      <div class="author-content-item tenyear-card single" style="background: linear-gradient(135deg, #5b27ff 0%, #1a8fff 55%, #00d4ff 100%); color: var(--about-white);">
         <div class="card-content">
           <div class="author-content-item-tips">时间轴</div>
-          <span class="author-content-item-title">从 2018.09.01 至今</span>
-          <div class="cd-count-left">
-            <span class="cd-count-num">{progress}%</span>
+          <span class="author-content-item-title">十年之约</span>
+
+          <!-- 顶部进度条 -->
+          <div class="ty-bar-row">
+            <span class="ty-pct">{progress}%</span>
+            <div class="ty-bar-wrap">
+              <div class="ty-bar" style={`width: ${progress}%`}>
+                <span class="ty-bar-dot"></span>
+              </div>
+            </div>
+            <span class="ty-end-label">2028.09</span>
           </div>
-          <div class="cd-progress-bar-wrapper">
-            <div class="cd-progress-bar" style="width: {progress}%">
-              <span class="cd-progress-indicator"></span>
+
+          <!-- 竖向时间轴 -->
+          <div class="ty-list">
+            {timelineEvents.map((e) => (
+              <div class="ty-item">
+                <div class="ty-year">{e.year}</div>
+                <div class="ty-node"></div>
+                <div class="ty-body">
+                  <span class="ty-tag">{e.tag}</span>
+                  <span class="ty-desc">{e.desc}</span>
+                </div>
+              </div>
+            ))}
+            <div class="ty-item ty-now">
+              <div class="ty-year">今</div>
+              <div class="ty-node ty-node-pulse"></div>
+              <div class="ty-body"><span class="ty-tag">进行中</span></div>
             </div>
           </div>
-          <div class="cd-date-range">
-            <span>{tenYearStart}</span>
-            <span>{tenYearEnd}</span>
+
+          <div class="ty-foot">
+            <span>2018.09.01</span>
+            <span>距终点还有 {daysLeft} 天</span>
           </div>
         </div>
       </div>
@@ -447,14 +472,13 @@ const projects = [
       width: 100%;
       height: 100%;
       background-color: transparent;
-      background-image: url(/blog/img-bg-day.svg);
-      background-position: 0 0;
-      background-size: 20rem;
-      background-repeat: repeat;
       pointer-events: none;
     }
     html.dark #web_bg_about {
+      background-image: url(/blog/img-bg-day.svg);
+      background-position: 0 0;
       background-size: 100rem;
+      background-repeat: repeat;
       opacity: 0.15;
     }
   </style>
@@ -1513,6 +1537,20 @@ const projects = [
   .author-content-item.maxim .maxim-title {
     display: flex;
     flex-direction: column;
+    margin-bottom: 0;
+  }
+
+  .author-content-item.maxim .maxim-title span {
+    line-height: 1.3;
+  }
+
+  .author-content-item.maxim .maxim-subtitle {
+    margin-top: -2px;
+    font-size: 0.8rem;
+    opacity: 0.75;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
   }
 
   /* ========== Buff ========== */
@@ -1802,96 +1840,186 @@ const projects = [
     width: 49%;
   }
 
-  /* ========== Card Countdown (Ten Year) ========== */
-  .author-content-item.card-countdown {
+  /* ========== Ten-Year Timeline Card ========== */
+  .author-content-item.tenyear-card {
     min-height: 300px;
-    background-size: 200% !important;
-    animation: gradient 15s ease infinite;
     box-shadow: 0 4px 12px rgba(46, 127, 255, 0.2);
-    transition: all 0.4s cubic-bezier(.25,.46,.45,.94);
+    transition: transform 0.4s cubic-bezier(.25,.46,.45,.94), box-shadow 0.4s ease;
     position: relative;
     overflow: hidden;
   }
 
-  .author-content-item.card-countdown:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 12px 32px rgba(46, 127, 255, 0.4), 0 0 0 1px rgba(46, 127, 255, 0.3);
+  .author-content-item.tenyear-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(46, 127, 255, 0.4);
   }
 
-  .author-content-item.card-countdown .card-content {
+  .author-content-item.tenyear-card .card-content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    height: 100%;
-    gap: 0.3rem;
+    align-items: flex-start;
+    gap: 0;
+    padding: 1.5rem 2rem;
   }
 
-  .cd-count-left {
-    position: relative;
+  /* -- 顶部进度条 -- */
+  .ty-bar-row {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    margin: 0.6rem 0;
+    gap: 0.75rem;
+    margin: 0.5rem 0 0;
+    width: 100%;
   }
 
-  .cd-count-num {
-    font-size: 5rem;
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: -0.02em;
+  .ty-pct {
+    font-size: 0.88rem;
+    font-weight: 700;
+    opacity: 0.9;
+    min-width: 38px;
   }
 
-  .cd-count-text {
-    font-size: 1rem;
-    font-weight: 600;
-    opacity: 0.7;
-    letter-spacing: 0.2em;
-  }
-
-  /* ========== Timeline Progress Bar ========== */
-  .cd-progress-bar-wrapper {
-    width: 70%;
-    max-width: 240px;
+  .ty-bar-wrap {
+    flex: 1;
     height: 4px;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.18);
     border-radius: 2px;
-    margin: 0.2rem 0 0.5rem;
     overflow: visible;
     position: relative;
   }
 
-  .cd-progress-bar {
+  .ty-bar {
     height: 100%;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.88);
     border-radius: 2px;
     position: relative;
-    transition: width 0.6s ease;
   }
 
-  .cd-progress-indicator {
+  .ty-bar-dot {
     position: absolute;
-    right: -4px;
+    right: -5px;
     top: 50%;
     transform: translateY(-50%);
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     background: #fff;
     border-radius: 50%;
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
   }
 
-  .cd-date-range {
+  .ty-end-label {
+    font-size: 0.72rem;
+    opacity: 0.6;
+    white-space: nowrap;
+  }
+
+  /* -- 竖向时间轴 -- */
+  .ty-list {
+    display: flex;
+    flex-direction: column;
+    margin: 1.25rem 0 0.5rem;
+    width: 100%;
+    position: relative;
+  }
+
+  /* 贯通竖线：从首节点到末节点中心 */
+  .ty-list::before {
+    content: '';
+    position: absolute;
+    /* 60px year 列 + 9px（节点半宽） */
+    left: 69px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    border-left: 2px dashed rgba(255, 255, 255, 0.28);
+  }
+
+  .ty-item {
+    display: grid;
+    grid-template-columns: 60px 18px 1fr;
+    align-items: flex-start;
+    gap: 0 10px;
+    padding: 0.45rem 0;
+    position: relative;
+  }
+
+  .ty-year {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.78);
+    text-align: right;
+    padding-top: 3px;
+    letter-spacing: 0.04em;
+  }
+
+  .ty-node {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.85);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    position: relative;
+    z-index: 1;
+    margin-top: 4px;
+    justify-self: center;
+    flex-shrink: 0;
+  }
+
+  .ty-node-pulse {
+    background: #fff;
+    border-color: rgba(255, 255, 255, 0.7);
+    animation: ty-pulse 2.2s ease-in-out infinite;
+  }
+
+  @keyframes ty-pulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(255,255,255,0.25), 0 0 10px rgba(255,255,255,0.35); }
+    50%       { box-shadow: 0 0 0 7px rgba(255,255,255,0.12), 0 0 18px rgba(255,255,255,0.55); }
+  }
+
+  .ty-body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.5rem;
+    align-items: flex-start;
+    padding-top: 1px;
+  }
+
+  .ty-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 4px;
+    padding: 1px 7px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1.6;
+  }
+
+  .ty-desc {
+    font-size: 0.76rem;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.55;
+  }
+
+  .ty-now .ty-year {
+    color: #fff;
+    font-size: 0.82rem;
+  }
+
+  .ty-now .ty-tag {
+    background: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.45);
+  }
+
+  /* -- 底部日期行 -- */
+  .ty-foot {
     display: flex;
     justify-content: space-between;
-    width: 70%;
-    max-width: 240px;
-    font-size: 0.72rem;
-    font-weight: 500;
-    opacity: 0.6;
-    letter-spacing: 0.02em;
+    width: 100%;
+    font-size: 0.7rem;
+    opacity: 0.5;
+    margin-top: 0.5rem;
+    letter-spacing: 0.03em;
   }
 
   /* ========== Reward List (Awards & Projects) ========== */
@@ -2899,7 +3027,7 @@ const projects = [
   (function() {
     const animated = document.querySelectorAll(
       '#about-page .myInfoAndSayHello, #about-page .author-content-item.maxim,' +
-      '#about-page .author-content-item.buff, #about-page .author-content-item.card-countdown,' +
+      '#about-page .author-content-item.buff, #about-page .author-content-item.tenyear-card,' +
       '#about-page .author-box, #about-page .tags-group-wrapper, #about-page .aboutsiteTips'
     );
     if (!animated.length) return;

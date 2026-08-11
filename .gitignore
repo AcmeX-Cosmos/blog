@@ -38,9 +38,7 @@ QuickStart.md
 # Coverage
 coverage/
 
-# Reference files
-src/关于 * GB的记事簿.html
-src/关于 * GB的记事簿_files/
+# Reference files（存档在仓库根目录，不在 src/ 下）
+关于 _ GB的记事簿.html
+关于 _ GB的记事簿_files/
 *.pdf
-
-
