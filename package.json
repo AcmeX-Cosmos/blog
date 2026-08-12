@@ -2,6 +2,22 @@
   "name": "blog",
   "type": "module",
   "version": "1.0.0",
+  "description": "AcmeX's technical blog - Robot vision algorithm engineer focusing on VLA models, world models, and embodied intelligence",
+  "author": "AcmeX <AcmeX@foxmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AcmeX/blog.git"
+  },
+  "homepage": "https://AcmeX-Cosmos.github.io/portfolio/",
+  "keywords": [
+    "blog",
+    "astro",
+    "robotics",
+    "computer-vision",
+    "ros2",
+    "embodied-intelligence"
+  ],
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",

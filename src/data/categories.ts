@@ -1,3 +1,7 @@
+// Copyright (c) 2026 AcmeX. All rights reserved.
+// Licensed under the MIT License. See LICENSE file in the project root.
+
+
 // 分类元数据 — 顺序决定分类页之间前后箭头的切换环
 export interface Category {
   slug: 'research' | 'algorithm' | 'tech' | 'daily';

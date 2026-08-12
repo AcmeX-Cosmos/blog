@@ -1,3 +1,7 @@
+// Copyright (c) 2026 AcmeX. All rights reserved.
+// Licensed under the MIT License. See LICENSE file in the project root.
+
+
 import { getCollection } from 'astro:content';
 
 export async function GET() {

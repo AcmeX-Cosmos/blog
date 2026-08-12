@@ -1,3 +1,7 @@
+// Copyright (c) 2026 AcmeX. All rights reserved.
+// Licensed under the MIT License. See LICENSE file in the project root.
+
+
 import type { CollectionEntry } from 'astro:content';
 import { categories } from '../data/categories';
 
