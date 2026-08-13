@@ -180,6 +180,9 @@ body::-webkit-scrollbar { height: 0; }
 .article-content img { max-width: 100%; border-radius: 8px; margin: 1.5rem 0; display: inline-block; vertical-align: top; }
 .article-content a { text-decoration: underline; text-underline-offset: 2px; }
 .article-content strong { font-weight: 600; }
+/* KaTeX 行间公式在窄屏会超出容器，让它自己横向滚动而不是撑破页面 */
+.article-content .katex-display { overflow-x: auto; overflow-y: hidden; padding-bottom: 0.5rem; }
+
 .article-content table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
 .article-content th, .article-content td { border: 1px solid hsl(var(--border)); padding: 0.5rem 0.75rem; text-align: left; }
 .article-content th { background: hsl(var(--muted)); font-weight: 600; }

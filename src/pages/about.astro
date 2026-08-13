@@ -49,7 +49,7 @@ const techItems = [
   { icon: '🤖', label: 'RoboMaster', desc: '战队竞技 · 算法研发' },
 ];
 
-const musicItem = { icon: '🎵', label: '音乐偏好', desc: '电子乐、古典、轻音乐' };
+const musicItem = { icon: '🎵', label: '音乐偏好', desc: '氛围感、轻音乐' };
 
 const musicTracks = [
   { title: 'Sacred Play Secret Place', artist: 'Matryoshka',  cover: '/blog/images/music-sacred-play.jpg',   src: '/blog/music/sacred-play-secret-place.mp3' },
@@ -406,7 +406,7 @@ const projects = [
           </div>
         </div>
       </div>
-      <!-- Music card: 2x2 grid player -->
+      <!-- Music card: vertical track list player -->
       <div class="author-content-item like-technology music-card" style="background: var(--about-card-bg);">
         <div class="music-grid">
           {musicTracks.map((track) => (
@@ -1892,7 +1892,7 @@ const projects = [
     min-height: 450px;
   }
 
-  /* ========== Music 2x2 Grid Player ========== */
+  /* ========== Music Vertical Track List Player ========== */
   /* 跟同排的书籍卡片（comic-content 的 min-height）对齐 */
   .author-content-item.like-technology.music-card {
     min-height: 300px;
@@ -1900,10 +1900,14 @@ const projects = [
     overflow: hidden;
   }
 
-  /* 标题浮在宫格上层，但不能挡住格子的点击 */
+  /* 标题浮在列表上层靠右下，但不能挡住条目的点击。
+     右侧留出 3.4rem 避开末条那颗播放按钮 */
   .author-content-item.music-card .card-content {
     z-index: 3;
-    height: auto;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 1rem 3.4rem 0.9rem 2rem;
+    text-align: right;
     pointer-events: none;
   }
 
@@ -1914,27 +1918,32 @@ const projects = [
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.5);
   }
 
-  /* 宫格铺满整张卡牌，四格无缝拼接 */
+  /* 列表铺满整张卡牌，四条无缝竖排 */
   .music-grid {
     position: absolute;
     inset: 0;
     z-index: 1;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
   }
 
   .music-tile {
     position: relative;
     display: flex;
-    align-items: flex-end;
-    padding: 0.6rem 0.7rem;
+    align-items: center;
+    padding: 0 1.2rem;
     border: 0;
     background: hsl(var(--foreground) / 0.04);
     overflow: hidden;
     cursor: pointer;
     text-align: left;
     color: var(--about-white);
+  }
+
+  /* 末条右侧被卡片标题压住，文字区多留出让位空间 */
+  .music-tile:last-child .music-tile-meta {
+    padding-right: 11rem;
   }
 
   /* 封面单独一层，缩放走合成器不重新光栅化 */
@@ -1954,21 +1963,14 @@ const projects = [
     filter: brightness(0.62) saturate(0.85);
   }
 
-  /* 封面亮底压不住文字，铺一层底部渐变 */
-  .music-tile::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.28) 45%, rgba(0, 0, 0, 0.06) 100%);
-    pointer-events: none;
-  }
-
   .music-tile-meta {
     position: relative;
     z-index: 2;
     display: flex;
     flex-direction: column;
     gap: 1px;
+    /* 留出右侧按钮的位置 */
+    padding-right: 2.8rem;
     min-width: 0;
     pointer-events: none;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
@@ -1976,18 +1978,16 @@ const projects = [
   }
 
   .music-tile:hover .music-tile-meta {
-    transform: translateY(-2px);
+    transform: translateX(4px);
   }
 
   .music-tile-title {
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     font-weight: 700;
     line-height: 1.25;
-    /* 曲名最长的 Sacred Play Secret Place 在半幅卡片里放不下一行 */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .music-tile-artist {
@@ -1999,14 +1999,14 @@ const projects = [
     text-overflow: ellipsis;
   }
 
-  /* 播放按钮：默认不显示，悬浮或正在播放时才浮现 */
+  /* 播放按钮：默认不显示，悬浮或正在播放时才浮现。横条里靠右，避开左侧文字 */
   .music-tile-state {
     position: absolute;
     top: 50%;
-    left: 50%;
+    right: 1.2rem;
     z-index: 2;
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     /* 沿用游戏卡牌标签那套玻璃态 */
     background: rgba(105, 105, 115, 0.52);
@@ -2016,7 +2016,8 @@ const projects = [
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
     pointer-events: none;
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.7);
+    /* 靠 right 定位，水平不再需要 -50% 位移 */
+    transform: translateY(-50%) scale(0.7);
     transition: opacity 0.3s ease, transform 0.35s cubic-bezier(.25,.46,.45,.94),
                 background 0.3s ease, border-color 0.3s ease;
   }
@@ -2025,7 +2026,7 @@ const projects = [
   .music-tile.is-playing .music-tile-state,
   .music-tile.is-paused .music-tile-state {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: translateY(-50%) scale(1);
   }
 
   .music-tile-state::before,
@@ -2042,9 +2043,9 @@ const projects = [
     width: 0;
     height: 0;
     margin-left: 2px;
-    border-left: 12px solid rgba(255, 255, 255, 0.92);
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
+    border-left: 10px solid rgba(255, 255, 255, 0.92);
+    border-top: 6.5px solid transparent;
+    border-bottom: 6.5px solid transparent;
   }
 
   .music-tile.is-playing .music-tile-state {
@@ -2054,8 +2055,8 @@ const projects = [
 
   .music-tile.is-playing .music-tile-state::before {
     margin-left: 0;
-    width: 4px;
-    height: 15px;
+    width: 3.5px;
+    height: 13px;
     border: 0;
     border-radius: 1px;
     background: rgba(255, 255, 255, 0.92);
@@ -2063,8 +2064,8 @@ const projects = [
   }
 
   .music-tile.is-playing .music-tile-state::after {
-    width: 4px;
-    height: 15px;
+    width: 3.5px;
+    height: 13px;
     border-radius: 1px;
     background: rgba(255, 255, 255, 0.92);
     transform: translate(50%, -50%);
