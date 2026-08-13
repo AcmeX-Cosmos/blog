@@ -2,6 +2,7 @@
   {
     "name": "RoboMaster 机器人跟踪射击系统",
     "role": "核心算法负责人",
+    "link": "/blog/rcia-vision-overview",
     "description": "基于ROS2架构的机器人自动瞄准跟踪系统，涵盖装甲板检测、位姿解算、多传感器融合跟踪与弹道补偿的完整管线。同时负责UE5虚实仿真环境的搭建，实现算法在虚拟和真实环境下的闭环验证。",
     "tags": ["ROS2", "OpenCV", "PnP", "Ceres", "EKF", "C++", "UE5", "Docker"],
     "highlights": [

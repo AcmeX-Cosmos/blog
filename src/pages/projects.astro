@@ -22,7 +22,30 @@ import projects from '../data/projects.json';
       {projects.map(project => (
         <div class="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] px-5 py-5 transition-colors hover:bg-[hsl(var(--muted))]">
           <div class="flex justify-between items-start gap-3 mb-2">
-            <h2 class="font-medium text-lg">{project.name}</h2>
+            <h2 class="font-medium text-lg">
+              {project.link ? (
+                <a
+                  href={project.link}
+                  class="group/link inline-flex items-center gap-1 transition-colors hover:text-[hsl(var(--foreground))]"
+                >
+                  {project.name}
+                  <svg
+                    aria-hidden="true"
+                    class="size-4 shrink-0 opacity-40 transition-transform group-hover/link:translate-x-0.5 group-hover/link:opacity-100"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </a>
+              ) : (
+                project.name
+              )}
+            </h2>
             <span class="text-xs text-[hsl(var(--muted-foreground))] font-mono shrink-0">{project.role}</span>
           </div>
 

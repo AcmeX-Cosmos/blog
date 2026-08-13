@@ -433,7 +433,7 @@ const projects = [
     <div class="author-content" id="tenyear">
       <div class="create-site-post author-content-item single">
         <div class="author-content-item-tips">十年之约</div>
-        <div class="author-content-item-title">寻找更优秀的自己</div>
+        <div class="author-content-item-title">寻找更强大的自己</div>
         <p></p>
         <div class="tenyear-timeline">
           <div class="progress" style={`--progress-percentage: ${progress}%;`}>
@@ -1911,13 +1911,12 @@ const projects = [
     overflow: hidden;
   }
 
-  /* 标题浮在列表上层靠右下，但不能挡住条目的点击。
-     右侧留出 3.4rem 避开末条那颗播放按钮 */
+  /* 标题浮在列表上层右下角,不挡住条目的点击 */
   .author-content-item.music-card .card-content {
     z-index: 3;
     justify-content: flex-end;
     align-items: flex-end;
-    padding: 1rem 3.4rem 0.9rem 2rem;
+    padding: 0 1.8rem 0.2rem 2rem;
     text-align: right;
     pointer-events: none;
   }
@@ -2083,18 +2082,23 @@ const projects = [
     transform: translate(50%, -50%);
   }
 
-  /* 播放进度条，JS 只写 --played 这一个自定义属性 */
+  /* 播放进度条,可点击/拖动跳转 */
   .music-tile-progress {
     position: absolute;
     bottom: 0;
     left: 0;
     z-index: 2;
     width: 100%;
-    height: 2px;
-    pointer-events: none;
+    height: 4px;
+    cursor: pointer;
+    pointer-events: auto;
     background: rgba(255, 255, 255, 0.16);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, height 0.2s ease;
+  }
+
+  .music-tile-progress:hover {
+    height: 6px;
   }
 
   .music-tile.is-playing .music-tile-progress,
@@ -3357,6 +3361,70 @@ const projects = [
       if (!current) return;
       clearState(current);
       current = null;
+    });
+
+    // 进度条点击/拖动跳转
+    var dragging = false;
+    var wasPlayingBeforeDrag = false;
+    var activeProgressBar = null;
+
+    tiles.forEach(function(tile) {
+      var progressBar = tile.querySelector('.music-tile-progress');
+      if (!progressBar) return;
+
+      function seek(e) {
+        if (!current || current !== tile || !audio.duration) return;
+        var rect = progressBar.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var pct = Math.max(0, Math.min(1, x / rect.width));
+        audio.currentTime = pct * audio.duration;
+      }
+
+      progressBar.addEventListener('click', function(e) {
+        if (dragging) return;
+        e.stopPropagation();
+        if (!current || current !== tile || !audio.duration) return;
+
+        var rect = progressBar.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var pct = Math.max(0, Math.min(1, x / rect.width));
+        audio.currentTime = pct * audio.duration;
+
+        // 立即恢复播放，不等待事件触发
+        audio.play().catch(function() {});
+      });
+
+      progressBar.addEventListener('mousedown', function(e) {
+        if (!current || current !== tile) return;
+        e.stopPropagation(); // 阻止冒泡到 tile
+        dragging = true;
+        wasPlayingBeforeDrag = !audio.paused;
+        activeProgressBar = progressBar;
+        if (wasPlayingBeforeDrag) {
+          audio.pause();
+        }
+        seek(e);
+        e.preventDefault();
+      });
+    });
+
+    document.addEventListener('mousemove', function(e) {
+      if (dragging && activeProgressBar && current) {
+        var rect = activeProgressBar.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var pct = Math.max(0, Math.min(1, x / rect.width));
+        audio.currentTime = pct * audio.duration;
+      }
+    });
+
+    document.addEventListener('mouseup', function() {
+      if (dragging) {
+        if (wasPlayingBeforeDrag) {
+          audio.play().catch(function() {});
+        }
+        dragging = false;
+        activeProgressBar = null;
+      }
     });
 
     // 切走页面时停掉，避免后台继续播
