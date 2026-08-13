@@ -413,10 +413,12 @@ const projects = [
             <button type="button" class="music-tile" data-src={track.src} title={`${track.title} · ${track.artist}`}>
               <span class="music-tile-cover" style={`--cover: url(${track.cover});`}></span>
               <span class="music-tile-state"></span>
+              {/* 暂时隐藏曲名/艺人，封面到位后再放开
               <span class="music-tile-meta">
                 <span class="music-tile-title">{track.title}</span>
                 <span class="music-tile-artist">{track.artist}</span>
               </span>
+              */}
               <span class="music-tile-progress"></span>
             </button>
           ))}
@@ -1938,7 +1940,7 @@ const projects = [
     overflow: hidden;
     cursor: pointer;
     text-align: left;
-    color: var(--about-white);
+    color: #000;
   }
 
   /* 末条右侧被卡片标题压住，文字区多留出让位空间 */
@@ -1973,7 +1975,8 @@ const projects = [
     padding-right: 2.8rem;
     min-width: 0;
     pointer-events: none;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+    /* 黑字压在封面上，投影改成浅色描边才不会糊成一团 */
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7), 0 0 8px rgba(255, 255, 255, 0.45);
     transition: transform 0.35s cubic-bezier(.25,.46,.45,.94);
   }
 
