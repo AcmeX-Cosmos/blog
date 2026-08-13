@@ -320,11 +320,13 @@ const projects = [
         <div class="card-content">
           <div class="tech-split-row">
             <div class="tech-split-item">
+              <div class="tech-split-img" style="background-image: url(/blog/images/embodied-ai.jpg);"></div>
               <div class="author-content-item-tips">科技</div>
               <span class="author-content-item-title">具身智能</span>
             </div>
             <div class="tech-split-divider"></div>
             <div class="tech-split-item">
+              <div class="tech-split-img" style="background-image: url(/blog/images/robomaster.jpg);"></div>
               <div class="author-content-item-tips" style="visibility: hidden;">占位</div>
               <span class="author-content-item-title" style="position: absolute; bottom: 1.5rem; right: 1.5rem;">RoboMaster</span>
             </div>
@@ -1905,6 +1907,22 @@ const projects = [
     display: flex;
     flex-direction: column;
     position: relative;
+  }
+
+  .tech-split-img {
+    width: 100%;
+    height: 180px;
+    border-radius: 12px;
+    background-size: cover;
+    background-position: center;
+    background-color: hsl(var(--foreground) / 0.06);
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .author-content-item.like-technology.single:hover .tech-split-img {
+    transform: scale(1.03);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   }
 
   .tech-split-divider {
