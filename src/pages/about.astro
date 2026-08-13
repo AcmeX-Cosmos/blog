@@ -316,19 +316,21 @@ const projects = [
 
     <!-- ====== Row 6: Tech & RoboMaster (Single Card) ====== -->
     <div class="author-content">
-      <div class="author-content-item like-technology single" style="background: var(--about-card-bg);">
-        <div class="card-content">
-          <div class="tech-split-row">
-            <div class="tech-split-item">
-              <div class="tech-split-img" style="background-image: url(/blog/images/embodied-ai.jpg);"></div>
+      <div class="author-content-item like-technology single tech-card-full">
+        <div class="tech-split-row">
+          <div class="tech-split-item tech-split-bg" style="background-image: url(/blog/images/embodied-ai.jpg);">
+            <div class="tech-split-overlay"></div>
+            <div class="tech-split-text">
               <div class="author-content-item-tips">科技</div>
               <span class="author-content-item-title">具身智能</span>
             </div>
-            <div class="tech-split-divider"></div>
-            <div class="tech-split-item">
-              <div class="tech-split-img" style="background-image: url(/blog/images/robomaster.jpg);"></div>
-              <div class="author-content-item-tips" style="visibility: hidden;">占位</div>
-              <span class="author-content-item-title" style="position: absolute; bottom: 1.5rem; right: 1.5rem;">RoboMaster</span>
+          </div>
+          <div class="tech-split-divider"></div>
+          <div class="tech-split-item tech-split-bg" style="background-image: url(/blog/images/robomaster.jpg);">
+            <div class="tech-split-overlay"></div>
+            <div class="tech-split-text">
+              <div class="author-content-item-tips">RoboMaster</div>
+              <span class="author-content-item-title">战队竞技 · 算法研发</span>
             </div>
           </div>
         </div>
@@ -1909,20 +1911,38 @@ const projects = [
     position: relative;
   }
 
-  .tech-split-img {
-    width: 100%;
-    height: 180px;
-    border-radius: 12px;
+  .tech-split-bg {
     background-size: cover;
     background-position: center;
-    background-color: hsl(var(--foreground) / 0.06);
-    margin-bottom: 1rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-repeat: no-repeat;
+    border-radius: 12px;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
   }
 
-  .author-content-item.like-technology.single:hover .tech-split-img {
-    transform: scale(1.03);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  .tech-split-bg .tech-split-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.45) 100%);
+  }
+
+  .tech-split-bg .tech-split-text {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    z-index: 2;
+    color: #fff;
+  }
+
+  .tech-split-bg .tech-split-text .author-content-item-tips {
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .tech-split-bg .tech-split-text .author-content-item-title {
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 
   .tech-split-divider {
