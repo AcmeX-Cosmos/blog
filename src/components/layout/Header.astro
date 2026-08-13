@@ -8,7 +8,10 @@
 import { categories } from '../../data/categories';
 
 const currentPath = Astro.url.pathname.replace(/\/$/, '');
-const onBlogCategory = categories.some((c) => currentPath.endsWith(`/blog/${c.slug}`));
+// Blog 项高亮：文章总览页本身，或任意一个分类页
+const onBlogIndex = currentPath === '/blog' || currentPath === '';
+const onBlogCategory =
+  onBlogIndex || categories.some((c) => currentPath.endsWith(`/blog/${c.slug}`));
 
 const navLinks = [
   { href: '/blog/projects', label: 'Projects' },
@@ -42,7 +45,7 @@ const GITHUB_URL = 'https://github.com/AcmeX-Cosmos';
         <!-- 文章 + 分类下拉 -->
         <div class="menu-item-with-dropdown relative w-full md:w-fit">
           <a
-            href="/blog/research"
+            href="/blog"
             aria-label="Nav menu item"
             class:list={[
               'blog-menu-link flex w-full flex-none items-center justify-end py-2 font-medium transition-colors hover:text-[hsl(var(--foreground))] md:justify-center md:px-4',
