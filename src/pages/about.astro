@@ -49,7 +49,7 @@ const techItems = [
   { icon: '🤖', label: 'RoboMaster', desc: '战队竞技 · 算法研发' },
 ];
 
-const musicItem = { icon: '🎵', label: '音乐偏好', desc: '氛围感、轻音乐' };
+const musicItem = { icon: '🎵', desc: '氛围感、轻音乐' , label: '音乐偏好'};
 
 const musicTracks = [
   { title: 'Sacred Play Secret Place', artist: 'Matryoshka',  cover: '/blog/images/music-sacred-play.jpg',   src: '/blog/music/sacred-play-secret-place.mp3' },
@@ -300,7 +300,25 @@ const projects = [
       </div>
     </div>
 
-    <!-- ====== Row 5: Maxim & Buff ====== -->
+    <!-- ====== Row 5: Tech & RoboMaster (Single Card) ====== -->
+    <div class="author-content">
+      <div class="author-content-item like-technology single" style="background: var(--about-card-bg);">
+        <div class="tech-split-media">
+          <div class="tech-split-image" style="background-image: url(/blog/images/embodied-ai.jpg);" title="具身智能"></div>
+          <div class="tech-split-image" style="background-image: url(/blog/images/robomaster.jpg);" title="RoboMaster"></div>
+        </div>
+        <div class="card-content">
+          <div class="tech-split-row">
+            <div class="tech-split-item">
+              <div class="author-content-item-tips">科技</div>
+              <span class="author-content-item-title">具身智能</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== Row 6: Maxim & Buff ====== -->
     <div class="author-content">
       <div class="author-content-item maxim" style="background: linear-gradient(120deg, #5b27ff 0, #00d4ff 100%); color: var(--about-white);">
         <div class="author-content-item-tips">座右铭</div>
@@ -318,24 +336,6 @@ const projects = [
           <span>探索不止 死磕不休 从0到1的践行者</span>
         </span>
         <div class="card-background-icon"><i class="anzhiyufont anzhiyu-icon-dice-d20"></i></div>
-      </div>
-    </div>
-
-    <!-- ====== Row 6: Tech & RoboMaster (Single Card) ====== -->
-    <div class="author-content">
-      <div class="author-content-item like-technology single" style="background: var(--about-card-bg);">
-        <div class="tech-split-media">
-          <div class="tech-split-image" style="background-image: url(/blog/images/embodied-ai.jpg);" title="具身智能"></div>
-          <div class="tech-split-image" style="background-image: url(/blog/images/robomaster.jpg);" title="RoboMaster"></div>
-        </div>
-        <div class="card-content">
-          <div class="tech-split-row">
-            <div class="tech-split-item">
-              <div class="author-content-item-tips">科技</div>
-              <span class="author-content-item-title">具身智能</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -413,12 +413,10 @@ const projects = [
             <button type="button" class="music-tile" data-src={track.src} title={`${track.title} · ${track.artist}`}>
               <span class="music-tile-cover" style={`--cover: url(${track.cover});`}></span>
               <span class="music-tile-state"></span>
-              {/* 暂时隐藏曲名/艺人，封面到位后再放开
               <span class="music-tile-meta">
                 <span class="music-tile-title">{track.title}</span>
                 <span class="music-tile-artist">{track.artist}</span>
               </span>
-              */}
               <span class="music-tile-progress"></span>
             </button>
           ))}
@@ -709,21 +707,18 @@ const projects = [
     padding: 1rem 2rem;
   }
 
-  .author-content-item .card-content .author-content-item-title {
-    margin-bottom: 0.1rem;
-  }
-
   .author-content-item .author-content-item-title {
-    font-size: 28px;
+    font-size: 27px;
     font-weight: 700;
     font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
     line-height: 1;
+    margin-bottom: 0.5rem;
   }
 
   .author-content-item .author-content-item-tips {
     opacity: 0.8;
     font-size: 12px;
-    margin-bottom: 0.1rem;
+    margin-bottom: 0.5rem;
   }
 
   /* ========== myInfoAndSayHello ========== */
@@ -1729,11 +1724,23 @@ const projects = [
   }
 
   /* ========== Comic/Movie ========== */
-  /* 49% + 1.5rem gap 会溢出换行，按 gap 折算成两等分 */
+  /* 参考页是游戏 59% / 番剧 39%（合 98%，余量留给两卡间距）。
+     这里有 1.5rem gap，直接写 59/39 会溢出换行，改成按 gap 折算的 60/40，
+     占比与参考页一致。基准值给电影卡，游戏卡下面单独放大 */
   .author-content-item.comic-content {
-    width: calc((100% - 1.5rem) / 2);
+    width: calc(40% - 0.75rem);
     min-height: 300px;
     overflow: hidden;
+  }
+
+  .author-content-item.comic-content.game-dual:not(.books-dual) {
+    width: calc(60% - 0.75rem);
+  }
+
+  /* 书籍与音乐同排，两张等分；高度取参考页 400px 的 75% */
+  .author-content-item.comic-content.books-dual {
+    width: calc((100% - 1.5rem) / 2);
+    min-height: 300px;
   }
 
   /* 斜切把上下边各横移 tan10°×149 ≈ 26px，两侧留出这点余量就够盖住卡片角，
@@ -1770,8 +1777,8 @@ const projects = [
     width: 100% !important;
   }
 
-  /* 首末两项各朝卡外加宽 30px（斜切在半高 150px 处横移 tan10°×150 ≈ 26px，30px 够盖），
-     再用同值负外边距抵消，三项净宽仍合计 100%，多出来的部分被卡片 overflow 裁掉 */
+  /* 首末两项各朝卡外加宽 30px（卡高 300px，斜切在半高 150px 处横移 tan10°×150 ≈ 26px，
+     30px 够盖），再用同值负外边距抵消，三项净宽仍合计 100%，多出来的部分被卡片 overflow 裁掉 */
   .author-content-item.comic-content.game-dual.books-dual .comic-item:first-child {
     --book-bleed: 30px;
     margin-left: -30px;
@@ -1895,8 +1902,10 @@ const projects = [
   }
 
   /* ========== Music Vertical Track List Player ========== */
-  /* 跟同排的书籍卡片（comic-content 的 min-height）对齐 */
+  /* 与同排的书籍卡片等分并对齐高度（400px 的 75%）。
+     49% + 1.5rem gap 会溢出换行，按 gap 折算成两等分 */
   .author-content-item.like-technology.music-card {
+    width: calc((100% - 1.5rem) / 2);
     min-height: 300px;
     padding: 0;
     overflow: hidden;
@@ -1940,7 +1949,7 @@ const projects = [
     overflow: hidden;
     cursor: pointer;
     text-align: left;
-    color: #000;
+    color: var(--about-white);
   }
 
   /* 末条右侧被卡片标题压住，文字区多留出让位空间 */
@@ -1975,8 +1984,8 @@ const projects = [
     padding-right: 2.8rem;
     min-width: 0;
     pointer-events: none;
-    /* 黑字压在封面上，投影改成浅色描边才不会糊成一团 */
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7), 0 0 8px rgba(255, 255, 255, 0.45);
+    /* 已移除封面上的渐变遮罩，白字靠深色投影压住亮底封面 */
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.5);
     transition: transform 0.35s cubic-bezier(.25,.46,.45,.94);
   }
 
