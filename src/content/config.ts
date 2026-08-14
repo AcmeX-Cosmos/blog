@@ -15,6 +15,16 @@ const blogCollection = defineCollection({
     category: z.enum(['research', 'algorithm', 'tech', 'daily']).default('tech'),
     // 可选封面图，卡片右侧作为背景铺开
     cover: z.string().optional(),
+    // 文末参考文献卡片；不写序号，顺序即列表顺序
+    references: z
+      .array(
+        z.object({
+          title: z.string(),
+          meta: z.string().optional(),
+          url: z.string().optional(),
+        })
+      )
+      .optional(),
   }),
 });
 

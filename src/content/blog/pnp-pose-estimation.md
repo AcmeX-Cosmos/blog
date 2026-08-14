@@ -1,9 +1,16 @@
 ---
 title: "PnP 位姿解算：从理论到实践"
-date: "2025-03-15"
+date: "2024-11-20"
 description: "深入理解 PnP (Perspective-n-Point) 问题的数学原理，并通过 OpenCV + Ceres 实现高精度位姿估计。"
 tags: ["PnP", "OpenCV", "Ceres", "视觉", "C++"]
-category: "research"
+category: "algorithm"
+references:
+  - title: "OpenCV 4 快速入门"
+    meta: "冯振. 人民邮电出版社, 2020"
+  - title: "学习 OpenCV（中文版）"
+    meta: "于仕琪, 刘瑞祯. 清华大学出版社, 2009"
+  - title: "Learning OpenCV 3: Computer Vision in C++ with the OpenCV Library"
+    meta: "Bradski G, Kaehler A. O'Reilly Media, 2017"
 ---
 
 ## 什么是 PnP 问题

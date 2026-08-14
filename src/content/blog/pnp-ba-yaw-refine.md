@@ -1,16 +1,27 @@
 ---
-title: "[Algorithm] PnP + 降自由度 BA：从单帧位姿抖动到多帧偏航平滑"
-date: "2025-03-08"
-description: "RCIA-vision 中 IPPE 初值解算与 Ceres 束调整的工程实现：固定俯仰先验、只优化偏航角的单参数 BA，以及 Cauchy 核与历史帧窗口的整定。"
+title: "[Algorithm] PnP + 降自由度 BA：从单帧位姿抖动到多帧yaw平滑"
+date: "2024-12-05"
+description: "RCIA-vision 中 IPPE 初值解算与 Ceres 束调整的工程实现：固定pitch先验、只优化yaw的单参数 BA，以及 Cauchy 核与历史帧窗口的整定。"
 tags: ["PnP", "Ceres", "BA", "OpenCV", "C++", "RoboMaster"]
 category: "algorithm"
+references:
+  - title: "rm.cv.fans"
+    meta: "上海交通大学 方俊杰"
+    url: "https://github.com/julyfun/rm.cv.fans"
+  - title: "OpenCV 4 快速入门"
+    meta: "冯振. 人民邮电出版社, 2020"
+  - title: "Infinitesimal Plane-Based Pose Estimation"
+    meta: "Collins T., Bartoli A. IJCV, 2014 —— OpenCV SOLVEPNP_IPPE 的原始论文"
+  - title: "Ceres Solver: Modeling Non-linear Least Squares"
+    meta: "官方文档"
+    url: "http://ceres-solver.org/nnls_modeling.html"
 ---
 
-## [Algorithm] 装甲板位姿解算与降自由度束调整 - 2026-03-08
+## [Algorithm] 装甲板位姿解算与降自由度束调整 - 2024-12-05
 
-单帧 PnP 在 RoboMaster 赛场上最难受的地方不是精度，而是**抖**。装甲板是一块近似平面的矩形，四个灯条角点在图像上张开的角度很小，深度方向的约束天然薄弱；再叠加曝光变化导致的角点亚像素漂移，解出来的偏航角在相邻两帧之间跳十几度是常态。而下游的 EKF 把 yaw 当作观测量之一，抖动会直接被放大成整车中心的乱飘。
+单帧 PnP 在 RoboMaster 赛场上最难受的地方不是精度，而是**抖**。装甲板是一块近似平面的矩形，四个灯条角点在图像上张开的角度很小，深度方向的约束天然薄弱；再叠加曝光变化导致的角点亚像素漂移，解出来的yaw在相邻两帧之间跳十几度是常态。而下游的 EKF 把 yaw 当作观测量之一，抖动会直接被放大成整车中心的乱飘。
 
-这篇记录 `rcia_math_solver` 包里的处理思路：用 IPPE 拿一个稳定初值，再用一个**只有一个待优化参数**的束调整把偏航角在多帧上磨平。
+这篇记录 `rcia_math_solver` 包里的处理思路：用 IPPE 拿一个稳定初值，再用一个**只有一个待优化参数**的束调整把yaw在多帧上磨平。**降自由度 BA 的核心方案参考上海交通大学方俊杰同学的实现**（[rm.cv.fans](https://github.com/julyfun/rm.cv.fans)）：固定pitch先验，只优化yaw单参数，大幅降低优化自由度的同时避免了欠约束导致的发散。
 
 ### 1. 问题定义
 
@@ -20,11 +31,11 @@ category: "algorithm"
   - 相机内参 $K$（`camera_matrix.data`，9 元素）与畸变系数（5 元素）
 - **输出**
   - `pnp_armor_rvec` / `pnp_armor_tvec`：Rodrigues 旋转向量与平移向量
-  - `euler`：pitch / yaw / roll（角度制）
+  - `euler`： pitch / yaw / roll （角度制）
   - 经 BA 精化后发布为 `ArmorBaposeInfo`，含 `geometry_msgs/Pose`
 - **约束条件**
   - 单帧必须在相机帧间隔内解完，BA 迭代不能拖累整条流水线
-  - 偏航角要求平滑到能直接喂给 9 维 EKF 作观测（详见 [9 维 EKF 状态建模](/blog/ekf9-spintop-tracker)）
+  - yaw 要求平滑到能直接喂给 9 维 EKF 作观测（详见 [9 维 EKF 状态建模](/blog/ekf9-spintop-tracker)）
 
 标定得到的内参里有个值得一提的细节：
 
@@ -55,7 +66,7 @@ $$
 
 #### 2.2 降自由度：把 6 维问题压成 1 维
 
-完整外参有 6 个自由度。但装甲板在赛场上的姿态是**有强先验**的：它被固定安装在机器人侧面，俯仰角基本恒定，滚转角接近零。于是不把 $R$ 当自由变量，而是参数化成只含偏航的形式：
+完整外参有 6 个自由度。但装甲板在赛场上的姿态是**有强先验**的：它被固定安装在机器人侧面，pitch 基本恒定，roll 接近零。于是不把 $R$ 当自由变量，而是参数化成只含yaw的形式：
 
 $$
 R(\psi) = R_z(0) \, R_y(\psi) \, R_x(\phi_0), \qquad \phi_0 = \pm 15^\circ
@@ -169,7 +180,7 @@ void BA_CLASS::adjust_optimized_data(vector<Point2f>& object_2d_point) {
 }
 ```
 
-窗口内所有帧共享同一个 `initial_yaw` 参数块，本质是"用 5 帧观测联合约束一个偏航角"。这就是抖动被压下去的原因：单帧 8 个残差换成 40 个，同时观测噪声在最小二乘意义下被平均。
+窗口内所有帧共享同一个 `initial_yaw` 参数块，本质是"用 5 帧观测联合约束一个 yaw"。这就是抖动被压下去的原因：单帧 8 个残差换成 40 个，同时观测噪声在最小二乘意义下被平均。
 
 跳变检测只看 x 方向平移差，超过 0.2 m 就清空整个窗口。装甲板切换（陀螺旋转导致下一块板转到正面）时位置是阶跃的，如果不清窗，旧帧会把新姿态往回拽。
 
@@ -179,8 +190,8 @@ void BA_CLASS::adjust_optimized_data(vector<Point2f>& object_2d_point) {
 
 | 参数 | 取值范围 | 最优值 | 调整依据 |
 | --- | --- | --- | --- |
-| `Ba_Param.yaw_optimization` | 0.01 – 1.0 | **0.05** | 偏航优化的 Cauchy 尺度。残差单位是像素，0.05 意味着几乎所有残差都落在核函数的对数压缩段 —— 这是**刻意**的强降权，让个别飘掉的角点无法主导解 |
-| `Ba_Param.trans_vector_optimization` | 1.0 – 5.0 | **2.5** | 平移优化的 Cauchy 尺度，量级远大于偏航项，因为平移残差本身分布更宽 |
+| `Ba_Param.yaw_optimization` | 0.01 – 1.0 | **0.05** | yaw 优化的 Cauchy 尺度。残差单位是像素，0.05 意味着几乎所有残差都落在核函数的对数压缩段 —— 这是**刻意**的强降权，让个别飘掉的角点无法主导解 |
+| `Ba_Param.trans_vector_optimization` | 1.0 – 5.0 | **2.5** | 平移优化的 Cauchy 尺度，量级远大于yaw项，因为平移残差本身分布更宽 |
 | `Ba_Param.maximum_yaw` / `minimum_yaw` | ±30° – ±60° | **±45°** | 超过 45° 时装甲板灯条投影严重压缩，角点定位精度崩塌，解出来的值没有意义，不如直接截断 |
 | `optimizeLength_` | 3 – 8 | **5** | 3 帧平滑不足，8 帧在陀螺转速高时会引入明显滞后 |
 | 跳变阈值 | 0.1 – 0.3 m | **0.2 m** | 小于 0.1 会被正常抖动误触发，整窗反复清空等于退化成单帧 |
@@ -188,13 +199,13 @@ void BA_CLASS::adjust_optimized_data(vector<Point2f>& object_2d_point) {
 
 #### 坑点与解决方案
 
-**坑 1：平移优化问题建了但没求解。** `bundle_adjustment()` 里完整构造了 `problem2`（三个平移分量各自作为一维参数块，上下界 ±0.05 m，配 `ReprojectionError2`），但真正的 `ceres::Solve(options2, &problem2, &summary2)` 调用连同结果回写一起被注释掉了。也就是说**平移量始终沿用 IPPE 的原始解，只有偏航被精化**。
+**坑 1：平移优化问题建了但没求解。** `bundle_adjustment()` 里完整构造了 `problem2`（三个平移分量各自作为一维参数块，上下界 ±0.05 m，配 `ReprojectionError2`），但真正的 `ceres::Solve(options2, &problem2, &summary2)` 调用连同结果回写一起被注释掉了。也就是说**平移量始终沿用 IPPE 的原始解，只有yaw被精化**。
 
-这不完全是坏事：偏航是抖得最凶的量，而平移（尤其深度）在四点共面配置下本来就缺乏约束，硬优化容易越优化越飘。但代码现状是"每帧白建一个 Ceres Problem 再丢掉"，纯浪费。要么恢复求解，要么把这段建模删掉。
+这不完全是坏事：yaw 是抖得最凶的量，而平移（尤其深度）在四点共面配置下本来就缺乏约束，硬优化容易越优化越飘。但代码现状是"每帧白建一个 Ceres Problem 再丢掉"，纯浪费。要么恢复求解，要么把这段建模删掉。
 
 **坑 2：`ReprojectionError2` 在残差计算中做副作用。** 它在遍历角点时累加 `sum_X/Y/Z` 并除以 4 写进 `g_reproject_tvec`，还得用 `if constexpr (std::is_same<T, ceres::Jet<double,3>>::value)` 分支来剥 Jet 类型的实部。把"取值"和"求导"两条路径混在同一个函子里，是自动微分代码里典型的味道 —— 正确做法是求解结束后从参数块读取结果。
 
-**坑 3：欧拉角提取公式漏了平方。** 从旋转矩阵取偏航角时写的是：
+**坑 3：欧拉角提取公式漏了平方。** 从旋转矩阵取yaw时写的是：
 
 ```cpp
 armor_identify_msg.euler.y = atan2(-rotM.at<double>(2,0),
@@ -207,15 +218,15 @@ armor_identify_msg.euler.y = atan2(-rotM.at<double>(2,0),
 ### 5. 验证方法
 
 - **单帧重投影检查**：把优化后的 $(R(\psi^\star), t)$ 重新投影回图像，叠加绘制在原始角点上。角点误差目视应在 1–2 px 内。
-- **静态标定板对拍**：装甲板固定在已知偏航角的转台上，对比解算值与真值，覆盖 $\pm 45^\circ$ 区间。
+- **静态标定板对拍**：装甲板固定在已知yaw的转台上，对比解算值与真值，覆盖 $\pm 45^\circ$ 区间。
 - **动态时序曲线**：录制陀螺场景的 bag，用 Foxglove 画 `armor_bapose_info/euler.y` 的时序曲线，对比开启/关闭 BA 的曲线毛刺幅度 —— 这是判断平滑是否生效最直观的方式。
 - **端到端指标**：论文实验部分给出位姿同步精度优于 1.5°，虚拟弹道与真实弹着点误差小于 5 cm。
 
-**评价指标**：重投影 RMSE（px）、偏航角时序标准差（deg）、相邻帧偏航角一阶差分的 95 分位数。
+**评价指标**：重投影 RMSE（px）、yaw 时序标准差（deg）、相邻帧yaw一阶差分的 95 分位数。
 
 ---
 
-**参考**
+延迟补偿链是另一半：[飞行时间与多级延迟](/blog/flight-time-delay-compensation)；弹道本身写在[弹道补偿：查表法与被注释掉的 RK4](/blog/ballistic-rk4-ceres)。
 
 - Collins T., Bartoli A. *Infinitesimal Plane-Based Pose Estimation*. IJCV, 2014.（OpenCV `SOLVEPNP_IPPE` 的原始论文）
 - Ceres Solver 官方文档：[Modeling Non-linear Least Squares](http://ceres-solver.org/nnls_modeling.html)

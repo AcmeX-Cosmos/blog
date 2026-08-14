@@ -4,6 +4,12 @@ date: "2024-07-06"
 description: "两两配对的向量比例判据、中心高度差与长宽比二次筛选，以及 O(n²) 配对循环为什么必须有轮廓数上限。"
 tags: ["OpenCV", "几何", "RoboMaster", "C++"]
 category: "algorithm"
+references:
+  - title: "OpenCV 4 快速入门"
+    meta: "冯振. 人民邮电出版社, 2020"
+  - title: "FYT2024 Vision Project"
+    meta: "CSU-FYT-Vision"
+    url: "https://github.com/CSU-FYT-Vision/FYT2024_vision"
 ---
 
 ## [Algorithm] 灯条配对与装甲板成型 - 2024-07-06

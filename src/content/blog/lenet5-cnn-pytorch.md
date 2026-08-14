@@ -4,6 +4,11 @@ date: "2024-11-05"
 description: "使用 PyTorch 从零实现 LeNet-5，理解卷积神经网络的基本原理，并在 MNIST 数据集上训练测试。"
 tags: ["PyTorch", "CNN", "LeNet-5", "深度学习", "Python"]
 category: "algorithm"
+references:
+  - title: "深度学习入门：基于 Python 的理论与实现"
+    meta: "斋藤康毅. 陆宇杰译. 人民邮电出版社, 2018"
+  - title: "Deep Learning"
+    meta: "Goodfellow I, Bengio Y, Courville A. MIT Press, 2016"
 ---
 
 ## CNN 的直觉

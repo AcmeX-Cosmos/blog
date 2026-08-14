@@ -4,13 +4,18 @@ date: "2024-08-03"
 description: "用加权点云 PCA 求灯条主轴，沿轴向做亮度梯度极值搜索定位端点，把 PnP 输入的角点误差压到亚像素。"
 tags: ["OpenCV", "PCA", "亚像素", "RoboMaster", "C++"]
 category: "algorithm"
+references:
+  - title: "OpenCV 4 快速入门"
+    meta: "冯振. 人民邮电出版社, 2020"
+  - title: "Learning OpenCV 3: Computer Vision in C++ with the OpenCV Library"
+    meta: "Bradski G, Kaehler A. O'Reilly Media, 2017"
 ---
 
 ## [Algorithm] 灯条端点亚像素定位 - 2024-08-03
 
 上一篇配对拿到的四个角点，是两条灯条最小外接矩形上下边的**中点**。这个点的精度取决于 `minAreaRect` 拟合的质量，而后者对二值化的胖瘦极其敏感——阈值调高一格，灯条缩短两三个像素，角点跟着往里缩。
 
-角点误差会被 PnP 放大成位姿误差。装甲板小板长约 135 mm，在 3 m 距离上成像宽度只有几十像素，2 px 的角点偏移换算到偏航角上就是好几度。所以这一步必须做。
+角点误差会被 PnP 放大成位姿误差。装甲板小板长约 135 mm，在 3 m 距离上成像宽度只有几十像素，2 px 的角点偏移换算到yaw上就是好几度。所以这一步必须做。
 
 ### 1. 问题定义
 
@@ -165,9 +170,9 @@ cv::Point2f centroid = cv::Point2f(moments.m10/moments.m00, moments.m01/moments.
 
 - **放大目视**：把原图 ROI 放大 8 倍，叠加绘制精修前后的角点，肉眼比较哪个更贴合灯条端点
 - **重投影误差对比**：同一批样本，分别用粗糙角点和精修角点跑 PnP，比较重投影 RMSE
-- **偏航角时序方差**：静止目标下录一段，看 `euler.y` 的标准差是否下降——这是最能反映实际收益的指标
+- **yaw 时序方差**：静止目标下录一段，看 `euler.y` 的标准差是否下降——这是最能反映实际收益的指标
 
-**评价指标**：重投影 RMSE（px）、静态目标偏航角标准差（deg）、精修成功率（四点全找到的帧占比）。
+**评价指标**：重投影 RMSE（px）、静态目标yaw标准差（deg）、精修成功率（四点全找到的帧占比）。
 
 ---
 

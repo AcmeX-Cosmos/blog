@@ -1,0 +1,192 @@
+---
+// 文章末尾的参考文献卡片。数据来自 frontmatter 的 references 字段。
+export interface Reference {
+  /** 文献标题 / 项目名 */
+  title: string;
+  /** 作者、出版社、年份等附注 */
+  meta?: string;
+  /** 可选外链 */
+  url?: string;
+}
+
+interface Props {
+  references?: Reference[];
+}
+
+const { references = [] } = Astro.props;
+---
+
+{references.length > 0 && (
+  <aside class="ref-card" aria-labelledby="ref-card-title">
+    <div class="ref-card-head">
+      <svg
+        aria-hidden="true"
+        class="ref-card-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+      </svg>
+      <h2 id="ref-card-title" class="ref-card-title">参考文献</h2>
+      <span class="ref-card-count">{references.length}</span>
+    </div>
+
+    <ol class="ref-card-list">
+      {references.map((ref) => (
+        <li class="ref-card-item">
+          <span class="ref-card-marker" aria-hidden="true"></span>
+          <div class="ref-card-body">
+            {ref.url ? (
+              <a
+                class="ref-card-link"
+                href={ref.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {ref.title}
+                <svg
+                  aria-hidden="true"
+                  class="ref-card-external"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M7 17 17 7M17 7H9M17 7v8" />
+                </svg>
+              </a>
+            ) : (
+              <span class="ref-card-name">{ref.title}</span>
+            )}
+            {ref.meta && <span class="ref-card-meta">{ref.meta}</span>}
+          </div>
+        </li>
+      ))}
+    </ol>
+  </aside>
+)}
+
+<style>
+  .ref-card {
+    margin-top: 3.5rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: 1rem;
+    background: hsl(var(--card));
+    padding: 1.25rem 1.4rem 1.4rem;
+  }
+
+  .ref-card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid hsl(var(--border));
+  }
+
+  .ref-card-icon {
+    width: 1.05rem;
+    height: 1.05rem;
+    flex: none;
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* 覆盖 .article-content h2 的默认边距与下划线 */
+  .ref-card-title {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .ref-card-count {
+    margin-inline-start: auto;
+    font-family: ui-monospace, monospace;
+    font-size: 0.7rem;
+    color: hsl(var(--muted-foreground));
+    border: 1px solid hsl(var(--border));
+    border-radius: 999px;
+    padding: 0.05rem 0.5rem;
+  }
+
+  .ref-card-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding-top: 1rem;
+  }
+
+  .ref-card-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  .ref-card-marker {
+    width: 0.3rem;
+    height: 0.3rem;
+    flex: none;
+    border-radius: 999px;
+    background: hsl(var(--muted-foreground));
+    opacity: 0.5;
+    transform: translateY(-0.15rem);
+  }
+
+  .ref-card-body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.15rem 0.5rem;
+  }
+
+  .ref-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 1px solid hsl(var(--border));
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .ref-card-link:hover {
+    color: hsl(var(--foreground));
+    border-bottom-color: hsl(var(--foreground));
+  }
+
+  .ref-card-external {
+    width: 0.8rem;
+    height: 0.8rem;
+    flex: none;
+    opacity: 0.5;
+  }
+
+  .ref-card-name {
+    font-weight: 500;
+  }
+
+  .ref-card-meta {
+    color: hsl(var(--muted-foreground));
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 640px) {
+    .ref-card {
+      padding: 1.1rem 1rem 1.2rem;
+    }
+  }
+</style>

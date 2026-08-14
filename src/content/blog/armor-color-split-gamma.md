@@ -4,6 +4,11 @@ date: "2024-06-08"
 description: "为什么用 R−B 通道相减而不是 HSV 阈值，红蓝两色为何一个腐蚀一个膨胀，以及查表法伽玛校正的实现细节。"
 tags: ["OpenCV", "图像处理", "RoboMaster", "C++"]
 category: "algorithm"
+references:
+  - title: "OpenCV 4 快速入门"
+    meta: "冯振. 人民邮电出版社, 2020"
+  - title: "学习 OpenCV（中文版）"
+    meta: "于仕琪, 刘瑞祯. 清华大学出版社, 2009"
 ---
 
 ## [Algorithm] 敌方色灯条二值化 - 2024-06-08

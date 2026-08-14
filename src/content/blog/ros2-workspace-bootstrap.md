@@ -4,6 +4,10 @@ date: "2024-03-16"
 description: "colcon 工作区的目录约定、一键构建脚本 rb.sh 的演化，以及新人最容易卡住的 source 顺序问题。"
 tags: ["ROS2", "colcon", "工程实践", "Linux"]
 category: "daily"
+references:
+  - title: "rmoss_core"
+    meta: "RoboMaster OpenSource Software"
+    url: "https://github.com/robomaster-oss/rmoss_core"
 ---
 
 ## [Daily] ROS2 工作区搭建 - 2024-03-16
