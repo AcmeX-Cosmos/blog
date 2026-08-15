@@ -1,5 +1,5 @@
 ---
-title: "Paper Reading: LLM 主流架构与训练方法演进"
+title: "Paper Reading: LLM 1 - 主流架构与训练方法演进"
 date: "2026-08-12"
 description: "从 GPT、BERT、T5 到 MoE、Mamba、Qwen2.5 与 DeepSeek，系统梳理大语言模型的架构、扩展规律、分布式训练和对齐方法。"
 tags: ["LLM", "Transformer", "模型架构", "模型对齐", "论文合集"]

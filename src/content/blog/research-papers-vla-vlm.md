@@ -1,5 +1,5 @@
 ---
-title: "Paper Reading: VLM 与 VLA 主流模型架构"
+title: "Paper Reading: VLA / VLM 1 - 主流模型架构"
 date: "2026-08-13"
 description: "从图文对比学习、多模态连接器到动作 Token、扩散策略与 Flow Matching，系统梳理 VLM/VLA 主流模型架构和训练目标。"
 tags: ["VLM", "VLA", "多模态", "机器人基础模型", "论文合集"]
