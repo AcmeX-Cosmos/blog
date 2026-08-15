@@ -29,6 +29,7 @@ export async function GET() {
   const entries = [
     { url: '/', lastmod: posts[0]?.data.date || '' },
     { url: '/projects', lastmod: '' },
+    { url: '/projects/diceposeest', lastmod: '' },
     { url: '/about', lastmod: '' },
     ...postEntries,
     ...tagEntries,

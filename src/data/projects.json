@@ -1,8 +1,9 @@
 [
   {
-    "name": "RoboMaster 机器人跟踪射击系统",
+    "name": "RCIA-Vision-2025",
+    "slug": "rcia-vision-2025",
     "role": "核心算法负责人",
-    "link": "/blog/rcia-vision-overview",
+    "detail": "/blog/rcia-vision-overview",
     "description": "基于ROS2架构的机器人自动瞄准跟踪系统，涵盖装甲板检测、位姿解算、多传感器融合跟踪与弹道补偿的完整管线。同时负责UE5虚实仿真环境的搭建，实现算法在虚拟和真实环境下的闭环验证。",
     "tags": ["ROS2", "OpenCV", "PnP", "Ceres", "EKF", "C++", "UE5", "Docker"],
     "highlights": [
@@ -18,16 +19,21 @@
     ]
   },
   {
-    "name": "骰子识别与姿态估计系统",
+    "name": "DicePoseEst",
+    "slug": "diceposeest",
     "role": "独立完成",
-    "description": "基于YOLOv10 + PnP + BA + PoseNet多模型融合的骰子识别与6D姿态估计系统，支持实时视频流处理，并使用PyQt5构建完整GUI交互界面。",
+    "detail": "/blog/projects/diceposeest",
+    "github": "https://github.com/AcmeX-Cosmos/DicePoseEst",
+    "description": "基于YOLOv10 + PnP + BA + PoseNet多模型融合的骰子6D姿态估计系统，训练损失MAE低至0.034 rad。支持图像、视频与实时屏幕捕获多源输入，PyQt5交互界面提供参数调节与结果检查。",
     "tags": ["YOLOv10", "PnP", "Ceres", "PoseNet", "PyQt5", "Python"],
     "highlights": [
-      "多模型融合：YOLOv10目标检测 + PnP初始位姿 + BA精化优化 + PoseNet端到端姿态直接回归",
-      "完整的PyQt5图形界面，支持实时视频流处理与姿态可视化"
+      "多模型融合策略：YOLO目标检测 + PnP初始位姿 + Ceres BA优化 + PoseNet回归",
+      "多源输入：图像文件、视频流、Windows实时屏幕捕获",
+      "PyQt5交互界面：参数调节、模式切换、3D轴投影可视化",
+      "模块化架构：易于扩展新算法与模型"
     ],
     "results": [
-      { "label": "姿态估计精度", "value": "±2°" },
+      { "label": "训练损失MAE", "value": "0.034 rad" },
       { "label": "检测mAP", "value": "95%+" }
     ]
   },

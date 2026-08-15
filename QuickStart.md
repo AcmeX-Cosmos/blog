@@ -8,7 +8,7 @@ npm run build && npm run preview
 git add . && git commit -m "" && git push origin main
 ```
 
-git add . && git commit -m "feat(about): rework tech/book/music cards with unified skew styling and grid player" && git push origin main
+git add . && git commit -m "" && git push origin main
 
 把刚才修改的内容总结成专业性高的commit
 
