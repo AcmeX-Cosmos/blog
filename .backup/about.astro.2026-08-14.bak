@@ -296,7 +296,7 @@ const projects = [
         </div>
       </div>
       <div class="author-content-item mbti">
-        <img src="/blog/INTP-b.svg" alt="INTP" />
+        <img src="/blog/INTP-B.svg" alt="INTP" />
       </div>
     </div>
 
@@ -1509,7 +1509,7 @@ const projects = [
   /* ========== MBTI ========== */
   .author-content-item.mbti {
     width: calc((100% - 1.5rem) * 0.45);
-    /* 跟随 INTP-b.svg 的 900x500，变窄时等比缩高，不被拉伸也不多裁切 */
+    /* 跟随 INTP-B.svg 的 900x500，变窄时等比缩高，不被拉伸也不多裁切 */
     aspect-ratio: 9 / 5;
     align-self: flex-start;
     min-height: 0;
