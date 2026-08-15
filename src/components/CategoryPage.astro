@@ -22,7 +22,11 @@ const meta = getCategory(category);
 if (!meta) throw new Error(`Unknown category: ${category}`);
 
 const all = await getCollection('blog');
-const posts = sortedPosts(all).filter((p) => p.data.category === category);
+const posts = sortedPosts(all.filter((p) => p.data.category === category));
+
+if (category === 'research') {
+  posts.sort((a, b) => Number(b.data.pinned) - Number(a.data.pinned));
+}
 
 const totalPages = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
 const slice = posts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);

@@ -4,6 +4,7 @@ date: "2026-08-11"
 description: "从 CNN、ViT、自监督学习到开放词汇检测、可提示分割、点云 Transformer、深度估计、三维重建和视频预测，系统梳理 CV 主流论文。"
 tags: ["CV", "计算机视觉", "三维视觉", "视觉表征", "论文合集"]
 category: "research"
+pinned: true
 cover: "/blog/images/research/cv-architecture-map.svg"
 references:
   - title: "Deep Residual Learning for Image Recognition"

@@ -13,6 +13,8 @@ const blogCollection = defineCollection({
     tags: z.array(z.string()).optional().default([]),
     // research | algorithm | tech | daily — 决定文章归入哪个分类页
     category: z.enum(['research', 'algorithm', 'tech', 'daily']).default('tech'),
+    // 分类页置顶；当前仅由 Research 列表使用
+    pinned: z.boolean().optional().default(false),
     // 可选封面图，卡片右侧作为背景铺开
     cover: z.string().optional(),
     // 文末参考文献卡片；不写序号，顺序即列表顺序

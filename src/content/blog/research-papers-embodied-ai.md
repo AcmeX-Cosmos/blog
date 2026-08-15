@@ -4,6 +4,7 @@ date: "2026-08-14"
 description: "聚焦具身智能中高影响力和高热度的代表论文，覆盖模仿学习、VLA、语言规划、空间推理、大规模数据、生成式策略与抓取感知。"
 tags: ["Embodied AI", "具身智能", "机器人学习", "VLA", "论文合集"]
 category: "research"
+pinned: true
 cover: "/blog/images/research/embodied-ai-architecture-map.svg"
 references:
   - title: "ACT"
