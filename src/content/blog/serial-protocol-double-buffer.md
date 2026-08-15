@@ -1,12 +1,12 @@
 ---
-title: "[Integration] 串口协议与原子双缓冲：视觉与电控的数据交换"
+title: "串口协议与原子双缓冲：视觉与电控的数据交换"
 date: "2024-05-11"
 description: "InfantryProtocol 的收发打包、UART 传输层抽象，以及用原子指针双缓冲让高频串口数据与图像回调无锁共享。"
 tags: ["ROS2", "串口", "并发", "C++"]
 category: "tech"
 ---
 
-## [Integration] serial_driver ↔ vision_detector - 2024-05-11
+## serial_driver ↔ vision_detector - 2024-05-11
 
 视觉和电控之间只有一根串口线。上行发云台角度和开火指令，下行收当前姿态、弹速、我方颜色。看起来简单，但这条链路是整个系统里唯一的硬实时边界——图像慢一帧只是延迟，串口错一个字节可能让云台甩飞。
 

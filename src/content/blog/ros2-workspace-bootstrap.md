@@ -1,5 +1,5 @@
 ---
-title: "[Daily] 从零搭起 RCIA-vision 的 ROS2 工作区"
+title: "从零搭起 RCIA-vision 的 ROS2 工作区"
 date: "2024-03-16"
 description: "colcon 工作区的目录约定、一键构建脚本 rb.sh 的演化，以及新人最容易卡住的 source 顺序问题。"
 tags: ["ROS2", "colcon", "工程实践", "Linux"]
@@ -10,7 +10,7 @@ references:
     url: "https://github.com/robomaster-oss/rmoss_core"
 ---
 
-## [Daily] ROS2 工作区搭建 - 2024-03-16
+## ROS2 工作区搭建 - 2024-03-16
 
 接手战队视觉代码的第一周，大部分时间不是花在算法上，而是花在"为什么我的包编不过"。这篇把踩过的坑记下来，免得下一届再问一遍。
 

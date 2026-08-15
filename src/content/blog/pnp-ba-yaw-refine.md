@@ -1,5 +1,5 @@
 ---
-title: "[Algorithm] PnP + 降自由度 BA：从单帧位姿抖动到多帧yaw平滑"
+title: "PnP + 降自由度 BA：从单帧位姿抖动到多帧yaw平滑"
 date: "2024-12-05"
 description: "RCIA-vision 中 IPPE 初值解算与 Ceres 束调整的工程实现：固定pitch先验、只优化yaw的单参数 BA，以及 Cauchy 核与历史帧窗口的整定。"
 tags: ["PnP", "Ceres", "BA", "OpenCV", "C++", "RoboMaster"]
@@ -17,7 +17,7 @@ references:
     url: "http://ceres-solver.org/nnls_modeling.html"
 ---
 
-## [Algorithm] 装甲板位姿解算与降自由度束调整 - 2024-12-05
+## 装甲板位姿解算与降自由度束调整 - 2024-12-05
 
 单帧 PnP 在 RoboMaster 赛场上最难受的地方不是精度，而是**抖**。装甲板是一块近似平面的矩形，四个灯条角点在图像上张开的角度很小，深度方向的约束天然薄弱；再叠加曝光变化导致的角点亚像素漂移，解出来的yaw在相邻两帧之间跳十几度是常态。而下游的 EKF 把 yaw 当作观测量之一，抖动会直接被放大成整车中心的乱飘。
 
