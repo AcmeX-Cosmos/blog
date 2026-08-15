@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="760" viewBox="0 0 1440 760" role="img" aria-labelledby="title desc">
+  <title id="title">Computer vision architecture map</title>
+  <desc id="desc">A map of supervised backbones, self-supervised representation, open-world perception, and 3D geometry models.</desc>
+  <rect width="1440" height="760" fill="#111315"/>
+  <text x="72" y="76" fill="#f5f6f7" font-family="Inter, Arial, sans-serif" font-size="36" font-weight="700">Computer Vision: Representation Map</text>
+  <text x="72" y="116" fill="#a7afb7" font-family="Inter, Arial, sans-serif" font-size="18">From fixed-label recognition to promptable perception, geometry, and predictive video.</text>
+  <g font-family="Inter, Arial, sans-serif">
+    <rect x="72" y="182" width="300" height="188" rx="6" fill="#17222c" stroke="#4ea1ff"/>
+    <text x="98" y="220" fill="#4ea1ff" font-size="14" font-weight="700">SUPERVISED BACKBONES</text>
+    <text x="98" y="260" fill="#f5f6f7" font-size="25" font-weight="650">AlexNet → VGG → ResNet</text>
+    <text x="98" y="300" fill="#a7afb7" font-size="16">Local convolutional hierarchy</text>
+    <text x="98" y="326" fill="#a7afb7" font-size="16">Residual optimization</text>
+    <text x="98" y="352" fill="#a7afb7" font-size="16">InternImage: adaptive sampling</text>
+    <path d="M372 276H414" stroke="#59636d" stroke-width="3"/><path d="m414 276-12-8v16z" fill="#59636d"/>
+    <rect x="434" y="182" width="300" height="188" rx="6" fill="#18251f" stroke="#4fc38a"/>
+    <text x="460" y="220" fill="#4fc38a" font-size="14" font-weight="700">TOKEN REPRESENTATION</text>
+    <text x="460" y="260" fill="#f5f6f7" font-size="25" font-weight="650">ViT / Point Transformer</text>
+    <text x="460" y="300" fill="#a7afb7" font-size="16">Image patches or 3D points</text>
+    <text x="460" y="326" fill="#a7afb7" font-size="16">Global self-attention</text>
+    <text x="460" y="352" fill="#a7afb7" font-size="16">Scalable foundation backbones</text>
+    <path d="M734 276H776" stroke="#59636d" stroke-width="3"/><path d="m776 276-12-8v16z" fill="#59636d"/>
+    <rect x="796" y="182" width="300" height="188" rx="6" fill="#292218" stroke="#e8ad4f"/>
+    <text x="822" y="220" fill="#e8ad4f" font-size="14" font-weight="700">SELF-SUPERVISION</text>
+    <text x="822" y="260" fill="#f5f6f7" font-size="25" font-weight="650">MAE / DINO / V-JEPA</text>
+    <text x="822" y="300" fill="#a7afb7" font-size="16">Masked reconstruction</text>
+    <text x="822" y="326" fill="#a7afb7" font-size="16">Teacher-student distillation</text>
+    <text x="822" y="352" fill="#a7afb7" font-size="16">Predictive latent video</text>
+    <path d="M1096 276H1138" stroke="#59636d" stroke-width="3"/><path d="m1138 276-12-8v16z" fill="#59636d"/>
+    <rect x="1158" y="182" width="210" height="188" rx="6" fill="#2a1c1b" stroke="#f27c71"/>
+    <text x="1184" y="220" fill="#f27c71" font-size="14" font-weight="700">OPEN WORLD</text>
+    <text x="1184" y="260" fill="#f5f6f7" font-size="25" font-weight="650">Text / prompts</text>
+    <text x="1184" y="300" fill="#a7afb7" font-size="16">Grounding DINO</text>
+    <text x="1184" y="326" fill="#a7afb7" font-size="16">SAM / SAM 2</text>
+    <text x="1184" y="352" fill="#a7afb7" font-size="16">OpenScene</text>
+
+    <text x="72" y="438" fill="#7f8993" font-size="14" font-weight="700">3D GEOMETRY AND SCENE REPRESENTATION</text>
+    <rect x="72" y="468" width="296" height="164" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="98" y="507" fill="#4ea1ff" font-size="14" font-weight="700">POINT SETS</text>
+    <text x="98" y="546" fill="#f5f6f7" font-size="24" font-weight="650">PointNet / PointNet++</text>
+    <text x="98" y="578" fill="#a7afb7" font-size="16">Permutation invariance</text>
+    <text x="98" y="603" fill="#a7afb7" font-size="16">Hierarchical neighborhoods</text>
+    <rect x="396" y="468" width="296" height="164" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="422" y="507" fill="#4fc38a" font-size="14" font-weight="700">DEPTH</text>
+    <text x="422" y="546" fill="#f5f6f7" font-size="24" font-weight="650">Depth Anything</text>
+    <text x="422" y="578" fill="#a7afb7" font-size="16">Relative structure</text>
+    <text x="422" y="603" fill="#a7afb7" font-size="16">Metric variants and video</text>
+    <rect x="720" y="468" width="296" height="164" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="746" y="507" fill="#e8ad4f" font-size="14" font-weight="700">GEOMETRY FOUNDATION</text>
+    <text x="746" y="546" fill="#f5f6f7" font-size="24" font-weight="650">DUSt3R / VGGT</text>
+    <text x="746" y="578" fill="#a7afb7" font-size="16">Pointmaps and cameras</text>
+    <text x="746" y="603" fill="#a7afb7" font-size="16">Multi-view prediction</text>
+    <rect x="1044" y="468" width="324" height="164" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="1070" y="507" fill="#f27c71" font-size="14" font-weight="700">NOVEL VIEW SYNTHESIS</text>
+    <text x="1070" y="546" fill="#f5f6f7" font-size="24" font-weight="650">3D Gaussian Splatting</text>
+    <text x="1070" y="578" fill="#a7afb7" font-size="16">Explicit Gaussian scene</text>
+    <text x="1070" y="603" fill="#a7afb7" font-size="16">Real-time differentiable rendering</text>
+  </g>
+  <text x="72" y="694" fill="#a7afb7" font-family="Inter, Arial, sans-serif" font-size="16">A visual model should be compared by representation, supervision, output coordinates, data scale, and inference cost.</text>
+  <text x="72" y="724" fill="#7f8993" font-family="Inter, Arial, sans-serif" font-size="14">Original study diagram · model names belong to their respective authors</text>
+</svg>

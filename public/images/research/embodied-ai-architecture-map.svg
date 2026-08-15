@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="760" viewBox="0 0 1440 760" role="img" aria-labelledby="title desc">
+  <title id="title">Embodied AI architecture map</title>
+  <desc id="desc">Four research tracks from observations and task conditions to policies, actions, and feedback.</desc>
+  <rect width="1440" height="760" fill="#111315"/>
+  <text x="72" y="76" fill="#f5f6f7" font-family="Inter, Arial, sans-serif" font-size="36" font-weight="700">Embodied AI: Architecture Map</text>
+  <text x="72" y="116" fill="#a7afb7" font-family="Inter, Arial, sans-serif" font-size="18">Representative models organized by the intermediate representation they learn.</text>
+
+  <g font-family="Inter, Arial, sans-serif">
+    <text x="330" y="158" fill="#7f8993" font-size="14" font-weight="700">INPUT</text>
+    <text x="610" y="158" fill="#7f8993" font-size="14" font-weight="700">REPRESENTATION</text>
+    <text x="890" y="158" fill="#7f8993" font-size="14" font-weight="700">POLICY</text>
+    <text x="1170" y="158" fill="#7f8993" font-size="14" font-weight="700">OUTPUT</text>
+
+    <rect x="72" y="182" width="220" height="98" rx="6" fill="#18251f" stroke="#4fc38a"/>
+    <text x="94" y="219" fill="#4fc38a" font-size="14" font-weight="700">IMITATION</text>
+    <text x="94" y="249" fill="#f5f6f7" font-size="21" font-weight="650">ACT / Diffusion Policy</text>
+    <rect x="330" y="182" width="220" height="98" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="352" y="220" fill="#f5f6f7" font-size="19">Images + state</text>
+    <text x="352" y="249" fill="#a7afb7" font-size="15">Demonstration windows</text>
+    <path d="M550 231H590" stroke="#59636d" stroke-width="2"/><path d="m590 231-9-6v12z" fill="#59636d"/>
+    <rect x="610" y="182" width="220" height="98" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="632" y="220" fill="#f5f6f7" font-size="19">Action chunk</text>
+    <text x="632" y="249" fill="#a7afb7" font-size="15">CVAE or denoising</text>
+    <path d="M830 231H870" stroke="#59636d" stroke-width="2"/><path d="m870 231-9-6v12z" fill="#59636d"/>
+    <rect x="890" y="182" width="220" height="98" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="912" y="220" fill="#f5f6f7" font-size="19">Closed-loop policy</text>
+    <text x="912" y="249" fill="#a7afb7" font-size="15">Receding horizon</text>
+    <path d="M1110 231H1150" stroke="#59636d" stroke-width="2"/><path d="m1150 231-9-6v12z" fill="#59636d"/>
+    <rect x="1170" y="182" width="198" height="98" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="1192" y="220" fill="#f5f6f7" font-size="19">Continuous action</text>
+    <text x="1192" y="249" fill="#a7afb7" font-size="15">Execute and observe</text>
+
+    <rect x="72" y="312" width="220" height="98" rx="6" fill="#17222c" stroke="#4ea1ff"/>
+    <text x="94" y="349" fill="#4ea1ff" font-size="14" font-weight="700">GENERALIST VLA</text>
+    <text x="94" y="379" fill="#f5f6f7" font-size="21" font-weight="650">RT-X / OpenVLA / Octo</text>
+    <rect x="330" y="312" width="220" height="98" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="352" y="350" fill="#f5f6f7" font-size="19">Vision + language</text>
+    <text x="352" y="379" fill="#a7afb7" font-size="15">Cross-robot datasets</text>
+    <path d="M550 361H590" stroke="#59636d" stroke-width="2"/><path d="m590 361-9-6v12z" fill="#59636d"/>
+    <rect x="610" y="312" width="220" height="98" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="632" y="350" fill="#f5f6f7" font-size="19">Shared token space</text>
+    <text x="632" y="379" fill="#a7afb7" font-size="15">Task and embodiment</text>
+    <path d="M830 361H870" stroke="#59636d" stroke-width="2"/><path d="m870 361-9-6v12z" fill="#59636d"/>
+    <rect x="890" y="312" width="220" height="98" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="912" y="350" fill="#f5f6f7" font-size="19">Transformer policy</text>
+    <text x="912" y="379" fill="#a7afb7" font-size="15">Pretrain then adapt</text>
+    <path d="M1110 361H1150" stroke="#59636d" stroke-width="2"/><path d="m1150 361-9-6v12z" fill="#59636d"/>
+    <rect x="1170" y="312" width="198" height="98" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="1192" y="350" fill="#f5f6f7" font-size="19">Action tokens</text>
+    <text x="1192" y="379" fill="#a7afb7" font-size="15">Multi-task control</text>
+
+    <rect x="72" y="442" width="220" height="98" rx="6" fill="#292218" stroke="#e8ad4f"/>
+    <text x="94" y="479" fill="#e8ad4f" font-size="14" font-weight="700">GENERATIVE ACTION</text>
+    <text x="94" y="509" fill="#f5f6f7" font-size="21" font-weight="650">RDT / PI-0 / FAST</text>
+    <rect x="330" y="442" width="220" height="98" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="352" y="480" fill="#f5f6f7" font-size="19">Multimodal context</text>
+    <text x="352" y="509" fill="#a7afb7" font-size="15">High-rate trajectories</text>
+    <path d="M550 491H590" stroke="#59636d" stroke-width="2"/><path d="m590 491-9-6v12z" fill="#59636d"/>
+    <rect x="610" y="442" width="220" height="98" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="632" y="480" fill="#f5f6f7" font-size="19">Noise / frequency</text>
+    <text x="632" y="509" fill="#a7afb7" font-size="15">Continuous latent path</text>
+    <path d="M830 491H870" stroke="#59636d" stroke-width="2"/><path d="m870 491-9-6v12z" fill="#59636d"/>
+    <rect x="890" y="442" width="220" height="98" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="912" y="480" fill="#f5f6f7" font-size="19">DiT / flow expert</text>
+    <text x="912" y="509" fill="#a7afb7" font-size="15">Iterative generation</text>
+    <path d="M1110 491H1150" stroke="#59636d" stroke-width="2"/><path d="m1150 491-9-6v12z" fill="#59636d"/>
+    <rect x="1170" y="442" width="198" height="98" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="1192" y="480" fill="#f5f6f7" font-size="19">Smooth trajectory</text>
+    <text x="1192" y="509" fill="#a7afb7" font-size="15">Continuous precision</text>
+
+    <rect x="72" y="572" width="220" height="98" rx="6" fill="#2a1c1b" stroke="#f27c71"/>
+    <text x="94" y="609" fill="#f27c71" font-size="14" font-weight="700">REASONING</text>
+    <text x="94" y="639" fill="#f5f6f7" font-size="16" font-weight="650">SayCan / VoxPoser / ReKep</text>
+    <rect x="330" y="572" width="220" height="98" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="352" y="610" fill="#f5f6f7" font-size="19">Instruction + scene</text>
+    <text x="352" y="639" fill="#a7afb7" font-size="15">Semantic constraints</text>
+    <path d="M550 621H590" stroke="#59636d" stroke-width="2"/><path d="m590 621-9-6v12z" fill="#59636d"/>
+    <rect x="610" y="572" width="220" height="98" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="632" y="610" fill="#f5f6f7" font-size="19">Skills / value maps</text>
+    <text x="632" y="639" fill="#a7afb7" font-size="15">Keypoint relations</text>
+    <path d="M830 621H870" stroke="#59636d" stroke-width="2"/><path d="m870 621-9-6v12z" fill="#59636d"/>
+    <rect x="890" y="572" width="220" height="98" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="912" y="610" fill="#f5f6f7" font-size="19">Planner / optimizer</text>
+    <text x="912" y="639" fill="#a7afb7" font-size="15">Executable grounding</text>
+    <path d="M1110 621H1150" stroke="#59636d" stroke-width="2"/><path d="m1150 621-9-6v12z" fill="#59636d"/>
+    <rect x="1170" y="572" width="198" height="98" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="1192" y="610" fill="#f5f6f7" font-size="19">Plan and feedback</text>
+    <text x="1192" y="639" fill="#a7afb7" font-size="15">Re-observe state</text>
+  </g>
+  <text x="72" y="724" fill="#7f8993" font-family="Inter, Arial, sans-serif" font-size="14">Original study diagram · model names belong to their respective authors</text>
+</svg>

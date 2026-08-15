@@ -1,0 +1,139 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+  variant: 'desktop' | 'mobile';
+}
+
+const { headings, variant } = Astro.props;
+const total = headings.length;
+const totalLabel = String(total).padStart(2, '0');
+---
+
+{variant === 'desktop' ? (
+  <aside class="paper-toc-desktop" data-paper-toc aria-labelledby="paper-toc-title">
+    <div class="paper-toc-heading">
+      <div>
+        <p class="paper-toc-eyebrow">TABLE OF CONTENTS</p>
+        <h2 id="paper-toc-title">Architecture papers</h2>
+      </div>
+      <span class="paper-toc-count" data-toc-current>{total > 0 ? `01 / ${totalLabel}` : '00 / 00'}</span>
+    </div>
+    <div class="paper-toc-progress" aria-hidden="true">
+      <span data-toc-progress></span>
+    </div>
+    <nav class="paper-toc-nav" aria-label="论文目录">
+      {headings.map((heading, index) => (
+        <a href={`#${heading.slug}`} class="paper-toc-link" data-toc-link data-toc-index={index}>
+          <span>{String(index + 1).padStart(2, '0')}</span>
+          <strong>{heading.text}</strong>
+        </a>
+      ))}
+    </nav>
+  </aside>
+) : (
+  <details class="paper-toc-mobile" data-paper-toc>
+    <summary>
+      <span>TABLE OF CONTENTS</span>
+      <span data-toc-current>{total > 0 ? `01 / ${totalLabel}` : '00 / 00'}</span>
+    </summary>
+    <div class="paper-toc-progress" aria-hidden="true">
+      <span data-toc-progress></span>
+    </div>
+    <nav class="paper-toc-mobile-nav" aria-label="论文目录">
+      {headings.map((heading, index) => (
+        <a href={`#${heading.slug}`} class="paper-toc-link" data-toc-link data-toc-index={index}>
+          <span>{String(index + 1).padStart(2, '0')}</span>
+          <strong>{heading.text}</strong>
+        </a>
+      ))}
+    </nav>
+  </details>
+)}
+
+<script>
+  const initializePaperToc = () => {
+    const roots = document.querySelectorAll<HTMLElement>('[data-paper-toc]');
+    const articleHeadings = Array.from(
+      document.querySelectorAll<HTMLElement>('.paper-reading-article .article-content h2[id]')
+    );
+
+    if (!roots.length || !articleHeadings.length) return;
+
+    const update = () => {
+      const threshold = Math.min(window.innerHeight * 0.3, 280);
+      let activeIndex = 0;
+
+      articleHeadings.forEach((heading, index) => {
+        if (heading.getBoundingClientRect().top <= threshold) activeIndex = index;
+      });
+
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 8) {
+        activeIndex = articleHeadings.length - 1;
+      }
+
+      roots.forEach(root => {
+        const links = Array.from(root.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
+        links.forEach((link, index) => {
+          const active = index === activeIndex;
+          link.classList.toggle('is-active', active);
+          if (active) link.setAttribute('aria-current', 'true');
+          else link.removeAttribute('aria-current');
+        });
+
+        if (root.dataset.activeIndex !== String(activeIndex)) {
+          root.dataset.activeIndex = String(activeIndex);
+          const activeLink = links[activeIndex];
+          const scroller = activeLink?.closest<HTMLElement>('.paper-toc-nav, .paper-toc-mobile-nav');
+
+          if (activeLink && scroller) {
+            const linkTop = activeLink.offsetTop;
+            const linkBottom = linkTop + activeLink.offsetHeight;
+            const visibleTop = scroller.scrollTop;
+            const visibleBottom = visibleTop + scroller.clientHeight;
+
+            if (linkTop < visibleTop) scroller.scrollTop = linkTop;
+            else if (linkBottom > visibleBottom) scroller.scrollTop = linkBottom - scroller.clientHeight;
+          }
+        }
+
+        const count = root.querySelector<HTMLElement>('[data-toc-current]');
+        if (count) {
+          count.textContent = `${String(activeIndex + 1).padStart(2, '0')} / ${String(articleHeadings.length).padStart(2, '0')}`;
+        }
+
+        const progress = root.querySelector<HTMLElement>('[data-toc-progress]');
+        if (progress) {
+          progress.style.width = `${((activeIndex + 1) / articleHeadings.length) * 100}%`;
+        }
+      });
+    };
+
+    let frame = 0;
+    const scheduleUpdate = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        update();
+      });
+    };
+
+    update();
+    window.requestAnimationFrame(update);
+    window.addEventListener('load', update, { once: true });
+    window.addEventListener('hashchange', update);
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializePaperToc, { once: true });
+  } else {
+    initializePaperToc();
+  }
+</script>

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="760" viewBox="0 0 1440 760" role="img" aria-labelledby="title desc">
+  <title id="title">Large language model architecture evolution</title>
+  <desc id="desc">A timeline connecting Transformer model families, scaling systems, alignment methods, and modern efficient architectures.</desc>
+  <rect width="1440" height="760" fill="#111315"/>
+  <text x="72" y="76" fill="#f5f6f7" font-family="Inter, Arial, sans-serif" font-size="36" font-weight="700">LLM: Architecture and Training Evolution</text>
+  <text x="72" y="116" fill="#a7afb7" font-family="Inter, Arial, sans-serif" font-size="18">Four layers of progress: backbone, scale, alignment, and inference efficiency.</text>
+  <g font-family="Inter, Arial, sans-serif">
+    <line x1="150" y1="190" x2="1290" y2="190" stroke="#30363c" stroke-width="3"/>
+    <g fill="#7f8993" font-size="14"><text x="130" y="164">2017</text><text x="410" y="164">2019</text><text x="690" y="164">2021</text><text x="970" y="164">2023</text><text x="1250" y="164">2025</text></g>
+    <g fill="#4ea1ff"><circle cx="150" cy="190" r="7"/><circle cx="430" cy="190" r="7"/><circle cx="710" cy="190" r="7"/><circle cx="990" cy="190" r="7"/><circle cx="1290" cy="190" r="7"/></g>
+
+    <rect x="72" y="232" width="280" height="154" rx="6" fill="#17222c" stroke="#4ea1ff"/>
+    <text x="98" y="270" fill="#4ea1ff" font-size="14" font-weight="700">BACKBONE FAMILIES</text>
+    <text x="98" y="309" fill="#f5f6f7" font-size="24" font-weight="650">Transformer</text>
+    <text x="98" y="340" fill="#a7afb7" font-size="16">Encoder: BERT</text>
+    <text x="98" y="364" fill="#a7afb7" font-size="16">Decoder: GPT / LLaMA</text>
+
+    <rect x="408" y="232" width="280" height="154" rx="6" fill="#18251f" stroke="#4fc38a"/>
+    <text x="434" y="270" fill="#4fc38a" font-size="14" font-weight="700">SCALE AND SYSTEMS</text>
+    <text x="434" y="309" fill="#f5f6f7" font-size="24" font-weight="650">Megatron / ZeRO</text>
+    <text x="434" y="340" fill="#a7afb7" font-size="16">Scaling Laws / Chinchilla</text>
+    <text x="434" y="364" fill="#a7afb7" font-size="16">Tensor, pipeline, data parallel</text>
+
+    <rect x="744" y="232" width="280" height="154" rx="6" fill="#292218" stroke="#e8ad4f"/>
+    <text x="770" y="270" fill="#e8ad4f" font-size="14" font-weight="700">ALIGNMENT AND REASONING</text>
+    <text x="770" y="309" fill="#f5f6f7" font-size="24" font-weight="650">InstructGPT / DPO</text>
+    <text x="770" y="340" fill="#a7afb7" font-size="16">Chain-of-Thought</text>
+    <text x="770" y="364" fill="#a7afb7" font-size="16">Preference and test-time compute</text>
+
+    <rect x="1080" y="232" width="288" height="154" rx="6" fill="#2a1c1b" stroke="#f27c71"/>
+    <text x="1106" y="270" fill="#f27c71" font-size="14" font-weight="700">MODERN EFFICIENCY</text>
+    <text x="1106" y="309" fill="#f5f6f7" font-size="24" font-weight="650">MoE / MLA / Mamba</text>
+    <text x="1106" y="340" fill="#a7afb7" font-size="16">Qwen2.5 / DeepSeek</text>
+    <text x="1106" y="364" fill="#a7afb7" font-size="16">Sparse compute and compact cache</text>
+
+    <text x="72" y="452" fill="#7f8993" font-size="14" font-weight="700">THE TRANSFORMER FAMILY TREE</text>
+    <rect x="72" y="482" width="220" height="126" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="96" y="521" fill="#f5f6f7" font-size="21" font-weight="650">Encoder-only</text>
+    <text x="96" y="554" fill="#4ea1ff" font-size="18">BERT</text>
+    <text x="96" y="581" fill="#a7afb7" font-size="15">Bidirectional understanding</text>
+    <path d="M292 545H346" stroke="#59636d" stroke-width="2"/><path d="m346 545-10-7v14z" fill="#59636d"/>
+    <rect x="366" y="482" width="220" height="126" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="390" y="521" fill="#f5f6f7" font-size="21" font-weight="650">Encoder-decoder</text>
+    <text x="390" y="554" fill="#4fc38a" font-size="18">T5</text>
+    <text x="390" y="581" fill="#a7afb7" font-size="15">Conditional text-to-text</text>
+    <path d="M586 545H640" stroke="#59636d" stroke-width="2"/><path d="m640 545-10-7v14z" fill="#59636d"/>
+    <rect x="660" y="482" width="316" height="126" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="684" y="521" fill="#f5f6f7" font-size="21" font-weight="650">Decoder-only</text>
+    <text x="684" y="554" fill="#e8ad4f" font-size="18">GPT / LLaMA / Qwen</text>
+    <text x="684" y="581" fill="#a7afb7" font-size="15">Causal generation and in-context learning</text>
+    <path d="M976 545H1030" stroke="#59636d" stroke-width="2"/><path d="m1030 545-10-7v14z" fill="#59636d"/>
+    <rect x="1050" y="482" width="318" height="126" rx="6" fill="#181b1e" stroke="#30363c"/>
+    <text x="1074" y="521" fill="#f5f6f7" font-size="21" font-weight="650">Sparse / state space</text>
+    <text x="1074" y="554" fill="#f27c71" font-size="18">DeepSeek MoE / Mamba</text>
+    <text x="1074" y="581" fill="#a7afb7" font-size="15">Efficient capacity and long sequences</text>
+  </g>
+  <text x="72" y="672" fill="#a7afb7" font-family="Inter, Arial, sans-serif" font-size="16">Architecture alone is not the full model: data mixture, token budget, parallelism, and post-training determine behavior.</text>
+  <text x="72" y="724" fill="#7f8993" font-family="Inter, Arial, sans-serif" font-size="14">Original study diagram · model names belong to their respective authors</text>
+</svg>
