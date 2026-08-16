@@ -9,13 +9,13 @@ import { getCollection } from 'astro:content';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import PostList from '../components/PostList.astro';
 import BlogSidebar from '../components/BlogSidebar.astro';
-import { PAGE_SIZE, countByCategory, sortedPosts } from '../utils/posts';
+import { PAGE_SIZE, countByCategory, countTags, sortedPosts } from '../utils/posts';
 
 const all = await getCollection('blog');
 const allPosts = sortedPosts(all);
 const totalPages = Math.max(1, Math.ceil(allPosts.length / PAGE_SIZE));
 const posts = allPosts.slice(0, PAGE_SIZE);
-const allTags = [...new Set(all.flatMap((p) => p.data.tags || []))].sort();
+const tagCounts = countTags(all);
 const counts = countByCategory(all);
 ---
 
@@ -35,6 +35,6 @@ const counts = countByCategory(all);
       />
     </section>
 
-    <BlogSidebar counts={counts} allTags={allTags} />
+    <BlogSidebar counts={counts} tagCounts={tagCounts} />
   </div>
 </SiteLayout>

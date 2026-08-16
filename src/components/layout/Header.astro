@@ -11,7 +11,10 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '');
 // Blog 项高亮：文章总览页本身，或任意一个分类页
 const onBlogIndex = currentPath === '/blog' || currentPath === '';
 const onBlogCategory =
-  onBlogIndex || categories.some((c) => currentPath.endsWith(`/blog/${c.slug}`));
+  onBlogIndex ||
+  currentPath === '/blog/tags' ||
+  currentPath.startsWith('/blog/tag/') ||
+  categories.some((c) => currentPath.endsWith(`/blog/${c.slug}`));
 
 const navLinks = [
   { href: '/blog/projects', label: 'Projects' },

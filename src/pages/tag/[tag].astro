@@ -9,7 +9,7 @@ import { getCollection } from 'astro:content';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import PostList from '../../components/PostList.astro';
 import BlogSidebar from '../../components/BlogSidebar.astro';
-import { countByCategory, sortedPosts } from '../../utils/posts';
+import { countByCategory, countTags, sortedPosts } from '../../utils/posts';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -24,7 +24,7 @@ const { tag } = Astro.props;
 
 const all = await getCollection('blog');
 const posts = sortedPosts(all).filter((p) => (p.data.tags || []).includes(tag));
-const allTags = [...new Set(all.flatMap((p) => p.data.tags || []))].sort();
+const tagCounts = countTags(all);
 const counts = countByCategory(all);
 ---
 
@@ -42,6 +42,6 @@ const counts = countByCategory(all);
       <PostList posts={posts} />
     </section>
 
-    <BlogSidebar counts={counts} allTags={allTags} activeTag={tag} />
+    <BlogSidebar counts={counts} tagCounts={tagCounts} activeTag={tag} />
   </div>
 </SiteLayout>

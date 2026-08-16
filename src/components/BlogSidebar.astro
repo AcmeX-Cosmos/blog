@@ -6,16 +6,41 @@
 
 ---
 import { categories } from '../data/categories';
+import { containsCjk } from '../utils/posts';
+import type { TagCount } from '../utils/posts';
 
 interface Props {
   /** 分类 slug -> 文章数，用于 Collections 区块的计数 */
   counts: Record<string, number>;
-  allTags: string[];
+  tagCounts: TagCount[];
   activeTag?: string;
   activeCategory?: string;
 }
 
-const { counts, allTags, activeTag, activeCategory } = Astro.props;
+const { counts, tagCounts, activeTag, activeCategory } = Astro.props;
+const SIDEBAR_TAG_LIMIT = 12;
+const FEATURED_TAGS = ['Embodied AI', 'LLM', 'VLA', 'CV', 'VLM', 'Isaac Sim'];
+const EXCLUDED_TAGS = new Set(['论文合集']);
+const sidebarCandidates = tagCounts.filter(
+  ({ name }) => !EXCLUDED_TAGS.has(name) && !containsCjk(name)
+);
+const featuredTagCounts = FEATURED_TAGS
+  .map((name) => sidebarCandidates.find((tag) => tag.name === name))
+  .filter((tag): tag is TagCount => Boolean(tag));
+const remainingTagCounts = sidebarCandidates.filter(({ name }) => !FEATURED_TAGS.includes(name));
+const visibleTagCounts = [...featuredTagCounts, ...remainingTagCounts].slice(0, SIDEBAR_TAG_LIMIT);
+
+if (
+  activeTag &&
+  !EXCLUDED_TAGS.has(activeTag) &&
+  !visibleTagCounts.some(({ name }) => name === activeTag)
+) {
+  const activeTagCount = sidebarCandidates.find(({ name }) => name === activeTag);
+  if (activeTagCount) {
+    visibleTagCounts.pop();
+    visibleTagCounts.push(activeTagCount);
+  }
+}
 ---
 
 <aside class="animate" id="sidebar">
@@ -86,24 +111,43 @@ const { counts, allTags, activeTag, activeCategory } = Astro.props;
     Tags
   </h2>
   <ul class="flex flex-wrap gap-2">
-    {allTags.map((tag) => (
+    {visibleTagCounts.map(({ name, count }) => (
       <li>
         <a
-          href={`/blog/tag/${encodeURIComponent(tag)}`}
-          aria-current={activeTag === tag ? 'page' : undefined}
+          href={`/blog/tag/${encodeURIComponent(name)}`}
+          aria-current={activeTag === name ? 'page' : undefined}
           class:list={[
-            'inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium leading-none transition-all duration-200',
-            activeTag === tag
-              ? 'border-[hsl(var(--foreground))] bg-[hsl(var(--foreground))] text-[hsl(var(--background))]'
+            'sidebar-tag-link inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-medium leading-none transition-all duration-200',
+            activeTag === name
+              ? 'is-active'
               : 'border-[hsl(var(--border))] bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))] hover:border-[hsl(var(--foreground))]/20 hover:bg-[hsl(var(--muted))]/80 hover:text-[hsl(var(--foreground))]',
           ]}
         >
-          {tag}
+          <span>{name}</span>
+          <span class:list={[
+            'text-xs tabular-nums',
+            activeTag === name ? 'opacity-70' : 'text-[hsl(var(--muted-foreground))]/70',
+          ]}>{count}</span>
         </a>
       </li>
     ))}
   </ul>
   <span class="mt-4 block text-sm sm:text-end">
-    <a class="hover:underline underline-offset-4" href="/blog">View all →</a>
+    <a class="hover:underline underline-offset-4" href="/blog/tags">View all tags →</a>
   </span>
 </aside>
+
+<style>
+  .sidebar-tag-link.is-active {
+    border-color: hsl(var(--foreground) / 0.45);
+    background-color: hsl(var(--muted));
+    color: hsl(var(--foreground));
+    box-shadow: inset 0 0 0 1px hsl(var(--foreground) / 0.12);
+  }
+
+  .sidebar-tag-link.is-active:hover {
+    border-color: hsl(var(--foreground) / 0.65);
+    background-color: hsl(var(--muted));
+    color: hsl(var(--foreground));
+  }
+</style>

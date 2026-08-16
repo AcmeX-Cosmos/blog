@@ -1,0 +1,146 @@
+<!--
+  Copyright (c) 2026 AcmeX. All rights reserved.
+  Licensed under the MIT License. See LICENSE file in the project root.
+-->
+
+---
+import { getCollection } from 'astro:content';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { containsCjk, countTags } from '../utils/posts';
+
+const posts = await getCollection('blog');
+const tagCounts = countTags(posts).filter(({ name }) => !containsCjk(name));
+const maxCount = tagCounts[0]?.count ?? 1;
+const TAGS_PER_ROW = 7;
+const tagRows = Array.from(
+  { length: Math.ceil(tagCounts.length / TAGS_PER_ROW) },
+  (_, rowIndex) => tagCounts.slice(rowIndex * TAGS_PER_ROW, (rowIndex + 1) * TAGS_PER_ROW)
+);
+
+const prominenceClass = (count: number) => {
+  const ratio = count / maxCount;
+  if (ratio >= 0.7) return 'text-base font-semibold';
+  if (ratio >= 0.4) return 'text-[0.9375rem] font-medium';
+  return 'text-sm font-medium';
+};
+---
+
+<SiteLayout
+  title="Tags | AcmeX"
+  description="Browse AcmeX's technical notes and research reading by topic."
+>
+  <header class="animate mb-10 mt-6 border-b border-[hsl(var(--border))] pb-8 sm:mt-10">
+    <p class="mb-3 text-sm font-medium uppercase text-[hsl(var(--muted-foreground))]">
+      Knowledge Index
+    </p>
+    <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 class="text-3xl font-semibold tracking-tight">Tags</h1>
+        <p class="mt-3 max-w-2xl leading-relaxed text-[hsl(var(--muted-foreground))]">
+          按主题浏览技术文章、工程实践与论文阅读记录。标签依据文章覆盖量排序，便于快速定位持续更新的研究方向。
+        </p>
+      </div>
+      <dl class="flex shrink-0 gap-8 border-s border-[hsl(var(--border))] ps-5">
+        <div>
+          <dt class="text-xs text-[hsl(var(--muted-foreground))]">Topics</dt>
+          <dd class="mt-1 text-xl font-semibold tabular-nums">{tagCounts.length}</dd>
+        </div>
+        <div>
+          <dt class="text-xs text-[hsl(var(--muted-foreground))]">Articles</dt>
+          <dd class="mt-1 text-xl font-semibold tabular-nums">{posts.length}</dd>
+        </div>
+      </dl>
+    </div>
+  </header>
+
+  <section class="animate" aria-labelledby="all-topics-heading">
+    <div class="mb-6 flex items-baseline justify-between gap-4">
+      <h2 id="all-topics-heading" class="text-xl font-semibold">All Topics</h2>
+      <p class="text-sm text-[hsl(var(--muted-foreground))]">按文章数量排序</p>
+    </div>
+
+    <ul class="tag-cloud flex flex-col gap-2 sm:gap-1" aria-label="Topics ordered by article count">
+      {tagRows.map((row, rowIndex) => {
+        const center = (row.length - 1) / 2;
+        return (
+          <li class:list={['tag-cloud-row flex min-h-14 flex-wrap items-center justify-center gap-3', rowIndex % 2 ? 'tag-cloud-row-reverse' : '']}>
+            {row.map(({ name, count }, index) => {
+              const distance = center === 0 ? 0 : (index - center) / center;
+              const curveY = Math.round(-14 * (1 - distance * distance));
+              return (
+                <a
+                  href={`/blog/tag/${encodeURIComponent(name)}`}
+                  style={`--tag-curve-y: ${curveY}px;`}
+                  class:list={[
+                    'tag-cloud-item group inline-flex min-h-11 items-center gap-3 rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--muted))]/40 px-4 py-2.5 text-[hsl(var(--muted-foreground))] transition-[transform,color,border-color,background-color] duration-200 hover:border-[hsl(var(--foreground))]/25 hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]',
+                    prominenceClass(count),
+                  ]}
+                >
+                  <span>{name}</span>
+                  <span class="inline-flex min-w-6 justify-center rounded-full bg-[hsl(var(--background))] px-1.5 py-1 text-xs font-medium leading-none tabular-nums text-[hsl(var(--muted-foreground))] transition-colors group-hover:text-[hsl(var(--foreground))]">
+                    {count}
+                  </span>
+                </a>
+              );
+            })}
+          </li>
+        );
+      })}
+    </ul>
+  </section>
+
+  <nav class="mt-12 border-t border-[hsl(var(--border))] pt-6" aria-label="Back to blog">
+    <a
+      href="/blog"
+      class="inline-flex items-center gap-2 text-sm text-[hsl(var(--muted-foreground))] transition-colors hover:text-[hsl(var(--foreground))]"
+    >
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 19l-7-7 7-7" />
+      </svg>
+      返回文章列表
+    </a>
+  </nav>
+</SiteLayout>
+
+<style>
+  .tag-cloud-row {
+    transform: translateX(-1.25rem);
+  }
+
+  .tag-cloud-row-reverse {
+    transform: translateX(1.25rem);
+  }
+
+  .tag-cloud-item {
+    transform: translateY(var(--tag-curve-y));
+  }
+
+  .tag-cloud-item:hover {
+    transform: translateY(calc(var(--tag-curve-y) - 3px)) scale(1.02);
+  }
+
+  @media (max-width: 639px) {
+    .tag-cloud {
+      gap: 0.75rem;
+    }
+
+    .tag-cloud-row,
+    .tag-cloud-row-reverse {
+      min-height: 0;
+      transform: none;
+    }
+
+    .tag-cloud-item,
+    .tag-cloud-item:hover {
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tag-cloud-item,
+    .tag-cloud-item:hover {
+      transform: none;
+      transition: none;
+    }
+  }
+</style>

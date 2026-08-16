@@ -10,7 +10,7 @@ import CategoryHeader from './CategoryHeader.astro';
 import PostList from './PostList.astro';
 import BlogSidebar from './BlogSidebar.astro';
 import { getCategory } from '../data/categories';
-import { PAGE_SIZE, countByCategory, sortedPosts } from '../utils/posts';
+import { PAGE_SIZE, countByCategory, countTags, sortedPosts } from '../utils/posts';
 
 interface Props {
   category: string;
@@ -31,7 +31,7 @@ if (category === 'research') {
 const totalPages = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
 const slice = posts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-const allTags = [...new Set(all.flatMap((p) => p.data.tags || []))].sort();
+const tagCounts = countTags(all);
 const counts = countByCategory(all);
 ---
 
@@ -46,5 +46,5 @@ const counts = countByCategory(all);
     />
   </section>
 
-  <BlogSidebar counts={counts} allTags={allTags} activeCategory={category} />
+  <BlogSidebar counts={counts} tagCounts={tagCounts} activeCategory={category} />
 </div>
