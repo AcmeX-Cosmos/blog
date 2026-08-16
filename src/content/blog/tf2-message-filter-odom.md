@@ -1,12 +1,12 @@
 ---
 title: "TF2 消息过滤器：把装甲板位姿搬进 odom 系"
-date: "2024-10-05"
+date: "2024-09-05"
 description: "用 tf2_ros::MessageFilter 让位姿消息等到变换可用再触发回调，以及云台高频 TF 发布为什么必须是 1000 Hz。"
 tags: ["ROS2", "TF2", "坐标系", "C++"]
 category: "tech"
 ---
 
-## armor_bapose_info ↔ odom - 2024-10-05
+## armor_bapose_info ↔ odom
 
 BA 解出来的位姿在**相机系**里。但跟踪要在一个不随云台转动的系里做——云台一转，相机系里的静止目标看起来在飞，EKF 的匀速模型立刻失效。所以位姿必须先变换到 `odom`。
 

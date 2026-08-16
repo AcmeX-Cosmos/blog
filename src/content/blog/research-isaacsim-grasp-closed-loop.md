@@ -1,6 +1,6 @@
 ---
 title: "Isaac Sim 抓取闭环复盘：物理判据、运动不变量与失败归因"
-date: "2026-02-15"
+date: "2025-09-03"
 description: "以现有双臂 Pick-and-Place 代码为对象，分析从预抓取到放置验收的状态机、物理判据和仿真特权，建立可用于回归测试的失败分类。"
 tags: ["Isaac Sim", "运动规划", "闭环系统", "机器人抓取", "Sim-to-Real"]
 category: "research"

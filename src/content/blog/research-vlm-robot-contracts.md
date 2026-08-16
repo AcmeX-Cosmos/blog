@@ -1,6 +1,6 @@
 ---
 title: "VLM 机器人代理审计：语义权限、JSON 契约与有界重规划"
-date: "2026-02-01"
+date: "2025-09-21"
 description: "结合现有 Planner-Executor-Checker 实现，分析 VLM 在机器人系统中应该拥有什么权限，以及结构化输出、场景 grounding 和重规划怎样形成可验证闭环。"
 tags: ["VLM", "机器人代理", "Isaac Sim", "系统安全", "结构化输出"]
 category: "research"

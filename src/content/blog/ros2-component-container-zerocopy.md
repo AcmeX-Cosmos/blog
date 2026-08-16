@@ -1,6 +1,6 @@
 ---
 title: "组件容器与进程内零拷贝：两个 container 的分工"
-date: "2024-09-07"
+date: "2024-09-03"
 description: "RCIA-vision 为什么把节点拆进两个 ComposableNodeContainer，多线程容器与单线程容器各放什么，以及 intra-process 零拷贝生效的前提条件。"
 tags: ["ROS2", "Component", "架构", "launch"]
 category: "tech"
@@ -10,7 +10,7 @@ references:
     url: "https://github.com/robomaster-oss/rmoss_core"
 ---
 
-## camera_container ↔ ComponentManager - 2024-09-07
+## camera_container ↔ ComponentManager
 
 1280 × 1024 的 BGR8 图像单帧 3.9 MB。如果相机节点和检测节点是两个进程，每帧要走一次序列化、一次 DDS 传输、一次反序列化——在自瞄这种帧率敏感的场景里这笔开销不能接受。
 

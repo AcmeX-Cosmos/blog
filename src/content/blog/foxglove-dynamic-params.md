@@ -1,12 +1,12 @@
 ---
 title: "Foxglove 在线调参：把 ROS2 参数回调接进比赛现场"
-date: "2025-12-06"
+date: "2025-09-09"
 description: "用 foxglove_bridge 暴露参数与可视化话题，on_set_parameters 回调的校验时机，以及\"每帧 get_parameter\"这种写法的真实代价。"
 tags: ["ROS2", "Foxglove", "调参", "可视化", "C++"]
 category: "tech"
 ---
 
-## 现场调参基础设施 - 2025-12-06
+## 现场调参基础设施
 
 RoboMaster 的检录到上场之间只有几分钟。场地灯光和训练室不一样，红蓝阈值大概率要改；对手换了车型，跟踪门限可能也要动。如果每改一个数都要停节点、改 yaml、重启、等相机重连，这几分钟什么都做不完。
 

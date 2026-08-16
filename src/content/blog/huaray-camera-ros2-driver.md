@@ -1,12 +1,12 @@
 ---
 title: "华睿工业相机 ROS2 驱动：回调采图与断线自愈"
-date: "2024-04-13"
+date: "2024-08-06"
 description: "用 IMV SDK 的抓帧回调驱动 image_transport 发布，处理 Bayer 去马赛克、行填充对齐，以及相机掉线后的定时重连。"
 tags: ["ROS2", "相机驱动", "image_transport", "C++"]
 category: "tech"
 ---
 
-## 相机 SDK ↔ ROS2 image_transport - 2024-04-13
+## 相机 SDK ↔ ROS2 image_transport
 
 比赛用的是华睿（Huaray）工业相机，厂商给的是 IMV SDK，接口风格是典型的 C 风格句柄 + 回调。要把它接进 ROS2，本质上是把 SDK 的推送模型翻译成 ROS2 的发布模型。
 

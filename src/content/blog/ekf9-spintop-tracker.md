@@ -1,6 +1,6 @@
 ---
 title: "9 维 EKF 整车建模：把四块装甲板看成一个旋转刚体"
-date: "2025-04-12"
+date: "2025-08-07"
 description: "状态向量 [xc, vxc, yc, vyc, za, vza, yaw, vyaw, r] 的物理含义、非线性观测方程与雅可比推导，以及为什么跟踪整车中心比跟踪单块装甲板稳。参考华南师范大学陈君 rm_vision 开源实现。"
 tags: ["EKF", "状态估计", "Eigen", "RoboMaster", "C++"]
 category: "algorithm"
@@ -16,7 +16,7 @@ references:
     meta: "Grewal M S, Andrews A P. Wiley-IEEE Press, 2014"
 ---
 
-## 陀螺目标的 9 维扩展卡尔曼滤波 - 2025-04-12
+## 陀螺目标的 9 维扩展卡尔曼滤波
 
 RoboMaster 的机器人会"小陀螺"——底盘持续高速自旋，四块装甲板轮流转到正面。如果直接跟踪"当前看到的那块装甲板"，目标会每隔几十毫秒瞬移一次，任何运动模型都拟合不上。
 

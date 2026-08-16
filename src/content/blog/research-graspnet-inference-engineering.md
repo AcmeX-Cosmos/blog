@@ -1,6 +1,6 @@
 ---
 title: "GraspNet 推理链路审计：从特权提示到可执行 6D 抓取"
-date: "2025-10-18"
+date: "2025-08-17"
 description: "沿 Isaac Sim 中的 SAM + GraspNet 实现逐段检查输入、候选、坐标系与执行接口，区分网络精度、仿真特权信息和规划可达性。"
 tags: ["GraspNet", "SAM", "RGB-D", "6D抓取", "Isaac Sim"]
 category: "research"

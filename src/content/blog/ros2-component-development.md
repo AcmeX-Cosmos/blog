@@ -1,6 +1,6 @@
 ---
 title: "ROS2 组件化开发实践：Component 与 Lifecycle 节点"
-date: "2025-02-20"
+date: "2025-08-23"
 description: "在大型机器人项目中，如何利用 ROS2 的 Component 和 Lifecycle 机制构建模块化、可管理的软件架构。"
 tags: ["ROS2", "C++", "架构", "Component"]
 category: "tech"

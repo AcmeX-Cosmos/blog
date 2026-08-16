@@ -1,6 +1,6 @@
 ---
 title: "RCIA-vision 全景：一套 RoboMaster 自瞄系统的三年"
-date: "2026-03-13"
+date: "2025-09-29"
 description: "从相机出图到扣下扳机，再到 UE5 虚实闭环——RCIA-vision 十个 ROS2 包的分工、关键设计取舍与量化结果，兼作全系列文章的索引。"
 tags: ["RoboMaster", "ROS2", "计算机视觉", "数字孪生", "系统架构"]
 category: "tech"

@@ -1,6 +1,6 @@
 ---
 title: "装甲板数字分类：透视矫正、OTSU 与 ONNX 推理"
-date: "2024-12-07"
+date: "2024-09-11"
 description: "把倾斜装甲板拉正成 28×28 灰度图喂给 LeNet-5 ONNX，以及 blobFromImage 前那一次除法带来的隐蔽陷阱。"
 tags: ["OpenCV", "ONNX", "LeNet-5", "深度学习", "C++"]
 category: "algorithm"
@@ -11,7 +11,7 @@ references:
     meta: "斋藤康毅. 陆宇杰译. 人民邮电出版社, 2018"
 ---
 
-## 装甲板数字识别 - 2024-12-07
+## 装甲板数字识别
 
 灯条配对给出的是"这里有一块装甲板"，但打谁要看数字——1 号英雄、3/4/5 步兵、6 号前哨站，[跟踪器](/blog/ekf9-spintop-tracker)靠 `armor_pattern_idx` 锁定目标，[装甲板跳变处理](/blog/armor-jump-continuous-yaw)也依赖它判断是不是同一辆车。
 
