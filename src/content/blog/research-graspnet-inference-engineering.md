@@ -1,6 +1,6 @@
 ---
 title: "GraspNet 推理链路审计：从特权提示到可执行 6D 抓取"
-date: "2026-08-15"
+date: "2025-10-18"
 description: "沿 Isaac Sim 中的 SAM + GraspNet 实现逐段检查输入、候选、坐标系与执行接口，区分网络精度、仿真特权信息和规划可达性。"
 tags: ["GraspNet", "SAM", "RGB-D", "6D抓取", "Isaac Sim"]
 category: "research"
@@ -89,4 +89,3 @@ S5 默认 `USE_GRASPNET_ORIENTATION=false`：使用 GraspNet 的平移信息，�
 真实部署需要逐项替换仿真特权：USD 中心投影换成检测器或 VLM grounding；理想深度加入空洞、飞点和边缘噪声；相机外参从直接读取世界位姿换成标定结果；物体 mesh 质心不再可用；最终成功不能读取 Prim 位置，而要由视觉、夹爪电流或力传感器确认。
 
 因此最有含金量的结论不是“GraspNet 能抓”，而是量化每移除一项特权信息后成功率下降多少，并指出下降来自感知、几何还是控制。
-

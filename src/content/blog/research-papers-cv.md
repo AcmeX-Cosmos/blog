@@ -1,6 +1,6 @@
 ---
 title: "Paper Reading: CV 1 - 视觉表征、三维感知与生成式重建"
-date: "2026-08-11"
+date: "2025-03-16"
 description: "从 CNN、ViT、自监督学习到开放词汇检测、可提示分割、点云 Transformer、深度估计、三维重建和视频预测，系统梳理 CV 主流论文。"
 tags: ["CV", "计算机视觉", "三维视觉", "视觉表征", "论文合集"]
 category: "research"

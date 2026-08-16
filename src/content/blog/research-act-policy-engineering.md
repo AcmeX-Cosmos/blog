@@ -1,6 +1,6 @@
 ---
 title: "ACT 策略源码审计：数据对齐、动作分块与部署一致性"
-date: "2026-08-15"
+date: "2025-07-19"
 description: "基于本机 RoboTwin/ACT 参考实现进行逐链路审计，定位时序对齐、统计量泄漏、padding 损失和 temporal aggregation 中会直接影响实验结论的问题。"
 tags: ["ACT", "模仿学习", "动作分块", "源码审计", "双臂机器人"]
 category: "research"
