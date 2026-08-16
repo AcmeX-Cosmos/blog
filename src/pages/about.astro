@@ -72,12 +72,12 @@ const now = Date.now();
 const progress = Math.min(100, Math.max(0, Math.round(((now - startDate) / (endDate - startDate)) * 100)));
 
 const awards = [
-  'RMUC 2024 全国赛 国家二等奖',
-  'RMUC 2023 全国赛 区域赛奖',
-  'RMUL 2025 (广西站) 团体 & 哨兵',
-  'RMUL 2024 (广东站) 团体 & 哨兵',
-  '2023 全国大学生电子设计竞赛 省级二等奖',
-  '2023-2025 赛季 RM 区域赛/兵种奖 一二等奖若干',
+  { title: 'RMUC 2024', content: '全国赛 国家二等奖' },
+  { title: 'RMUC 2023', content: '全国赛 区域赛奖' },
+  { title: 'RMUL 2025', content: '(广西站) 团体 & 哨兵' },
+  { title: 'RMUL 2024', content: '(广东站) 团体 & 哨兵' },
+  { title: '全国大学生电子设计竞赛', content: '2023 省级二等奖' },
+  { title: 'RM 赛季荣誉', content: '2023-2025 区域赛/兵种奖 一二等奖若干' },
 ];
 
 const projects = [
@@ -332,7 +332,7 @@ const projects = [
         <div class="card-content"></div>
         <div class="author-content-item-tips">特长</div>
         <span class="buff-title">
-          <span style="opacity:.6;margin-bottom:8px">机器人 脑洞大开 小天才</span>
+          <span style="opacity:.75;margin-bottom:8px">机器人 脑洞大开 小天才</span>
           <span>探索不止 死磕不休 从0到1的践行者</span>
         </span>
         <div class="card-background-icon"><i class="anzhiyufont anzhiyu-icon-dice-d20"></i></div>
@@ -454,10 +454,13 @@ const projects = [
         <div class="author-content-item-tips">竞赛获奖</div>
         <span class="author-content-item-title">赛场荣誉</span>
         <div class="reward-list">
-          {awards.map((award) => (
-            <div class="reward-list-item">
-              <span class="reward-dot"></span>
-              <span>{award}</span>
+          {awards.map(({ title, content }) => (
+            <div class="award-list-item">
+              <span class="reward-award">
+                <span class="reward-dot"></span>
+                <span>{title}</span>
+              </span>
+              <span class="reward-content">{content}</span>
             </div>
           ))}
         </div>
@@ -526,6 +529,7 @@ const projects = [
     --about-border: 1px solid hsl(var(--border));
     --about-shadow: 0 8px 32px hsl(var(--foreground) / 0.06);
     --about-radius: 24px;
+    --about-row-gap: 1.75rem;
     padding-bottom: 5rem;
     font-family: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -677,11 +681,11 @@ const projects = [
     justify-content: space-between;
     width: 100%;
     margin-top: 1.5rem;
-    gap: 1.5rem;
+    gap: var(--about-row-gap);
   }
 
   .author-content-item {
-    width: calc((100% - 1.5rem) / 2);
+    width: calc((100% - var(--about-row-gap)) / 2);
     border-radius: var(--about-radius);
     background: var(--about-card-bg);
     border: var(--about-border);
@@ -730,7 +734,7 @@ const projects = [
     background: linear-gradient(120deg, #5b27ff 0, #00d4ff 100%);
     background-size: 200%;
     animation: gradient 15s ease infinite;
-    width: calc((100% - 1.5rem) * 59 / 98);
+    width: calc((100% - var(--about-row-gap)) * 59 / 98);
     border-radius: var(--about-radius);
     box-shadow: 0 4px 12px rgba(46, 127, 255, 0.2);
     transition: all 0.4s cubic-bezier(.25,.46,.45,.94);
@@ -763,7 +767,7 @@ const projects = [
     justify-content: center;
     align-items: flex-start;
     flex-direction: column;
-    width: calc((100% - 1.5rem) * 39 / 98);
+    width: calc((100% - var(--about-row-gap)) * 39 / 98);
     background: var(--about-card-bg) !important;
   }
 
@@ -1071,7 +1075,7 @@ const projects = [
 
   /* ========== Skills ========== */
   .author-content-item.skills {
-    width: calc((100% - 1.5rem) * 59 / 98);
+    width: calc((100% - var(--about-row-gap)) * 59 / 98);
     min-height: 400px;
   }
 
@@ -1210,7 +1214,7 @@ const projects = [
     background-repeat: no-repeat;
     background-position-x: right;
     background-position-y: bottom;
-    width: calc((100% - 1.5rem) * 39 / 98);
+    width: calc((100% - var(--about-row-gap)) * 39 / 98);
   }
 
   .author-content-item.careers .careers-group {
@@ -1251,7 +1255,7 @@ const projects = [
   /* ========== Statistic ========== */
   #about-page .about-statistic {
     min-height: 380px;
-    width: calc((100% - 1.5rem) * 39 / 98);
+    width: calc((100% - var(--about-row-gap)) * 39 / 98);
     background-size: cover !important;
     color: var(--about-white);
     overflow: hidden;
@@ -1358,7 +1362,7 @@ const projects = [
   }
 
   .author-content-item-group.column.mapAndInfo {
-    width: calc((100% - 1.5rem) * 59 / 98);
+    width: calc((100% - var(--about-row-gap)) * 59 / 98);
   }
 
   .author-content-item.map {
@@ -1434,9 +1438,9 @@ const projects = [
   }
 
   /* ========== Personalities ========== */
-  /* 该行 6:4 分栏，减去 .author-content 的 1.5rem gap 再按比例分配 */
+  /* 右侧从 45% 缩至 36%，配合 9:5 比例让 INTP 卡片高度同步缩小 20% */
   .author-content-item.personalities {
-    width: calc((100% - 1.5rem) * 0.55);
+    width: calc((100% - var(--about-row-gap)) * 0.64);
     flex: none;
     min-height: 180px;
     transition: all 0.4s cubic-bezier(.25,.46,.45,.94);
@@ -1465,9 +1469,9 @@ const projects = [
 
   .author-content-item.personalities .image {
     position: absolute;
-    right: 30px;
-    top: 10px;
-    width: 220px;
+    right: 50px;
+    top: 5px;
+    width: 176px;
     /* 放大并往左下偏移，百分比位移让窄屏下自动等比收敛 */
     transform: translate(-8%, 25%) scale(1.08);
     transition: transform 0.6s cubic-bezier(.13,.45,.21,1.02), filter 0.4s ease;
@@ -1503,7 +1507,7 @@ const projects = [
 
   /* ========== MBTI ========== */
   .author-content-item.mbti {
-    width: calc((100% - 1.5rem) * 0.45);
+    width: calc((100% - var(--about-row-gap)) * 0.36);
     /* 跟随 INTP-B.svg 的 900x500，变窄时等比缩高，不被拉伸也不多裁切 */
     aspect-ratio: 9 / 5;
     align-self: flex-start;
@@ -1547,7 +1551,7 @@ const projects = [
     align-items: flex-start;
     flex-direction: column;
     justify-content: center;
-    width: calc((100% - 1.5rem) * 39 / 98);
+    width: calc((100% - var(--about-row-gap)) * 39 / 98);
     border-radius: var(--about-radius);
     border: var(--about-border);
     box-shadow: 0 4px 12px rgba(46, 127, 255, 0.2);
@@ -1591,21 +1595,21 @@ const projects = [
     align-items: flex-start;
     flex-direction: column;
     justify-content: center;
-    background: linear-gradient(120deg, #ff27e8 0, #ff8000 100%);
+    background: linear-gradient(120deg, #be123c 0, #e11d48 52%, #f97316 100%);
     color: var(--about-white);
-    background-size: 200%;
-    animation: gradient 15s ease infinite;
+    background-size: 100% 100%;
+    animation: none;
     min-height: 200px;
     height: fit-content;
-    width: calc((100% - 1.5rem) * 59 / 98);
+    width: calc((100% - var(--about-row-gap)) * 59 / 98);
     border-radius: var(--about-radius);
-    box-shadow: 0 4px 12px rgba(255, 128, 115, 0.2);
+    box-shadow: 0 4px 12px rgba(225, 29, 72, 0.2);
     transition: all 0.4s cubic-bezier(.25,.46,.45,.94);
   }
 
   .author-content-item.buff:hover {
     transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 12px 32px rgba(255, 128, 115, 0.4), 0 0 0 1px rgba(255, 128, 115, 0.3);
+    box-shadow: 0 12px 32px rgba(225, 29, 72, 0.4), 0 0 0 1px rgba(249, 115, 22, 0.3);
   }
 
   .author-content-item.buff .card-content {
@@ -1725,21 +1729,21 @@ const projects = [
 
   /* ========== Comic/Movie ========== */
   /* 参考页是游戏 59% / 番剧 39%（合 98%，余量留给两卡间距）。
-     这里有 1.5rem gap，直接写 59/39 会溢出换行，改成按 gap 折算的 60/40，
+     这里有间距变量，直接写 59/39 会溢出换行，改成按 gap 折算的 60/40，
      占比与参考页一致。基准值给电影卡，游戏卡下面单独放大 */
   .author-content-item.comic-content {
-    width: calc(40% - 0.75rem);
+    width: calc(40% - (var(--about-row-gap) / 2));
     min-height: 300px;
     overflow: hidden;
   }
 
   .author-content-item.comic-content.game-dual:not(.books-dual) {
-    width: calc(60% - 0.75rem);
+    width: calc(60% - (var(--about-row-gap) / 2));
   }
 
   /* 书籍与音乐同排，两张等分；高度取参考页 400px 的 75% */
   .author-content-item.comic-content.books-dual {
-    width: calc((100% - 1.5rem) / 2);
+    width: calc((100% - var(--about-row-gap)) / 2);
     min-height: 300px;
   }
 
@@ -1893,19 +1897,25 @@ const projects = [
   /* ========== Like Technology / Music ========== */
   .author-content-item.like-technology {
     min-height: 240px;
-    width: calc((100% - 1.5rem) / 2);
+    width: calc((100% - var(--about-row-gap)) / 2);
   }
 
   .author-content-item.like-technology.single {
     width: 100%;
     min-height: 450px;
+    transition: transform 0.4s cubic-bezier(.25,.46,.45,.94), box-shadow 0.4s ease;
+  }
+
+  .author-content-item.like-technology.single:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.16);
   }
 
   /* ========== Music Vertical Track List Player ========== */
   /* 与同排的书籍卡片等分并对齐高度（400px 的 75%）。
-     49% + 1.5rem gap 会溢出换行，按 gap 折算成两等分 */
+     使用间距变量折算成两等分，避免两列溢出换行 */
   .author-content-item.like-technology.music-card {
-    width: calc((100% - 1.5rem) / 2);
+    width: calc((100% - var(--about-row-gap)) / 2);
     min-height: 300px;
     padding: 0;
     overflow: hidden;
@@ -2131,6 +2141,19 @@ const projects = [
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
+    transition: transform 0.7s cubic-bezier(.2,.65,.25,1), filter 0.5s ease;
+  }
+
+  .author-content-item.like-technology.single:hover .tech-split-image {
+    filter: brightness(1.15);
+  }
+
+  .author-content-item.like-technology.single:hover .tech-split-image:first-child {
+    transform: scale(1.06) translateX(1%);
+  }
+
+  .author-content-item.like-technology.single:hover .tech-split-image:last-child {
+    transform: scale(1.06) translateX(-1%);
   }
 
   .tech-split-image:first-child {
@@ -2267,16 +2290,17 @@ const projects = [
     gap: 0.5rem;
   }
 
-  .reward-list-item {
-    display: flex;
+  .award-list-item {
+    display: grid;
+    grid-template-columns: minmax(180px, 0.8fr) minmax(0, 2fr);
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
     padding: 0.5rem 0;
     font-size: 0.88rem;
     border-bottom: 1px dashed hsl(var(--border));
   }
 
-  .reward-list-item:last-child {
+  .award-list-item:last-child {
     border-bottom: none;
   }
 
@@ -2288,6 +2312,20 @@ const projects = [
     flex: none;
   }
 
+  .reward-award {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+    font-weight: 650;
+  }
+
+  .reward-content {
+    color: hsl(var(--muted-foreground));
+    text-align: right;
+    justify-self: stretch;
+  }
+
   .reward-list-updateDate {
     color: hsl(var(--muted-foreground));
     font-size: 14px;
@@ -2295,6 +2333,7 @@ const projects = [
   }
 
   .project-item {
+    display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 0.3rem;
@@ -2506,7 +2545,7 @@ const projects = [
     }
 
     .author-content-item.personalities .image {
-      width: 120px;
+      width: 88px;
       right: 10px;
     }
 
@@ -2569,6 +2608,11 @@ const projects = [
   @media (max-width: 480px) {
     #statistic {
       grid-template-columns: 1fr 1fr;
+    }
+
+    .award-list-item {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      gap: 0.75rem;
     }
 
     .author-content-item.personalities .image {
