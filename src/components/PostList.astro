@@ -26,6 +26,8 @@ function readingTime(body: string): number {
 
 const pageNumbers = page ? Array.from({ length: page.total }, (_, i) => i + 1) : [];
 const pageHref = (n: number) => (n === 1 ? page!.baseUrl : `${page!.baseUrl}/${n}`);
+const previousPage = page && page.current > 1 ? page.current - 1 : null;
+const nextPage = page && page.current < page.total ? page.current + 1 : null;
 ---
 
 <div class="mb-3 flex flex-col justify-between text-sm sm:mb-5 sm:flex-row">
@@ -58,6 +60,25 @@ const pageHref = (n: number) => (n === 1 ? page!.baseUrl : `${page!.baseUrl}/${n
 
 {page && page.total > 1 && (
   <nav class="mt-8 flex flex-wrap items-center justify-center gap-1" aria-label="Pagination">
+    {previousPage ? (
+      <a
+        href={pageHref(previousPage)}
+        aria-label="Go to previous page"
+        class="mr-1 inline-flex h-9 items-center justify-center gap-1 rounded px-3 text-sm text-[hsl(var(--muted-foreground))] transition-colors duration-150 ease-in-out hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
+      >
+        <span aria-hidden="true">←</span>
+        <span>上一页</span>
+      </a>
+    ) : (
+      <span
+        aria-disabled="true"
+        class="mr-1 inline-flex h-9 items-center justify-center gap-1 rounded px-3 text-sm text-[hsl(var(--muted-foreground))] opacity-40"
+      >
+        <span aria-hidden="true">←</span>
+        <span>上一页</span>
+      </span>
+    )}
+
     {pageNumbers.map((n) =>
       n === page.current ? (
         <span
@@ -76,6 +97,25 @@ const pageHref = (n: number) => (n === 1 ? page!.baseUrl : `${page!.baseUrl}/${n
           {n}
         </a>
       )
+    )}
+
+    {nextPage ? (
+      <a
+        href={pageHref(nextPage)}
+        aria-label="Go to next page"
+        class="ml-1 inline-flex h-9 items-center justify-center gap-1 rounded px-3 text-sm text-[hsl(var(--muted-foreground))] transition-colors duration-150 ease-in-out hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
+      >
+        <span>下一页</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    ) : (
+      <span
+        aria-disabled="true"
+        class="ml-1 inline-flex h-9 items-center justify-center gap-1 rounded px-3 text-sm text-[hsl(var(--muted-foreground))] opacity-40"
+      >
+        <span>下一页</span>
+        <span aria-hidden="true">→</span>
+      </span>
     )}
   </nav>
 )}

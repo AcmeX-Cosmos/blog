@@ -9,10 +9,12 @@ import { getCollection } from 'astro:content';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import PostList from '../components/PostList.astro';
 import BlogSidebar from '../components/BlogSidebar.astro';
-import { countByCategory, sortedPosts } from '../utils/posts';
+import { PAGE_SIZE, countByCategory, sortedPosts } from '../utils/posts';
 
 const all = await getCollection('blog');
-const posts = sortedPosts(all);
+const allPosts = sortedPosts(all);
+const totalPages = Math.max(1, Math.ceil(allPosts.length / PAGE_SIZE));
+const posts = allPosts.slice(0, PAGE_SIZE);
 const allTags = [...new Set(all.flatMap((p) => p.data.tags || []))].sort();
 const counts = countByCategory(all);
 ---
@@ -26,7 +28,11 @@ const counts = countByCategory(all);
 
   <div class="grid gap-y-16 sm:grid-cols-[3fr_1fr] sm:gap-x-8">
     <section aria-label="Blog posts list" class="animate" id="content">
-      <PostList posts={posts} />
+      <PostList
+        posts={posts}
+        totalCount={allPosts.length}
+        page={{ current: 1, total: totalPages, size: PAGE_SIZE, baseUrl: '/blog' }}
+      />
     </section>
 
     <BlogSidebar counts={counts} allTags={allTags} />

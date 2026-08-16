@@ -6,7 +6,7 @@ import type { CollectionEntry } from 'astro:content';
 import { categories } from '../data/categories';
 
 /** 每个分类页显示的文章数，超出走分页 */
-export const PAGE_SIZE = 15;
+export const PAGE_SIZE = 10;
 
 export function sortedPosts(posts: CollectionEntry<'blog'>[]) {
   return [...posts].sort(
