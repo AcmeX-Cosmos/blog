@@ -59,23 +59,21 @@ const nextPage = page && page.current < page.total ? page.current + 1 : null;
 )}
 
 {page && page.total > 1 && (
-  <nav class="mt-8 flex flex-wrap items-center justify-center gap-1" aria-label="Pagination">
+  <nav class="mt-8 flex flex-wrap items-center justify-center gap-3" aria-label="Pagination">
     {previousPage ? (
       <a
         href={pageHref(previousPage)}
         aria-label="Go to previous page"
-        class="mr-1 inline-flex h-9 items-center justify-center gap-1 rounded px-3 text-sm text-[hsl(var(--muted-foreground))] transition-colors duration-150 ease-in-out hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
+        class="inline-flex h-9 w-9 items-center justify-center rounded text-base font-bold text-[hsl(var(--muted-foreground))] transition-colors duration-150 ease-in-out hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
       >
-        <span aria-hidden="true">←</span>
-        <span>上一页</span>
+        <span aria-hidden="true">&lt;</span>
       </a>
     ) : (
       <span
         aria-disabled="true"
-        class="mr-1 inline-flex h-9 items-center justify-center gap-1 rounded px-3 text-sm text-[hsl(var(--muted-foreground))] opacity-40"
+        class="inline-flex h-9 w-9 items-center justify-center rounded text-base font-bold text-[hsl(var(--muted-foreground))] opacity-40"
       >
-        <span aria-hidden="true">←</span>
-        <span>上一页</span>
+        <span aria-hidden="true">&lt;</span>
       </span>
     )}
 
@@ -103,18 +101,16 @@ const nextPage = page && page.current < page.total ? page.current + 1 : null;
       <a
         href={pageHref(nextPage)}
         aria-label="Go to next page"
-        class="ml-1 inline-flex h-9 items-center justify-center gap-1 rounded px-3 text-sm text-[hsl(var(--muted-foreground))] transition-colors duration-150 ease-in-out hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
+        class="inline-flex h-9 w-9 items-center justify-center rounded text-base font-bold text-[hsl(var(--muted-foreground))] transition-colors duration-150 ease-in-out hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
       >
-        <span>下一页</span>
-        <span aria-hidden="true">→</span>
+        <span aria-hidden="true">&gt;</span>
       </a>
     ) : (
       <span
         aria-disabled="true"
-        class="ml-1 inline-flex h-9 items-center justify-center gap-1 rounded px-3 text-sm text-[hsl(var(--muted-foreground))] opacity-40"
+        class="inline-flex h-9 w-9 items-center justify-center rounded text-base font-bold text-[hsl(var(--muted-foreground))] opacity-40"
       >
-        <span>下一页</span>
-        <span aria-hidden="true">→</span>
+        <span aria-hidden="true">&gt;</span>
       </span>
     )}
   </nav>
