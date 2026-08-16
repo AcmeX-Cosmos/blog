@@ -4,7 +4,6 @@ date: "2025-06-15"
 description: "以定位、尺度与开放词汇接口为线索，评估 MASt3R、CUT3R、Depth Anything V2、UniDepth、FoundationStereo、Florence-2 和 YOLO-World。"
 tags: ["CV", "三维视觉", "深度估计", "开放词汇", "论文合集"]
 category: "research"
-pinned: true
 cover: "/blog/images/research/cv-architecture-map.svg"
 references:
   - { title: "MASt3R", meta: "arXiv 2406.09756", url: "https://arxiv.org/abs/2406.09756" }

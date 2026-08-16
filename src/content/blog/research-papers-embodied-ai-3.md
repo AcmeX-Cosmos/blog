@@ -4,7 +4,6 @@ date: "2026-07-19"
 description: "从候选召回、姿态评分到闭环执行，分析 EconomicGrasp、RNGNet、AnyGrasp、GSNet、HGGD 与 GtG 2.0 的取舍。"
 tags: ["Embodied AI", "6D抓取", "GraspNet", "点云", "论文合集"]
 category: "research"
-pinned: true
 cover: "/blog/images/research/embodied-ai-architecture-map.svg"
 references:
   - { title: "EconomicGrasp", meta: "arXiv 2407.08366", url: "https://arxiv.org/abs/2407.08366" }

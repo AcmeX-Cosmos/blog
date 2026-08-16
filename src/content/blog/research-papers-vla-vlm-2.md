@@ -4,7 +4,6 @@ date: "2026-01-18"
 description: "围绕数据利用率、策略分层与在线延迟，评估 UniVLA、GraspVLA、A0、OneTwoVLA、Magma、CoT-VLA、Interleave-VLA 和 SmolVLA。"
 tags: ["VLA", "VLM", "多模态", "机器人基础模型", "论文合集"]
 category: "research"
-pinned: true
 cover: "/blog/images/research/vla-vlm-architecture-map.svg"
 references:
   - { title: "UniVLA", meta: "arXiv 2505.06111", url: "https://arxiv.org/abs/2505.06111" }

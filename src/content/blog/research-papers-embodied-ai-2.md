@@ -4,7 +4,6 @@ date: "2026-03-22"
 description: "以 ECoT、RoboPoint、GR-1、HPT、GR-2 和 GR00T N1 为案例，追踪具身中间表示如何连接推理、视频先验与实时控制。"
 tags: ["Embodied AI", "具身智能", "机器人学习", "VLA", "论文合集"]
 category: "research"
-pinned: true
 cover: "/blog/images/research/embodied-ai-architecture-map.svg"
 references:
   - title: "Robotic Control via Embodied Chain-of-Thought Reasoning"
