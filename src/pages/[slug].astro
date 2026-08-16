@@ -41,6 +41,7 @@ const { Content, headings } = isBlogPage ? { Content: null, headings: [] } : awa
 const slug = post?.id.replace(/\.md$/, '') || '';
 const isPaperCollection = !isBlogPage && slug.startsWith('research-papers-');
 const tocHeadings = headings.filter(heading => heading.depth === 2);
+const hasToc = !isBlogPage && tocHeadings.length > 0;
 ---
 
 {isBlogPage ? (
@@ -64,9 +65,9 @@ const tocHeadings = headings.filter(heading => heading.depth === 2);
     </div>
   </SiteLayout>
 ) : (
-<SiteLayout title={post.data.title} description={post.data.description}>
-  <div class:list={['paper-reading-layout', { 'is-paper-collection': isPaperCollection }]}>
-  <article class:list={['max-w-none', { 'paper-reading-article': isPaperCollection }]}>
+<SiteLayout title={post.data.title} description={post.data.description} universeOpacity={0.15}>
+  <div class:list={['article-toc-layout', { 'has-toc': hasToc }]}>
+  <article class:list={['max-w-none', 'article-with-toc', { 'paper-reading-article': isPaperCollection }]}>
     <header class="mb-10 pb-8 border-b border-[hsl(var(--border))]">
       <h1 class="text-3xl font-bold mb-3 leading-tight tracking-tight">
         {post.data.title}
@@ -99,7 +100,7 @@ const tocHeadings = headings.filter(heading => heading.depth === 2);
       </div>
     </header>
 
-    {isPaperCollection && <PaperToc headings={tocHeadings} variant="mobile" />}
+    {hasToc && <PaperToc headings={tocHeadings} variant="mobile" />}
 
     <div class="article-content">
       <Content />
@@ -115,7 +116,7 @@ const tocHeadings = headings.filter(heading => heading.depth === 2);
     </div>
   </article>
 
-  {isPaperCollection && <PaperToc headings={tocHeadings} variant="desktop" />}
+  {hasToc && <PaperToc headings={tocHeadings} variant="desktop" />}
   </div>
 </SiteLayout>
 )}

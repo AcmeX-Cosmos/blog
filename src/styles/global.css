@@ -190,9 +190,9 @@ body::-webkit-scrollbar { height: 0; }
 .article-content th { background: hsl(var(--muted)); font-weight: 600; }
 
 /* ===== Paper Reading Layout ===== */
-.paper-reading-layout.is-paper-collection {
+.article-toc-layout.has-toc {
   display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 4fr) minmax(0, 1fr);
   align-items: start;
   gap: clamp(1.5rem, 2.5vw, 3rem);
 }
@@ -201,7 +201,7 @@ body::-webkit-scrollbar { height: 0; }
   min-width: 0;
 }
 
-.paper-reading-article .article-content h2[id] {
+.article-with-toc .article-content h2[id] {
   scroll-margin-top: 7rem;
 }
 
@@ -243,8 +243,6 @@ body::-webkit-scrollbar { height: 0; }
   top: 6.5rem;
   max-height: calc(100vh - 8rem);
   min-width: 0;
-  border-left: 1px solid hsl(var(--border));
-  padding-left: 1.25rem;
 }
 
 .paper-toc-heading {
@@ -252,22 +250,15 @@ body::-webkit-scrollbar { height: 0; }
   align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 0.8rem;
+  margin-bottom: 1.1rem;
 }
 
 .paper-toc-heading h2 {
-  font-size: 1rem;
-  line-height: 1.35;
-  font-weight: 600;
-  margin: 0.3rem 0 0;
-}
-
-.paper-toc-eyebrow {
-  color: hsl(var(--muted-foreground));
-  font-size: 0.68rem;
-  line-height: 1;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  color: hsl(var(--foreground));
+  font-size: 1.05rem;
+  line-height: 1.25;
+  font-weight: 800;
+  letter-spacing: 0.07em;
   margin: 0;
 }
 
@@ -277,22 +268,41 @@ body::-webkit-scrollbar { height: 0; }
   font-family: "JetBrains Mono", "Fira Code", monospace;
   font-size: 0.72rem;
   line-height: 1;
-  padding-top: 0.1rem;
+  padding-top: 0.2rem;
 }
 
-.paper-toc-progress {
-  height: 2px;
+.paper-toc-body {
+  position: relative;
+  min-height: 8rem;
+}
+
+.paper-toc-item {
+  position: relative;
+  padding-left: 0.8rem;
+}
+
+.paper-toc-segment {
+  position: absolute;
+  top: 5%;
+  bottom: 5%;
+  inset-inline-start: 0;
+  width: 2px;
   overflow: hidden;
-  background: hsl(var(--border));
-  margin-bottom: 0.9rem;
+  border-radius: 999px;
+  background: hsl(var(--border) / 0.75);
 }
 
-.paper-toc-progress span {
+.paper-toc-segment span {
   display: block;
-  width: 0;
-  height: 100%;
+  width: 100%;
+  height: 0;
+  border-radius: inherit;
   background: hsl(var(--foreground));
-  transition: width 180ms ease;
+  transition: height 120ms linear, background-color 180ms ease;
+}
+
+.paper-toc-item.is-read .paper-toc-segment span {
+  background: hsl(var(--muted-foreground) / 0.45);
 }
 
 .paper-toc-nav {
@@ -307,9 +317,9 @@ body::-webkit-scrollbar { height: 0; }
   grid-template-columns: 1.8rem minmax(0, 1fr);
   align-items: baseline;
   gap: 0.5rem;
-  border-left: 2px solid transparent;
   color: hsl(var(--muted-foreground));
   padding: 0.48rem 0.7rem;
+  border-radius: 0.5rem;
   font-size: 0.78rem;
   line-height: 1.35;
   text-decoration: none;
@@ -334,14 +344,17 @@ body::-webkit-scrollbar { height: 0; }
   background: hsl(var(--muted));
 }
 
-.paper-toc-link.is-active {
+.paper-toc-item.is-active .paper-toc-link {
   color: hsl(var(--foreground));
-  border-left-color: hsl(var(--foreground));
   background: hsl(var(--muted));
 }
 
-.paper-toc-link.is-active > strong {
+.paper-toc-item.is-active .paper-toc-link > strong {
   font-weight: 650;
+}
+
+.paper-toc-item.is-read .paper-toc-link:not([aria-current='true']) {
+  color: hsl(var(--muted-foreground) / 0.62);
 }
 
 .paper-toc-mobile {
@@ -349,7 +362,7 @@ body::-webkit-scrollbar { height: 0; }
 }
 
 @media (max-width: 1199px) {
-  .paper-reading-layout.is-paper-collection {
+  .article-toc-layout.has-toc {
     display: block;
   }
 
@@ -382,16 +395,16 @@ body::-webkit-scrollbar { height: 0; }
     display: none;
   }
 
-  .paper-toc-mobile .paper-toc-progress {
-    margin: 0.8rem 0 0;
-  }
-
   .paper-toc-mobile-nav {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.15rem;
     max-height: 20rem;
     overflow-y: auto;
+    margin-top: 0.8rem;
+  }
+
+  .paper-toc-mobile .paper-toc-body {
     margin-top: 0.8rem;
   }
 }

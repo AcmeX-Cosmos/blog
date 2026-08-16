@@ -18,23 +18,22 @@ const totalLabel = String(total).padStart(2, '0');
 {variant === 'desktop' ? (
   <aside class="paper-toc-desktop" data-paper-toc aria-labelledby="paper-toc-title">
     <div class="paper-toc-heading">
-      <div>
-        <p class="paper-toc-eyebrow">TABLE OF CONTENTS</p>
-        <h2 id="paper-toc-title">Architecture papers</h2>
-      </div>
+      <h2 id="paper-toc-title">TABLE OF CONTENTS</h2>
       <span class="paper-toc-count" data-toc-current>{total > 0 ? `01 / ${totalLabel}` : '00 / 00'}</span>
     </div>
-    <div class="paper-toc-progress" aria-hidden="true">
-      <span data-toc-progress></span>
+    <div class="paper-toc-body">
+      <nav class="paper-toc-nav" aria-label="论文目录">
+        {headings.map((heading, index) => (
+          <div class="paper-toc-item" data-toc-item>
+            <span class="paper-toc-segment" aria-hidden="true"><span data-toc-progress></span></span>
+            <a href={`#${heading.slug}`} class="paper-toc-link" data-toc-link data-toc-index={index}>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <strong>{heading.text}</strong>
+            </a>
+          </div>
+        ))}
+      </nav>
     </div>
-    <nav class="paper-toc-nav" aria-label="论文目录">
-      {headings.map((heading, index) => (
-        <a href={`#${heading.slug}`} class="paper-toc-link" data-toc-link data-toc-index={index}>
-          <span>{String(index + 1).padStart(2, '0')}</span>
-          <strong>{heading.text}</strong>
-        </a>
-      ))}
-    </nav>
   </aside>
 ) : (
   <details class="paper-toc-mobile" data-paper-toc>
@@ -42,17 +41,19 @@ const totalLabel = String(total).padStart(2, '0');
       <span>TABLE OF CONTENTS</span>
       <span data-toc-current>{total > 0 ? `01 / ${totalLabel}` : '00 / 00'}</span>
     </summary>
-    <div class="paper-toc-progress" aria-hidden="true">
-      <span data-toc-progress></span>
+    <div class="paper-toc-body">
+      <nav class="paper-toc-mobile-nav" aria-label="论文目录">
+        {headings.map((heading, index) => (
+          <div class="paper-toc-item" data-toc-item>
+            <span class="paper-toc-segment" aria-hidden="true"><span data-toc-progress></span></span>
+            <a href={`#${heading.slug}`} class="paper-toc-link" data-toc-link data-toc-index={index}>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <strong>{heading.text}</strong>
+            </a>
+          </div>
+        ))}
+      </nav>
     </div>
-    <nav class="paper-toc-mobile-nav" aria-label="论文目录">
-      {headings.map((heading, index) => (
-        <a href={`#${heading.slug}`} class="paper-toc-link" data-toc-link data-toc-index={index}>
-          <span>{String(index + 1).padStart(2, '0')}</span>
-          <strong>{heading.text}</strong>
-        </a>
-      ))}
-    </nav>
   </details>
 )}
 
@@ -60,14 +61,36 @@ const totalLabel = String(total).padStart(2, '0');
   const initializePaperToc = () => {
     const roots = document.querySelectorAll<HTMLElement>('[data-paper-toc]');
     const articleHeadings = Array.from(
-      document.querySelectorAll<HTMLElement>('.paper-reading-article .article-content h2[id]')
+      document.querySelectorAll<HTMLElement>('.article-with-toc .article-content h2[id]')
     );
 
-    if (!roots.length || !articleHeadings.length) return;
+    const article = document.querySelector<HTMLElement>('.article-with-toc .article-content');
+
+    if (!roots.length || !articleHeadings.length || !article) return;
 
     const update = () => {
+      const viewportHeight = window.innerHeight;
+      const articleBottom = article.getBoundingClientRect().bottom + window.scrollY;
       const threshold = Math.min(window.innerHeight * 0.3, 280);
       let activeIndex = 0;
+      const headingProgress = articleHeadings.map((heading, index) => {
+        const headingTop = heading.getBoundingClientRect().top + window.scrollY;
+        const sectionBottom = articleHeadings[index + 1]
+          ? articleHeadings[index + 1].getBoundingClientRect().top + window.scrollY
+          : articleBottom;
+        const sectionTopInViewport = headingTop - window.scrollY;
+        const sectionBottomInViewport = sectionBottom - window.scrollY - heading.offsetHeight;
+        const sectionRange = Math.max(sectionBottomInViewport - sectionTopInViewport, 1);
+        const progress = Math.max(
+          0,
+          Math.min(1, (viewportHeight - sectionTopInViewport) / sectionRange)
+        );
+
+        return {
+          inView: sectionTopInViewport < viewportHeight && sectionBottomInViewport > 0,
+          progress,
+        };
+      });
 
       articleHeadings.forEach((heading, index) => {
         if (heading.getBoundingClientRect().top <= threshold) activeIndex = index;
@@ -80,10 +103,17 @@ const totalLabel = String(total).padStart(2, '0');
       roots.forEach(root => {
         const links = Array.from(root.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
         links.forEach((link, index) => {
-          const active = index === activeIndex;
-          link.classList.toggle('is-active', active);
-          if (active) link.setAttribute('aria-current', 'true');
+          const state = headingProgress[index];
+          const item = link.closest<HTMLElement>('[data-toc-item]');
+          const progress = item?.querySelector<HTMLElement>('[data-toc-progress]');
+          const isRead = !state.inView && state.progress >= 1;
+
+          item?.classList.toggle('is-active', state.inView);
+          item?.classList.toggle('is-read', isRead);
+          link.classList.toggle('is-active', index === activeIndex);
+          if (index === activeIndex) link.setAttribute('aria-current', 'true');
           else link.removeAttribute('aria-current');
+          if (progress) progress.style.height = `${state.progress * 100}%`;
         });
 
         if (root.dataset.activeIndex !== String(activeIndex)) {
@@ -107,10 +137,6 @@ const totalLabel = String(total).padStart(2, '0');
           count.textContent = `${String(activeIndex + 1).padStart(2, '0')} / ${String(articleHeadings.length).padStart(2, '0')}`;
         }
 
-        const progress = root.querySelector<HTMLElement>('[data-toc-progress]');
-        if (progress) {
-          progress.style.width = `${((activeIndex + 1) / articleHeadings.length) * 100}%`;
-        }
       });
     };
 
@@ -124,6 +150,18 @@ const totalLabel = String(total).padStart(2, '0');
     };
 
     update();
+    roots.forEach(root => {
+      root.querySelectorAll<HTMLAnchorElement>('[data-toc-link]').forEach(link => {
+        link.addEventListener('click', event => {
+          const targetId = decodeURIComponent(link.hash.slice(1));
+          const target = document.getElementById(targetId);
+          if (!target) return;
+          event.preventDefault();
+          history.pushState(null, '', link.hash);
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    });
     window.requestAnimationFrame(update);
     window.addEventListener('load', update, { once: true });
     window.addEventListener('hashchange', update);

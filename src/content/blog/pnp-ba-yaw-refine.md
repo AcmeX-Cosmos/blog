@@ -1,6 +1,6 @@
 ---
 title: "PnP + 降自由度 BA：从单帧位姿抖动到多帧yaw平滑"
-date: "2024-12-05"
+date: "2024-08-08"
 description: "RCIA-vision 中 IPPE 初值解算与 Ceres 束调整的工程实现：固定pitch先验、只优化yaw的单参数 BA，以及 Cauchy 核与历史帧窗口的整定。"
 tags: ["PnP", "Ceres", "BA", "OpenCV", "C++", "RoboMaster"]
 category: "algorithm"

@@ -8,19 +8,19 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
-import ToTopButton from '../components/layout/ToTopButton.astro';
 import '../styles/global.css';
 import 'katex/dist/katex.min.css';
 
 interface Props {
   title?: string;
   description?: string;
+  universeOpacity?: number;
 }
 
-const { title, description } = Astro.props;
+const { title, description, universeOpacity } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} universeOpacity={universeOpacity}>
   <!-- 主题闪烁抑制 -->
   <script is:inline>
     (function () {
@@ -42,5 +42,4 @@ const { title, description } = Astro.props;
     <Footer />
   </div>
 
-  <ToTopButton />
 </BaseLayout>

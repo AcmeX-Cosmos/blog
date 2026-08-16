@@ -13,10 +13,10 @@
   data-show="false"
   aria-label="回到顶部"
   title="回到顶部"
-  class="fixed bottom-8 end-4 z-40 flex size-11 items-center justify-center rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--background))]/70 text-[hsl(var(--muted-foreground))] shadow-lg backdrop-blur-md transition-all duration-300 hover:text-[hsl(var(--foreground))] data-[show=false]:pointer-events-none data-[show=false]:translate-y-4 data-[show=false]:opacity-0 sm:end-8"
+  class="to-top-button fixed bottom-20 end-16 z-40 flex size-12 cursor-pointer items-center justify-center rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--background))]/70 text-[hsl(var(--muted-foreground))] shadow-lg backdrop-blur-md transition-all duration-300 data-[show=false]:pointer-events-none data-[show=false]:translate-y-4 data-[show=false]:opacity-0 sm:end-20"
 >
   <svg
-    class="size-5"
+    class="to-top-icon size-[1.375rem]"
     width="20"
     height="20"
     viewBox="0 0 24 24"
@@ -33,18 +33,49 @@
 
 <script>
   const btn = document.getElementById('to-top-btn');
-  // 以页面头部为哨兵：头部滚出视口后才显示按钮
-  const sentinel = document.getElementById('content-header') ?? document.querySelector('main');
+  const updateVisibility = () => {
+    if (btn) btn.dataset.show = (window.scrollY > 320).toString();
+  };
 
   btn?.addEventListener('click', () => {
     document.documentElement.scrollTo({ behavior: 'smooth', top: 0 });
   });
 
-  if (btn && sentinel) {
-    new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        btn.dataset.show = (!entry.isIntersecting).toString();
-      });
-    }).observe(sentinel);
-  }
+  updateVisibility();
+  window.addEventListener('scroll', updateVisibility, { passive: true });
 </script>
+
+<style>
+  .to-top-button:hover {
+    border-color: hsl(var(--foreground) / 0.35);
+    background-color: hsl(var(--foreground));
+    color: hsl(var(--background));
+    box-shadow: 0 14px 28px hsl(var(--foreground) / 0.18);
+    transform: translateY(-5px);
+  }
+
+  .to-top-button:hover .to-top-icon {
+    transform: translateY(-2px);
+  }
+
+  .to-top-button:active {
+    transform: translateY(-2px) scale(0.94);
+  }
+
+  .to-top-icon {
+    transition: transform 180ms ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .to-top-button,
+    .to-top-icon {
+      transition: none;
+    }
+
+    .to-top-button:hover,
+    .to-top-button:active,
+    .to-top-button:hover .to-top-icon {
+      transform: none;
+    }
+  }
+</style>
