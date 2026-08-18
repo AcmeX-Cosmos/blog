@@ -1,6 +1,6 @@
 ---
 title: "Paper Reading: CV 2 - 三维匹配、持续重建与开放世界感知"
-date: "2025-06-15"
+date: "2025-06-16"
 description: "以定位、尺度与开放词汇接口为线索，评估 MASt3R、CUT3R、Depth Anything V2、UniDepth、FoundationStereo、Florence-2 和 YOLO-World。"
 tags: ["CV", "三维视觉", "深度估计", "开放词汇", "论文合集"]
 category: "research"

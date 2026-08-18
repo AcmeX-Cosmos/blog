@@ -1,5 +1,24 @@
 [
   {
+    "name": "双臂机器人 ACT 训练闭环优化",
+    "slug": "dual-arm-act-training-optimization",
+    "role": "核心开发",
+    "detail": "/blog/dual-arm-act-training-optimization",
+    "description": "基于 Tron2 双臂机器人构建的 Expert → Data → ACT → Evaluation 闭环优化系统，系统性解决从数据采集到策略部署的全链路质量问题，覆盖单臂调整、双臂抓举、双碗堆叠和三碗长时序堆叠四类递增难度任务。",
+    "tags": ["ACT", "PyTorch", "模仿学习", "RoboTwin", "SAPIEN", "cuRobo"],
+    "highlights": [
+      "ACT 数据契约：16维双臂状态空间、三相机语义顺序、action/qpos 时序对齐校验",
+      "训练策略优化：KL权重Warmup、分层学习率、高EMA系数、Keyframe-Aware采样",
+      "Expert 轨迹优化：阶段化任务分解、实时放置对齐、抓取候选fallback策略",
+      "评测基础设施：固定Seed rollout、分层堆叠评分、多维度模型选择"
+    ],
+    "results": [
+      { "label": "T4 Expert成功率", "value": "0%→20%" },
+      { "label": "采集速度提升", "value": "≥17.7%" },
+      { "label": "训练完成度", "value": "6500 epochs" }
+    ]
+  },
+  {
     "name": "RCIA-Vision-2025",
     "slug": "rcia-vision-2025",
     "role": "核心算法负责人",

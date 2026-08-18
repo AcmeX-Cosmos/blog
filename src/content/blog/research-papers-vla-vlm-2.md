@@ -1,6 +1,6 @@
 ---
 title: "Paper Reading: VLA / VLM 2 - 潜动作、分层推理与高效策略"
-date: "2026-01-18"
+date: "2025-09-15"
 description: "围绕数据利用率、策略分层与在线延迟，评估 UniVLA、GraspVLA、A0、OneTwoVLA、Magma、CoT-VLA、Interleave-VLA 和 SmolVLA。"
 tags: ["VLA", "VLM", "多模态", "机器人基础模型", "论文合集"]
 category: "research"
