@@ -1,6 +1,6 @@
 ---
 title: "Paper Reading: Embodied AI 3 - 高效 6D 抓取检测与候选排序"
-date: "2025-10-27"
+date: "2026-07-19"
 description: "从候选召回、姿态评分到闭环执行，分析 EconomicGrasp、RNGNet、AnyGrasp、GSNet、HGGD 与 GtG 2.0 的取舍。"
 tags: ["Embodied AI", "6D抓取", "GraspNet", "点云", "论文合集"]
 category: "research"
