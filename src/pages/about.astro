@@ -72,12 +72,12 @@ const now = Date.now();
 const progress = Math.min(100, Math.max(0, Math.round(((now - startDate) / (endDate - startDate)) * 100)));
 
 const awards = [
-  { title: 'RMUC 2024', content: '全国赛 国家二等奖' },
-  { title: 'RMUC 2023', content: '全国赛 区域赛奖' },
-  { title: 'RMUL 2025', content: '(广西站) 团体 & 哨兵' },
-  { title: 'RMUL 2024', content: '(广东站) 团体 & 哨兵' },
-  { title: '全国大学生电子设计竞赛', content: '2023 省级二等奖' },
-  { title: 'RM 赛季荣誉', content: '2023-2025 区域赛/兵种奖 一二等奖若干' },
+  { title: '2025年 RoboMaster 高校联盟赛 | 哨兵机器人', content: '省级一等奖' },
+  { title: '2024年 RoboMaster 超级对抗赛 全国赛', content: '国家二等奖' },
+  { title: '2024年 RoboMaster 高校联盟赛 | 团体 & 哨兵机器人', content: '省级一等奖' },
+  { title: '2023年 RoboMaster 超级对抗赛 全国赛', content: '国家三等奖' },
+  { title: '2023年 全国大学生电子设计竞赛', content: '省级二等奖' },
+  { title: '另获 2023-2025 赛季 RM 区域赛/兵种奖 一、二等奖若干', content: '' },
 ];
 
 const projects = [
@@ -2346,7 +2346,7 @@ const projects = [
 
   .award-list-item {
     display: grid;
-    grid-template-columns: minmax(180px, 0.8fr) minmax(0, 2fr);
+    grid-template-columns: minmax(320px, 3fr) minmax(96px, 1fr);
     align-items: center;
     gap: 1rem;
     padding: 0.5rem 0;
@@ -2356,6 +2356,12 @@ const projects = [
 
   .award-list-item:last-child {
     border-bottom: none;
+  }
+
+  .award-list-item:last-child .reward-award {
+    grid-column: 1 / -1;
+    color: hsl(var(--muted-foreground));
+    font-weight: 400;
   }
 
   .reward-dot {
@@ -2665,7 +2671,7 @@ const projects = [
     }
 
     .award-list-item {
-      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      grid-template-columns: minmax(0, 2.2fr) minmax(5.5rem, 1fr);
       gap: 0.75rem;
     }
 
