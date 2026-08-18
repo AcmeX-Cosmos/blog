@@ -1,44 +1,57 @@
-# Dependencies
+# Dependencies and package-manager caches
 node_modules/
+.pnpm-store/
+.npm/
 
-# Build output
+# Astro and deployment output
 dist/
-
-# Astro
 .astro/
+.vercel/
 
-# IDE / Editor
+# Build, test, and tool caches
+coverage/
+.cache/
+.parcel-cache/
+.turbo/
+*.tsbuildinfo
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Logs and temporary files
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+*.log
+*.tmp
+*.temp
+
+# IDE and editor state
 .vscode/
 .idea/
 *.sublime-*
-
-# OS
-.DS_Store
-Thumbs.db
 *.swp
 *.swo
 *~
 
-# Env
-.env
-.env.*
+# Operating-system metadata
+.DS_Store
+Thumbs.db
+ehthumbs.db
 
-# Debug
-npm-debug.log*
-*.log
-
-# Local notes
+# Local notes and quick-start instructions
 QuickStart.md
 
-# Archive
+# Archives and reference material
 *.zip
+*.tar
 *.tar.gz
 *.rar
+*.7z
+*.pdf
 
-# Coverage
-coverage/
-
-# Reference files（存档在仓库根目录，不在 src/ 下）
+# Local reference-page exports
 关于 _ GB的记事簿.html
 关于 _ GB的记事簿_files/
-*.pdf
