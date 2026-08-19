@@ -40,8 +40,9 @@ const counts = isBlogPage ? countByCategory(allPosts) : {};
 const { Content, headings } = isBlogPage ? { Content: null, headings: [] } : await post.render();
 const slug = post?.id.replace(/\.md$/, '') || '';
 const isPaperCollection = !isBlogPage && slug.startsWith('research-papers-');
+const isDailyLife = !isBlogPage && post.data.category === 'daily';
 const tocHeadings = headings.filter(heading => heading.depth === 2);
-const hasToc = !isBlogPage && tocHeadings.length > 0;
+const hasToc = !isBlogPage;
 ---
 
 {isBlogPage ? (
@@ -67,7 +68,7 @@ const hasToc = !isBlogPage && tocHeadings.length > 0;
 ) : (
 <SiteLayout title={post.data.title} description={post.data.description} universeOpacity={0.15}>
   <div class:list={['article-toc-layout', { 'has-toc': hasToc }]}>
-  <article class:list={['max-w-none', 'article-with-toc', { 'paper-reading-article': isPaperCollection }]}>
+  <article class:list={['max-w-none', 'article-with-toc', { 'paper-reading-article': isPaperCollection, 'daily-life-article': isDailyLife }]}>
     <header class="mb-10 pb-8 border-b border-[hsl(var(--border))]">
       <h1 class="text-3xl font-bold mb-3 leading-tight tracking-tight">
         {post.data.title}
@@ -100,7 +101,7 @@ const hasToc = !isBlogPage && tocHeadings.length > 0;
       </div>
     </header>
 
-    {hasToc && <PaperToc headings={tocHeadings} variant="mobile" />}
+    {hasToc && <PaperToc headings={tocHeadings} variant="mobile" title={post.data.title} />}
 
     <div class="article-content">
       <Content />
@@ -116,7 +117,7 @@ const hasToc = !isBlogPage && tocHeadings.length > 0;
     </div>
   </article>
 
-  {hasToc && <PaperToc headings={tocHeadings} variant="desktop" />}
+  {hasToc && <PaperToc headings={tocHeadings} variant="desktop" title={post.data.title} />}
   </div>
 </SiteLayout>
 )}

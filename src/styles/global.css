@@ -238,6 +238,32 @@ body::-webkit-scrollbar { height: 0; }
   margin-top: -0.75rem;
 }
 
+/* Daily Life essays use a quieter, centered reading measure. */
+.daily-life-article {
+  justify-self: center;
+  width: 100%;
+  max-width: 56rem;
+}
+
+.daily-life-article header .flex {
+  justify-content: flex-start;
+}
+
+.daily-life-article .article-content {
+  max-width: 44rem;
+  margin-inline: auto;
+}
+
+.daily-life-article .article-content p {
+  max-width: 38rem;
+  margin-inline: auto;
+}
+
+.daily-life-article .article-content h2#loss-is-nan-dropout {
+  text-align: center;
+  border-bottom: 0;
+}
+
 .paper-toc-desktop {
   position: sticky;
   top: 6.5rem;
@@ -255,7 +281,7 @@ body::-webkit-scrollbar { height: 0; }
 
 .paper-toc-heading h2 {
   color: hsl(var(--foreground));
-  font-size: 1.05rem;
+  font-size: 0.85rem;
   line-height: 1.25;
   font-weight: 800;
   letter-spacing: 0.07em;
@@ -274,6 +300,23 @@ body::-webkit-scrollbar { height: 0; }
 .paper-toc-body {
   position: relative;
   min-height: 8rem;
+}
+
+.paper-toc-empty {
+  padding: 1rem 0.7rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.8rem;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.paper-toc-empty p {
+  margin: 0;
+}
+
+/* Hide h2 for poetry articles where title = h2 */
+.article-content h2#loss-is-nan-dropout {
+  display: none;
 }
 
 .paper-toc-item {
