@@ -1,0 +1,507 @@
+<!--
+  Copyright (c) 2026 AcmeX. All rights reserved.
+  Licensed under the MIT License. See LICENSE file in the project root.
+-->
+
+---
+import { getCollection } from 'astro:content';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { sortedPosts } from '../utils/posts';
+import { getCategory } from '../data/categories';
+
+const posts = sortedPosts(await getCollection('blog'));
+const years = [...new Set(posts.map((post) => new Date(post.data.date).getFullYear()))];
+const postsByYear = years.map((year) => ({
+  year,
+  months: [...new Set(
+    posts
+      .filter((post) => new Date(post.data.date).getFullYear() === year)
+      .map((post) => new Date(post.data.date).getMonth())
+  )].sort((a, b) => b - a).map((month) => ({
+    month,
+    posts: posts.filter((post) => {
+      const date = new Date(post.data.date);
+      return date.getFullYear() === year && date.getMonth() === month;
+    }),
+  })),
+}));
+const timelineStart = new Date(2023, 8, 1);
+const timelinePosts = posts.filter((post) => new Date(post.data.date) >= timelineStart);
+const latestPostDate = timelinePosts.reduce(
+  (latest, post) => Math.max(latest, new Date(post.data.date).getTime()),
+  timelineStart.getTime(),
+);
+const timelineEnd = new Date(latestPostDate);
+const timelineMonths: { year: number; month: number; label: string }[] = [];
+for (
+  let cursor = new Date(timelineStart);
+  cursor <= timelineEnd;
+  cursor = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1)
+) {
+  timelineMonths.push({
+    year: cursor.getFullYear(),
+    month: cursor.getMonth(),
+    label: cursor.toLocaleDateString('en-US', { month: 'short' }),
+  });
+}
+const monthlyCounts = timelineMonths.map((month) => ({
+  ...month,
+  count: timelinePosts.filter((post) => {
+    const date = new Date(post.data.date);
+    return date.getFullYear() === month.year && date.getMonth() === month.month;
+  }).length,
+}));
+const maxMonthlyCount = Math.max(1, ...monthlyCounts.map(({ count }) => count));
+const yTickStep = Math.max(1, Math.ceil(maxMonthlyCount / 4));
+const yMax = Math.max(yTickStep, Math.ceil(maxMonthlyCount / yTickStep) * yTickStep);
+const yTicks = Array.from({ length: yMax / yTickStep + 1 }, (_, index) => index * yTickStep);
+const chartHeight = 240;
+const chartMargin = { top: 18, right: 24, bottom: 46, left: 52 };
+const chartSlotWidth = 30;
+const chartWidth = Math.max(960, chartMargin.left + chartMargin.right + monthlyCounts.length * chartSlotWidth);
+const plotWidth = chartWidth - chartMargin.left - chartMargin.right;
+const plotHeight = chartHeight - chartMargin.top - chartMargin.bottom;
+const xForIndex = (index: number) => chartMargin.left + (index + 0.5) * (plotWidth / monthlyCounts.length);
+const yForValue = (value: number) => chartMargin.top + plotHeight - (value / yMax) * plotHeight;
+const linePoints = monthlyCounts.map(({ count }, index) => `${xForIndex(index)},${yForValue(count)}`).join(' ');
+const areaPoints = `${chartMargin.left},${chartMargin.top + plotHeight} ${linePoints} ${chartWidth - chartMargin.right},${chartMargin.top + plotHeight}`;
+const hoverSlotWidth = plotWidth / monthlyCounts.length;
+---
+
+<SiteLayout
+  title="Archives | AcmeX"
+  description="按时间浏览 AcmeX 的技术文章、研究记录与日常随笔。"
+>
+  <header class="archive-header animate">
+    <div>
+      <p class="archive-kicker">Knowledge Timeline</p>
+      <h1>Archives</h1>
+      <p class="archive-description">按时间回顾技术实践、论文阅读与日常记录。</p>
+    </div>
+    <dl class="archive-summary" aria-label="Archive summary">
+      <div>
+        <dt>Posts</dt>
+        <dd>{posts.length}</dd>
+      </div>
+      <div>
+        <dt>Years</dt>
+        <dd>{years.length}</dd>
+      </div>
+    </dl>
+  </header>
+
+  <section class="archive-activity animate" aria-labelledby="activity-heading">
+    <div class="archive-activity-heading">
+      <div>
+        <p class="archive-kicker">Publication Activity</p>
+        <h2 id="activity-heading">Publication timeline</h2>
+      </div>
+      <div class="archive-activity-legend" aria-label="Timeline legend">
+        <i></i>
+        <span>Monthly publication volume</span>
+      </div>
+    </div>
+    <div class="archive-chart-scroll">
+      <svg
+        class="archive-chart"
+        viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+        role="img"
+        aria-labelledby="activity-chart-title activity-chart-description"
+      >
+        <title id="activity-chart-title">文章发布量时间轴</title>
+        <desc id="activity-chart-description">从 2023 年 9 月开始，横轴为月份，纵轴为每月发布的文章数量，面积展示发布趋势。</desc>
+        {yTicks.map((tick) => {
+          const y = yForValue(tick);
+          return (
+            <g class="archive-chart-y-tick">
+              <line x1={chartMargin.left} x2={chartWidth - chartMargin.right} y1={y} y2={y}></line>
+              <text x={chartMargin.left - 0.7} y={y + 3} text-anchor="end">{tick}</text>
+            </g>
+          );
+        })}
+        <text class="archive-chart-axis-label" x="14" y={chartMargin.top} text-anchor="middle" transform={`rotate(-90 14 ${chartMargin.top})`}>Posts</text>
+        <line class="archive-chart-baseline" x1={chartMargin.left} x2={chartWidth - chartMargin.right} y1={chartMargin.top + plotHeight} y2={chartMargin.top + plotHeight}></line>
+        <polygon class="archive-chart-area" points={areaPoints}></polygon>
+        <polyline class="archive-chart-line" points={linePoints}></polyline>
+        {monthlyCounts.map(({ year, month, label, count }, index) => {
+          const x = xForIndex(index);
+          const y = yForValue(count);
+          const showYear = index === 0 || monthlyCounts[index - 1]?.year !== year;
+          const tooltipWidth = 126;
+          const tooltipX = Math.min(chartWidth - chartMargin.right - tooltipWidth, Math.max(chartMargin.left, x - tooltipWidth / 2));
+          const tooltipY = Math.max(4, y - 49);
+          return (
+            <g class="archive-chart-month" tabindex="0">
+              <rect
+                class="archive-chart-hover-zone"
+                x={chartMargin.left + index * hoverSlotWidth}
+                y={chartMargin.top}
+                width={hoverSlotWidth}
+                height={plotHeight}
+              >
+                <title>{`${year}-${String(month + 1).padStart(2, '0')} · ${count} posts`}</title>
+              </rect>
+              <line class="archive-chart-cursor" x1={x} x2={x} y1={chartMargin.top} y2={chartMargin.top + plotHeight}></line>
+              <g class="archive-chart-tooltip" transform={`translate(${tooltipX} ${tooltipY})`} aria-hidden="true">
+                <rect width={tooltipWidth} height="41" rx="4"></rect>
+                <text x="9" y="17">{`${year}-${String(month + 1).padStart(2, '0')}`}</text>
+                <text class="archive-chart-tooltip-count" x="9" y="33">{`${count} posts`}</text>
+              </g>
+              <text class="archive-chart-month-label" x={x} y={chartHeight - 29} text-anchor="middle">{label}</text>
+              {showYear && <text class="archive-chart-year-label" x={x} y={chartHeight - 12} text-anchor="middle">{year}</text>}
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  </section>
+
+  <main class="archive-timeline" aria-label="文章归档">
+    {postsByYear.map(({ year, months }) => (
+      <section class="archive-year animate" aria-labelledby={`archive-${year}`}>
+        <div class="archive-year-heading">
+          <h2 id={`archive-${year}`}>{year}</h2>
+          <span>{months.reduce((total, group) => total + group.posts.length, 0)} posts</span>
+        </div>
+        {months.map(({ month, posts: monthPosts }) => (
+          <div class="archive-month">
+            <h3>{new Date(year, month, 1).toLocaleDateString('zh-CN', { month: 'long' })}</h3>
+            <ol class="archive-list">
+              {monthPosts.map((post) => {
+                const date = new Date(post.data.date);
+                const category = getCategory(post.data.category);
+                return (
+                  <li class="archive-entry">
+                    <time datetime={post.data.date}>
+                      <span>{date.toLocaleDateString('en-US', { month: 'short' })}</span>
+                      <strong>{String(date.getDate()).padStart(2, '0')}</strong>
+                    </time>
+                    <div class="archive-entry-content">
+                      <a href={`/blog/${post.id.replace(/\.md$/, '')}`} class="archive-entry-title">
+                        {post.data.title}
+                      </a>
+                      <div class="archive-entry-meta">
+                        <span>{category?.title ?? post.data.category}</span>
+                        {post.data.tags?.slice(0, 3).map((tag) => <span>#{tag}</span>)}
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+        ))}
+      </section>
+    ))}
+  </main>
+
+  <nav class="archive-footer" aria-label="Archive navigation">
+    <a href="/blog">← Back to Blog</a>
+  </nav>
+</SiteLayout>
+
+<style>
+  .archive-header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin: 0.75rem 0 2.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid hsl(var(--border));
+  }
+
+  .archive-kicker {
+    margin: 0 0 0.45rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .archive-header h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 2.6rem);
+    font-weight: 650;
+    letter-spacing: 0.01em;
+    line-height: 1.08;
+  }
+
+  .archive-description {
+    max-width: 34rem;
+    margin: 0.5rem 0 0;
+    color: hsl(var(--muted-foreground));
+    line-height: 1.55;
+  }
+
+  .archive-summary {
+    display: flex;
+    flex: none;
+    gap: 1.5rem;
+    margin: 0;
+    padding-left: 1.25rem;
+    border-left: 1px solid hsl(var(--border));
+  }
+
+  .archive-summary div { min-width: 3.5rem; }
+  .archive-summary dt {
+    color: hsl(var(--muted-foreground));
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .archive-summary dd {
+    margin: 0.15rem 0 0;
+    font-size: 1.3rem;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    font-weight: 650;
+  }
+
+  .archive-timeline { max-width: 58rem; }
+
+  .archive-activity {
+    margin: -0.75rem 0 3rem;
+    padding: 1.05rem 1.2rem 1.1rem;
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.75rem;
+    background: hsl(var(--card) / 0.42);
+  }
+  .archive-activity-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 0.7rem;
+  }
+  .archive-activity-heading .archive-kicker { margin-bottom: 0.35rem; }
+  .archive-activity-heading h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 650;
+  }
+  .archive-activity-legend {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.68rem;
+  }
+  .archive-activity-legend i {
+    width: 1rem;
+    height: 0.55rem;
+    border-bottom: 1px solid hsl(var(--foreground));
+    background: hsl(var(--foreground) / 0.14);
+  }
+
+  .archive-chart-scroll {
+    overflow-x: auto;
+    padding-bottom: 0.2rem;
+  }
+  .archive-chart {
+    display: block;
+    width: max(100%, 60rem);
+    height: 15rem;
+  }
+  .archive-chart-y-tick line {
+    stroke: hsl(var(--border) / 0.55);
+    stroke-dasharray: 2 5;
+  }
+  .archive-chart-y-tick text,
+  .archive-chart-axis-label,
+  .archive-chart-month-label,
+  .archive-chart-year-label {
+    fill: hsl(var(--muted-foreground));
+    font-family: ui-monospace, monospace;
+    font-size: 0.68rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .archive-chart-axis-label {
+    fill: hsl(var(--foreground));
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .archive-chart-baseline {
+    stroke: hsl(var(--foreground) / 0.65);
+    stroke-width: 1;
+  }
+  .archive-chart-line {
+    fill: none;
+    stroke: hsl(var(--foreground));
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2.5;
+  }
+  .archive-chart-area {
+    fill: hsl(var(--foreground) / 0.13);
+  }
+  .archive-chart-hover-zone {
+    fill: transparent;
+    pointer-events: all;
+  }
+  .archive-chart-cursor {
+    opacity: 0;
+    stroke: hsl(var(--foreground) / 0.35);
+    stroke-dasharray: 3 4;
+    transition: opacity 140ms ease;
+  }
+  .archive-chart-month:hover .archive-chart-cursor,
+  .archive-chart-month:focus .archive-chart-cursor {
+    opacity: 1;
+  }
+  .archive-chart-tooltip {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 140ms ease;
+  }
+  .archive-chart-month:hover .archive-chart-tooltip,
+  .archive-chart-month:focus .archive-chart-tooltip {
+    opacity: 1;
+  }
+  .archive-chart-tooltip rect {
+    fill: hsl(var(--foreground));
+    stroke: hsl(var(--background));
+    stroke-width: 1;
+  }
+  .archive-chart-tooltip text {
+    fill: hsl(var(--background));
+    font-family: ui-monospace, monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .archive-chart-tooltip-count { opacity: 0.78; }
+  .archive-chart-month-label { font-size: 0.65rem; }
+  .archive-chart-year-label {
+    fill: hsl(var(--foreground));
+    font-size: 0.62rem;
+    font-weight: 600;
+  }
+
+  .archive-year { margin-bottom: 3.5rem; }
+  .archive-year-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .archive-year-heading h2 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 650;
+  }
+  .archive-year-heading span {
+    color: hsl(var(--muted-foreground));
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .archive-month { margin-top: 1.75rem; }
+  .archive-month h3 {
+    margin: 0 0 0.35rem 1.5rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .archive-list {
+    position: relative;
+    margin: 0;
+    padding: 0 0 0 1.5rem;
+    list-style: none;
+    border-left: 1px solid hsl(var(--border));
+  }
+  .archive-entry {
+    position: relative;
+    display: grid;
+    grid-template-columns: 4.25rem minmax(0, 1fr);
+    gap: 1.25rem;
+    padding: 0.85rem 0 0.85rem 1rem;
+  }
+  .archive-entry::before {
+    position: absolute;
+    top: 1.25rem;
+    left: -0.28rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border: 2px solid hsl(var(--background));
+    border-radius: 50%;
+    background: hsl(var(--muted-foreground));
+    content: '';
+  }
+  .archive-entry time {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.7rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+  .archive-entry time strong {
+    color: hsl(var(--foreground));
+    font-size: 1.1rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .archive-entry-content { min-width: 0; }
+  .archive-entry-title {
+    color: hsl(var(--foreground));
+    font-size: 0.98rem;
+    font-weight: 550;
+    line-height: 1.5;
+    text-decoration: none;
+    text-underline-offset: 0.2em;
+  }
+  .archive-entry-title:hover { text-decoration: underline; }
+  .archive-entry-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.75rem;
+    margin-top: 0.3rem;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.72rem;
+  }
+  .archive-footer {
+    margin: 1rem 0 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid hsl(var(--border));
+  }
+  .archive-footer a {
+    color: hsl(var(--muted-foreground));
+    font-size: 0.85rem;
+    text-decoration: none;
+  }
+  .archive-footer a:hover { color: hsl(var(--foreground)); }
+
+  @media (max-width: 640px) {
+    .archive-header {
+      align-items: start;
+      flex-direction: column;
+      margin-top: 0.5rem;
+      margin-bottom: 1.75rem;
+    }
+    .archive-summary {
+      width: 100%;
+      padding: 0.75rem 0 0;
+      border-top: 1px solid hsl(var(--border));
+      border-left: 0;
+    }
+    .archive-activity {
+      margin-top: -0.25rem;
+      padding: 0.9rem 1rem 1rem;
+    }
+    .archive-activity-heading { align-items: start; flex-direction: column; gap: 0.5rem; }
+    .archive-chart { min-width: 60rem; }
+    .archive-entry {
+      grid-template-columns: 3.5rem minmax(0, 1fr);
+      gap: 0.75rem;
+      padding-left: 0.75rem;
+    }
+  }
+</style>
