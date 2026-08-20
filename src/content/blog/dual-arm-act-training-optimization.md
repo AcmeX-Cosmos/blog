@@ -1,5 +1,5 @@
 ---
-title: "双臂机器人 ACT 训练的闭环优化实践"
+title: "双臂机器人 ACT 训练优化"
 date: "2026-08-05"
 description: "面向长时序双臂操作的 ACT 模仿学习系统优化：从 Expert 轨迹可靠性、数据契约设计、训练策略调整到固定 Seed 评测的完整工程实践。"
 tags: ["Embodied AI", "ACT", "Imitation Learning", "Robotics", "双臂机器人"]
