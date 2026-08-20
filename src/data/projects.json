@@ -1,5 +1,27 @@
 [
   {
+    "name": "AuraVLA：Vision-Language-Action 具身智能闭环控制系统",
+    "slug": "auravla",
+    "role": "核心开发",
+    "detail": "/blog/auravla-embodied-ai-closed-loop",
+    "github": "https://github.com/AcmeX-Cosmos/AuraVLA",
+    "description": "集成 VLM 多模态理解、Schema 验证规划、Lula IK/RRT 运动规划、Isaac Sim 仿真与几何验证的自主机器人操作系统，实现感知-规划-执行-验证的完整闭环与自动重规划能力。",
+    "tags": ["VLA", "ROS2", "Lula", "RRT", "Isaac Sim", "cuRobo", "VLM", "Python"],
+    "highlights": [
+      "Lula IK + RRT 混合规划：warm-start 连续 IK + 碰撞避障全局路径搜索",
+      "Schema 验证安全规划：禁止底层运动指令，防止 VLM 幻觉生成不安全参数",
+      "稀疏关键姿态扩散：minimum jerk 插值生成 C² 连续轨迹，满足动力学约束",
+      "双臂协同控制：实时 TCP 间距约束（18cm）+ 力反馈独立双指抓取",
+      "文件桥接通信：零依赖跨进程集成 ROS2 与 Isaac Sim，支持心跳与独占控制"
+    ],
+    "results": [
+      { "label": "IK 求解", "value": "8-25ms" },
+      { "label": "RRT 规划", "value": "0.5-3s" },
+      { "label": "TCP 精度", "value": "±3.5cm" },
+      { "label": "重规划成功率", "value": "78%" }
+    ]
+  },
+  {
     "name": "双臂机器人 ACT 训练闭环优化",
     "slug": "dual-arm-act-training-optimization",
     "role": "核心开发",
@@ -41,7 +63,7 @@
     "name": "DicePoseEst",
     "slug": "diceposeest",
     "role": "独立完成",
-    "detail": "/blog/projects/diceposeest",
+    "detail": "/blog/diceposeest-6dof-estimation",
     "github": "https://github.com/AcmeX-Cosmos/DicePoseEst",
     "description": "基于YOLOv10 + PnP + BA + PoseNet多模型融合的骰子6D姿态估计系统，训练损失MAE低至0.034 rad。支持图像、视频与实时屏幕捕获多源输入，PyQt5交互界面提供参数调节与结果检查。",
     "tags": ["YOLOv10", "PnP", "Ceres", "PoseNet", "PyQt5", "Python"],
