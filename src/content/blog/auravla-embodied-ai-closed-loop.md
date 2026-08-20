@@ -1,5 +1,5 @@
 ---
-title: "AuraVLA：Vision-Language-Action 具身智能闭环控制系统"
+title: "AuraVLA 具身智能闭环控制系统"
 date: "2026-08-20"
 description: "集成 VLM 多模态理解、Schema 验证规划、Lula IK/RRT 运动规划、Isaac Sim 仿真与几何验证的自主机器人操作系统，实现感知-规划-执行-验证的完整闭环。"
 tags: ["Embodied AI", "VLA", "ROS2", "Vision-Language Model", "Robotics", "Isaac Sim", "Lula", "RRT"]
@@ -18,7 +18,7 @@ references:
 
 ## 项目概述
 
-AuraVLA（Autonomous Unified Robotic Agent with Vision-Language-Action）是一套面向具身智能的完整闭环控制系统，实现了从自然语言指令到机器人执行的端到端自主操作流程。系统将视觉-语言模型（VLM）的多模态理解能力、基于 Schema 的安全任务规划、Lula IK/RRT 运动规划、物理仿真执行与几何验证机制融合在统一的 ROS2 架构中，构建了生产级的机器人操作基础设施。
+AuraVLA（Autonomous Unified Robotic Agent with Vision-Language-Action）是一套面向具身智能的闭环控制系统，实现了从自然语言指令到机器人执行的端到端自主操作流程。系统将视觉-语言模型（VLM）的多模态理解能力、基于 Schema 的安全任务规划、Lula IK/RRT 运动规划、物理仿真执行与几何验证机制融合在统一的 ROS2 架构中，构建了生产级的机器人操作基础设施。
 
 项目核心价值在于闭环架构设计：**Perception → Planning → Execution → Verification → Replanning**，每个环节都具备独立的错误检测与恢复能力，形成自修正的控制循环。
 
