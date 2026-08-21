@@ -227,12 +227,12 @@ const projects = projectCatalog.slice(0, 3);
           <div class="author-content-item-tips">数据</div>
           <span class="author-content-item-title">访问统计</span>
           <div id="statistic">
-            <div><span>今日人数</span><span id="today_uv">--</span></div>
-            <div><span>今日访问</span><span id="today_pv">--</span></div>
-            <div><span>昨日人数</span><span id="yesterday_uv">--</span></div>
-            <div><span>昨日访问</span><span id="yesterday_pv">--</span></div>
-            <div><span>本月访问</span><span id="last_month_pv">--</span></div>
-            <div><span>本年访问</span><span id="last_year_pv">--</span></div>
+            <div><span>今日人数</span><span id="today_uv" aria-live="polite">--</span></div>
+            <div><span>今日访问</span><span id="today_pv" aria-live="polite">--</span></div>
+            <div><span>昨日人数</span><span id="yesterday_uv" aria-live="polite">--</span></div>
+            <div><span>昨日访问</span><span id="yesterday_pv" aria-live="polite">--</span></div>
+            <div><span>本月访问</span><span id="last_month_pv" aria-live="polite">--</span></div>
+            <div><span>本年访问</span><span id="last_year_pv" aria-live="polite">--</span></div>
           </div>
           <div class="post-tips">统计信息来自 <a href="https://umami.gbfun.cc/" target="_blank" rel="noopener nofollow">Umami统计</a></div>
           <div class="banner-button-group">
@@ -2678,6 +2678,84 @@ const projects = projectCatalog.slice(0, 3);
 </style>
 
 <script async src="/blog/opencv.js" onload="window._cvLoaded=1"></script>
+<script>
+  // Umami 统计：优先使用公开分享接口，避免把管理端凭据暴露到浏览器。
+  (function() {
+    var statistic = document.getElementById('statistic');
+    if (!statistic) return;
+
+    var shareId = 'eXFjpWCdNbn8kykH';
+    var apiBase = 'https://cloud.umami.is/analytics/us/api';
+    var number = new Intl.NumberFormat('zh-CN');
+
+    function localStart(date) {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+    }
+
+    function rangeFor(kind) {
+      var now = new Date();
+      var start;
+      if (kind === 'today') start = localStart(now);
+      if (kind === 'yesterday') {
+        start = localStart(now) - 86400000;
+      }
+      if (kind === 'month') start = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+      if (kind === 'year') start = new Date(now.getFullYear(), 0, 1).getTime();
+      return { startAt: start, endAt: Date.now() };
+    }
+
+    async function loadShare() {
+      var response = await fetch(apiBase + '/share/' + shareId, { headers: { Accept: 'application/json' } });
+      if (!response.ok) throw new Error('Unable to load Umami share metadata');
+      return response.json();
+    }
+
+    async function request(range, share) {
+      var url = apiBase + '/websites/' + share.websiteId + '/stats?startAt=' + range.startAt + '&endAt=' + range.endAt;
+      var response = await fetch(url, {
+        headers: {
+          Accept: 'application/json',
+          'x-umami-share-token': share.token,
+          'x-umami-share-context': '1'
+        }
+      });
+      if (!response.ok) throw new Error('Unable to load Umami statistics');
+      var data = await response.json();
+      return {
+        pageviews: Number(data.pageviews) || 0,
+        visitors: Number(data.visitors) || 0
+      };
+    }
+
+    function render(id, valueToShow) {
+      var element = document.getElementById(id);
+      if (element) element.textContent = valueToShow === null ? '--' : number.format(valueToShow);
+    }
+
+    loadShare().then(function(share) {
+      return Promise.all([
+        request(rangeFor('today'), share),
+        request(rangeFor('yesterday'), share),
+        request(rangeFor('month'), share),
+        request(rangeFor('year'), share)
+      ]);
+    }).then(function(results) {
+      var today = results[0];
+      var yesterday = results[1];
+      var month = results[2];
+      var year = results[3];
+      render('today_uv', today && today.visitors);
+      render('today_pv', today && today.pageviews);
+      render('yesterday_uv', yesterday && yesterday.visitors);
+      render('yesterday_pv', yesterday && yesterday.pageviews);
+      render('last_month_pv', month && month.pageviews);
+      render('last_year_pv', year && year.pageviews);
+    }).catch(function() {
+      ['today_uv', 'today_pv', 'yesterday_uv', 'yesterday_pv', 'last_month_pv', 'last_year_pv']
+        .forEach(function(id) { render(id, null); });
+    });
+  })();
+</script>
 <script>
   (function() {
     const canvas = document.getElementById('aim-canvas');

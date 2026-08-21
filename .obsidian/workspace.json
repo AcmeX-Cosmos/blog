@@ -1,0 +1,216 @@
+{
+  "main": {
+    "id": "b62e8805f153642b",
+    "type": "split",
+    "children": [
+      {
+        "id": "13fc3dabed1d13c9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "28f6eee19b21a037",
+            "type": "leaf",
+            "state": {
+              "type": "image",
+              "state": {
+                "file": "public/images/CSGO.jpg"
+              },
+              "icon": "lucide-image",
+              "title": "CSGO"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "1dfbb640249b7999",
+    "type": "split",
+    "children": [
+      {
+        "id": "f9e07ec72ef24ddb",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6df080363a51e94a",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          },
+          {
+            "id": "cfc69b041b4d6dba",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "26378258ce6f4657",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "933372e51b4c143f",
+    "type": "split",
+    "children": [
+      {
+        "id": "206af93e82495cb5",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0e1169fefc421940",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "public/images/CSGO.jpg",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "反向链接"
+            }
+          },
+          {
+            "id": "0a745ab0a0f645db",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "public/images/CSGO.jpg",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "出链"
+            }
+          },
+          {
+            "id": "c0d6e3997c48fc5f",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "efd8f2dc9fa4cab2",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "添加笔记属性"
+            }
+          },
+          {
+            "id": "57c56b49ada5f0e8",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "public/images/CSGO.jpg",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "大纲"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "bases:新建数据库": false
+    }
+  },
+  "active": "6df080363a51e94a",
+  "lastOpenFiles": [
+    "dist/tags/index.html",
+    "dist/tags",
+    "dist/tag/姿态估计/index.html",
+    "dist/tag/姿态估计",
+    "dist/tag/RRT/index.html",
+    "dist/tag/RRT",
+    "dist/tag/Lula/index.html",
+    "dist/tag/Lula",
+    "dist/tag/Vision-Language Model/index.html",
+    "dist/tag/Vision-Language Model",
+    "dist/tag/Machine Learning/index.html",
+    "dist/img-bg-day.svg",
+    "dist/images/research/papers/yolo-world-architecture.webp",
+    "dist/images/research/papers/voxposer-architecture.webp",
+    "dist/images/research/papers/vjepa2-architecture.webp",
+    "dist/images/research/papers/vit-architecture.webp",
+    "dist/images/research/papers/vidar-architecture.webp",
+    "dist/images/research/papers/univla-architecture.webp",
+    "dist/images/research/papers/unidepth-architecture.webp",
+    "dist/images/research/papers/tracevla-architecture.webp",
+    "dist/images/research/papers/t5-architecture.webp",
+    "README_zh.md",
+    "node_modules/rehype-katex/node_modules/commander/Readme.md",
+    "src/content/blog/armor-color-split-gamma.md",
+    "src/content/blog/rcia-vision-overview.md"
+  ]
+}
