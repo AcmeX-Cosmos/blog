@@ -97,7 +97,7 @@ case TRACKING_ARMOR: {
 
 反向切换用 `min_switching_v_yaw`（1.0 rad/s）做迟滞——切回跟板模式的阈值远低于切出去的阈值，避免在临界转速附近来回横跳。这是标准的施密特触发器思路。
 
-**这里有个参数名错位**，和 [EKF 那组](/blog/ekf-qr-adaptive-tuning)是同一类问题：
+**这里有个参数名错位**，和 EKF 参数接入问题是同一类问题：
 
 ```cpp
 max_tracking_w_yaw_ = node_ptr->declare_parameter("gimbal_control.max_tracking_w_yaw", 6.0);

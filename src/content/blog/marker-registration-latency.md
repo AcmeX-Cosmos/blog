@@ -96,4 +96,4 @@ $$
 
 ---
 
-最后一篇是整套系统的量化复盘：[数字孪生验证框架的效率账](/blog/digital-twin-validation-efficiency)。
+整套系统的架构与量化边界见：[RCIA-vision 全景](/blog/rcia-vision-overview)。

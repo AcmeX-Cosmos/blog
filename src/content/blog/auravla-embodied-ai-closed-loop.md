@@ -1,6 +1,6 @@
 ---
 title: "AuraVLA 具身智能闭环控制系统"
-date: "2026-08-20"
+date: "2026-08-21"
 description: "集成 VLM 多模态理解、Schema 验证规划、Lula IK/RRT 运动规划、Isaac Sim 仿真与几何验证的自主机器人操作系统，实现感知-规划-执行-验证的完整闭环。"
 tags: ["Embodied AI", "VLA", "ROS2", "Vision-Language Model", "Robotics", "Isaac Sim", "Lula", "RRT"]
 category: "tech"
@@ -102,15 +102,15 @@ AuraVLA（Autonomous Unified Robotic Agent with Vision-Language-Action）是一�
 
 ### 4. cuRobo 集成与碰撞网格优化
 
-配置了 **NVIDIA cuRobo** 加速运动规划，针对 Tron2 双臂机器人进行了精细的碰撞几何优化。采用 multi-convex decomposition 为每个连杆生成多个凸包，消除了 PD 控制器在接触时的震颤，将自碰撞检测精度从 ±5mm 提升到 ±0.5mm，碰撞查询时间从 8ms 降至 1.2ms。
+配置了 **NVIDIA cuRobo** 加速运动规划，针对 Tron2 双臂机器人进行了碰撞几何优化。采用 multi-convex decomposition 为连杆生成凸包，并将碰撞查询参数纳入配置。±5 mm/±0.5 mm 的几何误差和 8 ms/1.2 ms 的查询耗时属于待固定场景复测的指标，不能在没有 benchmark 样本的情况下写成已验证提升。
 
 ### 5. 稀疏关键姿态扩散与双臂协同
 
-实现了 **Sparse Keypose Diffusion** 算法，采用 minimum jerk 插值生成 C² 连续的轨迹，满足关节速度限制（每帧 ≤ 0.008 rad）。在双臂协同操作中，实现了动态的末端执行器间距约束（默认 18cm），通过实时前向运动学验证防止碰撞。
+实现了 **SparseKeyposeDiffuser** 轨迹模块，采用 minimum jerk 插值生成 C² 连续的轨迹，关节单帧步长上限配置为 `0.008 rad`。在双臂协同操作中，末端执行器最小间距配置为 `0.18 m`，并通过实时前向运动学检查防止碰撞。
 
 ### 6. 力反馈闭合与接触确认
 
-实现了独立双指的力反馈抓取控制。通过监测指令位置与实际位置的残差（1.5mm 阈值）判断接触，连续 3 帧满足条件才锁定。接触确认后执行自适应预紧，根据力传感器反馈（0.25N 力阈值）动态调整预紧深度。
+实现了独立双指的接触确认控制。通过监测指令位置与实际位置的残差（`1.5 mm` 阈值）判断候选接触，连续 3 帧满足条件后锁定接触；随后进入预紧保持阶段，保持帧数由运行配置决定。力阈值存在配置与运行时默认值差异（`config.yaml` 为 `2.0 N`，runtime fallback 为 `0.25 N`），部署时必须显式记录最终生效值。
 
 ### 7. 文件桥接的 Isaac Sim 通信协议
 
@@ -131,20 +131,20 @@ AuraVLA（Autonomous Unified Robotic Agent with Vision-Language-Action）是一�
 | Verification | aura_verification/ | 完成检查、几何验证 |
 | Orchestration | aura_orchestration/ | 主编排器、状态机、闭环协调 |
 
-## 技术指标
+## 配置与观测指标
 
 | 指标 | 数值 | 说明 |
 |------|------|------|
-| 端到端延迟 | 8-15 秒 | 从指令到执行完成（简单任务） |
-| VLM 推理时间 | 2-4 秒 | Nemotron 单次调用（640px 图像） |
-| IK 求解时间 | 8-25 ms | Lula 单次逆运动学（warm-start） |
-| RRT 规划时间 | 0.5-3 秒 | 碰撞避障路径搜索 |
+| 端到端延迟 | 8-15 秒 | 当前简单任务记录，需附样本数与硬件 |
+| VLM 推理时间 | 2-4 秒 | Nemotron 单次调用（640px 图像），需附调用统计 |
+| IK 求解时间 | 8-25 ms | Lula warm-start 观测范围 |
+| RRT 规划时间 | 0.5-3 秒 | 当前碰撞避障观测范围 |
 | 关节速度限制 | 0.008 rad/frame | 约 0.46°/frame @ 60Hz 物理 |
 | TCP 轨迹精度 | ±3.5 cm | 末端位置到达容差 |
 | 双臂最小间距 | 18 cm | 防碰撞安全距离 |
 | 夹爪接触检测 | 1.5 mm | 残差位置阈值 |
-| 重规划触发率 | 15-25% | 首次尝试失败比例 |
-| 二次成功率 | 78% | 重规划后成功比例 |
+| 重规划触发率 | 15-25% | 当前小规模记录，需附任务与样本数 |
+| 二次成功率 | 78% | 当前小规模记录，不能视为通用基准 |
 
 ## 应用场景
 

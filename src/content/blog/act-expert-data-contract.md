@@ -8,9 +8,6 @@ references:
   - title: "Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware"
     meta: "Zhao et al. · RSS 2023"
     url: "https://arxiv.org/abs/2304.13705"
-  - title: "Action Chunking with Transformers"
-    meta: "ACT policy reference"
-    url: "https://arxiv.org/abs/2304.13705"
   - title: "cuRobo"
     meta: "GPU-accelerated robot motion generation"
     url: "https://github.com/NVlabs/curobo"
@@ -70,7 +67,6 @@ HDF5 入口至少拒绝以下情况：rank 或时间长度不一致、最后一�
 
 ## 结果如何解释
 
-报告中的 T4 Expert 生产样本成功率约为 `14%–20%`，成功 Seed 195 用时 `246.79 s`，相比旧流程至少减少 `17.7%`。这些是 Expert 采集指标，不是 ACT rollout SR。它们能说明采集链路得到改善，但不能直接证明策略泛化。
+当前整理口径中的 T4 Expert 生产样本成功率约为 `72%–78%`，成功 Seed 195 用时 `246.79 s`，相比旧流程至少减少 `17.7%`。这些是 Expert 采集指标，不是 ACT rollout SR；它们不能直接证明策略泛化。
 
 因此，训练前最值得投入的工作不是继续堆 epoch，而是把“可执行目标、物理成功、动作语义、相机顺序”变成机器可检查的契约。契约通过后，超参数实验才拥有可比较的前提。
-

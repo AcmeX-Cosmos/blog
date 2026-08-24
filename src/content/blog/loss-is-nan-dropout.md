@@ -1,6 +1,6 @@
 ---
 title: "Loss is NaN, Dropout"
-date: "2026-08-20"
+date: "2026-08-10"
 description: "一次无法收敛的模型训练。"
 tags: ["Daily Life", "Reflection", "Machine Learning"]
 category: "daily"

@@ -126,4 +126,4 @@ if ((current_p - infer_p).norm() > max_match_distance_) {
 
 ---
 
-噪声矩阵的整定是另一半功课：[EKF 的 Q 与 R 整定](/blog/ekf-qr-adaptive-tuning)。
+噪声矩阵的整定是另一半功课，可参考[EKF 多传感器融合](/blog/ekf-multisensor-fusion)。
