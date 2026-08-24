@@ -1,166 +1,110 @@
 ---
 title: "AuraVLA 具身智能闭环控制系统"
 date: "2026-08-19"
-description: "集成 VLM 多模态理解、Schema 验证规划、Lula IK/RRT 运动规划、Isaac Sim 仿真与几何验证的自主机器人操作系统，实现感知-规划-执行-验证的完整闭环。"
-tags: ["Embodied AI", "VLA", "ROS2", "Vision-Language Model", "Robotics", "Isaac Sim", "Lula", "RRT"]
+description: "AuraVLA 项目级总览：从 VLM 语义任务、GraspNet 多帧感知与 Schema 契约，到 Lula IK/RRT、Isaac Sim 执行和几何终态验证的可审计闭环。"
+tags: ["Embodied AI", "VLA", "ROS2", "VLM", "Robotics", "Isaac Sim", "Lula", "RRT", "GraspNet"]
 category: "tech"
 references:
   - title: "NVIDIA Isaac Sim Documentation"
     meta: "NVIDIA · Robot Simulation Platform"
     url: "https://docs.omniverse.nvidia.com/isaacsim/latest/index.html"
-  - title: "ROS2 Humble Documentation"
-    meta: "Open Robotics · Robot Operating System"
+  - title: "ROS 2 Humble Documentation"
+    meta: "Open Robotics · ROS 2"
     url: "https://docs.ros.org/en/humble/"
-  - title: "Lula Robot Description Editor"
-    meta: "NVIDIA · Motion Planning and IK"
-    url: "https://docs.omniverse.nvidia.com/isaacsim/latest/features/motion_generation/ext_omni_isaac_lula.html"
+  - title: "GraspNet-1Billion"
+    meta: "Fang et al. · Grasp Pose Detection"
+    url: "https://graspnet.net/"
+  - title: "AuraVLA"
+    meta: "Project implementation"
+    url: "https://github.com/AcmeX-Cosmos/AuraVLA"
 ---
 
-## 项目概述
+## 项目定位
 
-AuraVLA（Autonomous Unified Robotic Agent with Vision-Language-Action）是一套面向具身智能的闭环控制系统，实现了从自然语言指令到机器人执行的端到端自主操作流程。系统将视觉-语言模型（VLM）的多模态理解能力、基于 Schema 的安全任务规划、Lula IK/RRT 运动规划、物理仿真执行与几何验证机制融合在统一的 ROS2 架构中，构建了生产级的机器人操作基础设施。
+AuraVLA（Autonomous Unified Robotic Agent with Vision-Language-Action）面向桌面双臂操作，将自然语言任务转换为可验证的机器人动作。项目的核心不是让 VLM 直接控制关节，而是把不确定性限制在语义入口，把抓取几何、运动学、碰撞和终态检查放在可测试的确定性模块中。
 
-项目核心价值在于闭环架构设计：**Perception → Planning → Execution → Verification → Replanning**，每个环节都具备独立的错误检测与恢复能力，形成自修正的控制循环。
+系统闭环为：
 
-**技术栈：** Python · ROS2 · NVIDIA Isaac Sim · Lula · cuRobo · VLM · RRT
+**Perception → Planning → Execution → Verification → Replanning**
 
-**项目地址：** [AuraVLA GitHub 仓库](https://github.com/AcmeX-Cosmos/AuraVLA)
+每次任务都需要保留输入指令、场景 grounding、Schema 版本、动作计划、执行状态和验证结果；只有最终 `success` 而没有失败阶段，无法支持工程回归。
 
-## 系统架构
+## 系统数据流
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                   自然语言指令输入                         │
-└────────────────────┬────────────────────────────────────┘
-                     ▼
-          ┌──────────────────────┐
-          │  VLM Perception 模块  │
-          │  · 场景理解           │
-          │  · 可行性评估         │
-          └──────────┬───────────┘
-                     ▼
-              ┌──────────┐
-              │可行性判断│
-              └─────┬────┘
-           不可行 ↙     ↘ 可行
-        ┌────────┐     ┌──────────────────────┐
-        │返回原因│     │ Schema-Validated     │
-        └────────┘     │ Planning 模块        │
-                       │ · 任务分解           │
-                       │ · 安全约束检查       │
-                       └──────────┬───────────┘
-                                  ▼
-                       ┌──────────────────────┐
-                       │ Lula IK/RRT 运动规划 │
-                       │ · Warm-start IK      │
-                       │ · 碰撞避障           │
-                       └──────────┬───────────┘
-                                  ▼
-                       ┌──────────────────────┐
-                       │ Isaac Sim Execution  │
-                       │ · 文件桥接通信       │
-                       │ · 轨迹执行           │
-                       └──────────┬───────────┘
-                                  ▼
-                       ┌──────────────────────┐
-                       │ Geometric Verification│
-                       │ · 空间关系检查       │
-                       └──────────┬───────────┘
-                                  ▼
-                            ┌──────────┐
-                            │验证结果  │
-                            └─────┬────┘
-                         成功 ↙     ↘ 失败
-                  ┌────────┐     ┌──────────┐
-                  │任务完成│     │需要重规划│
-                  └────────┘     └─────┬────┘
-                                       │
-                        ┌──────────────┘
-                        ▼
-                   (返回 Planning，携带失败上下文)
+```mermaid
+flowchart LR
+  I[Instruction + RGB-D] --> P[Perception]
+  P --> S[Semantic Task]
+  P --> G[GraspNet 3-frame Fusion]
+  S --> V[Schema Validator]
+  G --> H[Grasp Geometry Gate]
+  V --> X[Lula IK / RRT]
+  H --> X
+  X --> E[Isaac Sim Bridge]
+  E --> C[Geometric Verification]
+  C -->|pass| D[Completed]
+  C -->|fail| R[Bounded Replan]
+  R --> P
 ```
 
-## 核心技术实现
+语义计划和抓取观测在进入规划器前分别验收。这样可以区分“任务含义不完整”“视觉候选不稳定”“夹爪几何不可行”和“运动空间不可达”，而不是把所有问题归因于 VLM。
 
-### 1. VLM 驱动的多模态场景理解
+## 语义层：VLM 只决定做什么
 
-系统基于 **NVIDIA Nemotron VLM** 构建感知层，在规划前引入 Doability Evaluation 阶段，综合分析指令语义明确性、目标对象可见性与机器人能力匹配度。支持场景名称规范化，将 VLM 生成的对象名称（如 "red apple"）映射到仿真环境中的 USD 场景名称（如 "apple_sm_d428_01"）。
+`aura_perception` 负责 VLM 调用、可行性评估和场景名称规范化。输出只允许描述 `pick_and_place` 等高层动作；`aura_planning/config/planning.yaml` 和 `schema_validator.py` 递归拒绝 `pose`、`trajectory`、`ik`、`joint_positions`、`velocity`、`waypoints` 等底层控制字段。
 
-### 2. Schema 验证的安全任务规划
+Schema 校验还会检查空动作、未知任务、空对象名和空目标名。解析 Markdown 代码块只解决格式噪声，不能替代完整结构校验。通过后的动作仍需根据当前 USD 场景重新计算抓取位姿和放置目标。
 
-规划模块引入 **JSON Schema 强制约束**，禁止 VLM 直接生成底层运动控制指令（如 pose、trajectory、IK、joint_positions 等关键字），通过递归检测确保生成的任务计划同时满足结构正确性与安全性要求。高层任务描述可跨不同机器人平台复用。
+## 感知层：从候选到观测
 
-### 3. Lula IK 与 RRT 碰撞规划
+GraspNet 结果不是最终抓取指令。当前实现每次采集三帧 RGB-D，以 `score × depth_quality × geometric_validity` 计算观测质量，并用 Median/MAD 剔除位置异常值；姿态先做四元数半球对齐，再进行 Markley 平均。
 
-集成 NVIDIA Isaac Sim 的 **Lula 运动规划库**，采用 warm-start 策略实现平滑的笛卡尔路径跟踪，避免 IK 解跳变。当直接路径会发生碰撞时，自动切换到 **Lula RRT** 进行全局路径搜索。支持动态障碍物管理，实现特殊场景的柔性规划。
+融合器同时返回接受/拒绝帧数、位置离散度、姿态离散度和 confidence。位置离散度超过 `0.025 m`、姿态离散度超过 `25°` 或 confidence 低于 `0.10` 时直接拒绝，不回退到不可靠的单帧结果。GraspNet 和 SAM 使用运行时缓存，VLM 不参与抓取点校准。
 
-**多层降级策略：**
+融合通过后仍需经过夹爪闭合轴、开口宽度、目标包围盒和最大 `15°` 抓取倾角检查；这层保护解决的是“候选稳定”，不是“夹爪一定能夹住”。
 
-1. RRT + 姿态约束：全局搜索同时保持末端朝向
-2. 密集笛卡尔 IK：4cm 间距的直线路径
-3. 姿态渐进调整：在固定位置逐步收敛到目标姿态（100 步插值）
+## 规划层：运动约束优先于模型输出
 
-### 4. cuRobo 集成与碰撞网格优化
+`aura_planning` 生成高层动作对应的目标位姿，`aura_hardware` 中的 Lula IK/RRT 再结合机器人当前关节、碰撞几何和夹爪约束求解路径。SparseKeyposeDiffuser 把稀疏关键姿态转换为连续轨迹，minimum-jerk 插值降低 RRT 转角处的速度突变。
 
-配置了 **NVIDIA cuRobo** 加速运动规划，针对 Tron2 双臂机器人进行了碰撞几何优化。采用 multi-convex decomposition 为连杆生成凸包，并将碰撞查询参数纳入配置。±5 mm/±0.5 mm 的几何误差和 8 ms/1.2 ms 的查询耗时属于待固定场景复测的指标，不能在没有 benchmark 样本的情况下写成已验证提升。
+双臂轨迹逐帧检查 TCP 最小间距；固定抓取姿态无法同时满足可达性和碰撞约束时返回失败，不通过改变腕部方向静默绕过约束。规划成功也只表示路径存在，不能替代接触和放置后的几何验证。
 
-### 5. 稀疏关键姿态扩散与双臂协同
+## 执行层：可恢复的 Isaac Sim 边界
 
-实现了 **SparseKeyposeDiffuser** 轨迹模块，采用 minimum jerk 插值生成 C² 连续的轨迹，关节单帧步长上限配置为 `0.008 rad`。在双臂协同操作中，末端执行器最小间距配置为 `0.18 m`，并通过实时前向运动学检查防止碰撞。
+`aura_execution` 通过文件桥接与 Isaac Sim 通信：请求、响应和状态分别写入 JSON 文件，正式文件使用临时文件加 `os.replace()` 原子替换。`request_id`、Owner Token 和 heartbeat 用来阻止旧请求重复执行，并区分 `ready`、`executing`、`error` 和 idle 状态。
 
-### 6. 力反馈闭合与接触确认
+执行配置中的桥接超时为 `300 s`、轮询间隔为 `0.5 s`，动作最多重试 `2` 次。重试只覆盖可恢复的桥接或规划错误；几何验收失败必须携带结构化原因进入有界重规划，不能无限重复同一路径。
 
-实现了独立双指的接触确认控制。通过监测指令位置与实际位置的残差（`1.5 mm` 阈值）判断候选接触，连续 3 帧满足条件后锁定接触；随后进入预紧保持阶段，保持帧数由运行配置决定。力阈值存在配置与运行时默认值差异（`config.yaml` 为 `2.0 N`，runtime fallback 为 `0.25 N`），部署时必须显式记录最终生效值。
+## 验证层：成功必须有物理证据
 
-### 7. 文件桥接的 Isaac Sim 通信协议
+`aura_verification` 在动作返回后检查对象是否处于容器可用区域、物体是否高于桌面、接触是否成立、放置后速度是否稳定，以及物体是否随夹爪抬升。夹爪接触采用指令位置与实际位置残差，连续多帧满足阈值后才进入抬升。
 
-执行模块采用创新的 **文件系统桥接方案** 实现 ROS2 与 Isaac Sim 的异步通信。使用原子文件替换（.tmp → 正式文件）防止读写竞争，实现了零依赖跨进程集成。包含心跳机制（5 秒容忍）和 Owner Token 独占控制，防止多个 ROS2 节点同时控制同一 Isaac Sim 实例。
+因此，动作接口没有抛异常不等于任务成功。建议将结果写成结构化记录：
 
-### 8. 几何验证与上下文感知重规划
+```json
+{
+  "success": false,
+  "stage": "verification",
+  "reason_code": "GRASP_ALIGNMENT",
+  "entity_id": "banana_01",
+  "attempt": 2,
+  "replan_allowed": true
+}
+```
 
-验证模块通过查询 Isaac Sim 的 USD 场景，验证包容关系（对象边界框是否在容器内）、接触关系（表面距离是否小于阈值）等空间关系。当验证失败时，将失败信息注入下一轮规划，使 VLM 能够学习避免相同错误。
+真实失败也应保留。例如香蕉任务在夹爪轴对齐检查中记录 `alignment=0.879` 时应安全停止；这表示未达到阈值，不是成功率。蓝色罐头在 Lula 完整抓取与抬升可达性检查处停止，则应归因于标定或工作空间，而不是隐藏成感知成功。
 
-## ROS2 模块化设计
+## 代码边界与验证口径
 
-| 模块 | 文件路径 | 职责 |
-|------|----------|------|
-| Interfaces | aura_interfaces/ | ROS2 消息、服务、动作类型定义 |
-| Perception | aura_perception/ | VLM 客户端、可行性评估、场景名称解析 |
-| Planning | aura_planning/ | 任务规划、Schema 验证、动作分解 |
-| Execution | aura_execution/ | 任务桥接、动作执行、Isaac Sim 控制 |
-| Verification | aura_verification/ | 完成检查、几何验证 |
-| Orchestration | aura_orchestration/ | 主编排器、状态机、闭环协调 |
+| 层级 | 代码位置 | 主要责任 | 可验证证据 |
+| --- | --- | --- | --- |
+| 感知 | `aura_perception/`、`aura_hardware/aura_isaac_bridge/core/grasp_fusion.py` | 语义解析、RGB-D、抓取融合 | 帧一致性、离散度、confidence |
+| 规划 | `aura_planning/`、Lula/Curobo 配置 | Schema、IK、RRT、碰撞 | 禁止字段测试、规划状态 |
+| 执行 | `aura_execution/`、Isaac bridge | 请求幂等、轨迹执行 | request/response/status |
+| 验证 | `aura_verification/` | 接触、包容、抬升和放置 | reason code、终态几何 |
 
-## 配置与观测指标
+目前已验证的 GraspNet 融合与运动规划测试共 `7 passed`，并通过 `py_compile` 与 `git diff --check`；Isaac Sim VS Code Edition 热重载后任务桥和相机桥正常。上述结果证明的是模块边界和安全停止行为，不是端到端 benchmark 成绩。
 
-| 指标 | 数值 | 说明 |
-|------|------|------|
-| 端到端延迟 | 8-15 秒 | 当前简单任务记录，需附样本数与硬件 |
-| VLM 推理时间 | 2-4 秒 | Nemotron 单次调用（640px 图像），需附调用统计 |
-| IK 求解时间 | 8-25 ms | Lula warm-start 观测范围 |
-| RRT 规划时间 | 0.5-3 秒 | 当前碰撞避障观测范围 |
-| 关节速度限制 | 0.008 rad/frame | 约 0.46°/frame @ 60Hz 物理 |
-| TCP 轨迹精度 | ±3.5 cm | 末端位置到达容差 |
-| 双臂最小间距 | 18 cm | 防碰撞安全距离 |
-| 夹爪接触检测 | 1.5 mm | 残差位置阈值 |
-| 重规划触发率 | 15-25% | 当前小规模记录，需附任务与样本数 |
-| 二次成功率 | 78% | 当前小规模记录，不能视为通用基准 |
+## 结论
 
-## 应用场景
-
-- **桌面操作任务**：拾取-放置、物体排序、容器装填
-- **多步骤任务**：需要中间状态的复杂操作（先移动障碍物再抓取目标）
-- **自然语言交互**：支持口语化指令（"把香蕉放进篮子里"）
-
-## 总结
-
-AuraVLA 展示了如何将大模型的泛化能力与传统机器人系统的安全性、可控性结合。通过精心设计的架构分层、约束机制与闭环反馈，系统在保持灵活性的同时确保了生产环境的可靠性。
-
-**关键技术贡献：**
-
-1. Lula IK + RRT 混合规划：连续 warm-start IK 保证平滑性，RRT 处理复杂避障
-2. Schema 验证的安全规划：禁止底层运动指令，有效防止 VLM 生成不安全指令
-3. 稀疏关键姿态扩散：minimum jerk 插值生成满足动力学约束的 C² 连续轨迹
-4. 双臂 TCP 间距约束：实时前向运动学验证，防止双臂协同操作时的碰撞
-5. 文件桥接异步通信：零依赖跨进程集成，原子写入防止竞争
-6. 力反馈独立双指控制：残差位置 + 力传感器双模式接触确认
+AuraVLA 的项目级价值在于把 VLA 系统拆成可审计的职责边界：VLM 负责泛化的任务语义，GraspNet 提供带一致性证据的候选，规划器负责运动约束，Isaac Sim 负责执行，验证器负责决定任务是否真的完成。这样的闭环允许系统在不确定时停止，并把失败归因到可修复的模块，而不是用一条模糊的“执行失败”覆盖整个链路。

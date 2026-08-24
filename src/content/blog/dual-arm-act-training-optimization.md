@@ -1,292 +1,111 @@
 ---
-title: "双臂机器人 ACT 训练优化"
+title: "双臂 ACT 训练优化：从 Expert 可达性到末态评分契约"
 date: "2026-08-05"
-description: "面向长时序双臂操作的 ACT 模仿学习系统优化：从 Expert 轨迹可靠性、数据契约设计、训练策略调整到固定 Seed 评测的完整工程实践。"
-tags: ["Embodied AI", "ACT", "Imitation Learning", "Robotics", "双臂机器人"]
+description: "基于 Tron2 双臂任务，记录 ACT 数据契约、T4 Expert 失败定位、实时放置对齐、采集 I/O 优化与末态分级评测的完整工程链路。"
+tags: ["ACT", "Imitation Learning", "Tron2", "RoboTwin", "Curobo", "HDF5", "Evaluation"]
 category: "tech"
+references:
+  - title: "Action Chunking with Transformers"
+    meta: "Zhao et al. · Learning Fine-Grained Bimanual Manipulation"
+    url: "https://arxiv.org/abs/2304.13705"
+  - title: "ACT evaluation implementation"
+    meta: "LimX Dynamics · Four-task ACT evaluation suite"
+    url: "https://github.com/limxdynamics/troncamp-mani"
+  - title: "RoboTwin 2.0"
+    meta: "RoboTwin Platform · Generalizable robot learning benchmark"
+    url: "https://github.com/RoboTwin-Platform/RoboTwin"
+  - title: "AuraVLA"
+    meta: "Project implementation · Schema planning and Isaac Sim execution"
+    url: "https://github.com/AcmeX-Cosmos/AuraVLA"
 ---
 
-## 项目背景
+## 先修数据链路，再调 ACT
 
-双臂机器人在长时序操作任务中面临数据链路的误差耦合问题：Expert 规划失败、接触点选择错误、动作与状态错位、相机顺序漂移、失败样本污染等。本项目基于 Tron2 双臂机器人平台，构建了 `Expert → Data → ACT → Evaluation` 的闭环优化系统。
+公开 ACT 任务套件的四个任务共用 `collect → process → train → evaluate` 流水线：T1 `adjust_bottle`、T2 `grab_roller`、T3 `stack_bowls_two` 和主榜 T4 `stack_bowls_three`。训练使用 Tron2 双臂的 16 维状态与动作，单纯降低 validation loss 不能证明长时序堆叠已经可执行。
 
-项目覆盖四类递增难度任务：单臂瓶体调整（T1）、双臂滚筒抓举（T2）、双碗堆叠（T3）和三碗长时序堆叠（T4）。通过基于运行日志的故障定位、固定 Seed 回归测试、数据契约检查和任务阶段化优化，形成了完整的训练与评测基础设施。
+这次优化把问题拆成三个边界：
 
-**技术栈：** Python · PyTorch · ACT · RoboTwin · SAPIEN · cuRobo · HDF5
+1. Expert 是否能以稳定接触和可达姿态完成任务；
+2. 保存到 HDF5 的状态、动作和相机是否满足训练契约；
+3. 评测是否只在 episode 末态计算与比赛一致的分数。
 
-## 系统架构
+任何边界失败都应停止并留下原因，而不是通过增加 epoch 或重复采集掩盖上游问题。
 
-```mermaid
-flowchart LR
-    A[Task Expert] --> B[Preflight and Reachability]
-    B --> C[Single-pass Collection]
-    C --> D[Seed and Quality Audit]
-    D --> E[ACT Data Conversion]
-    E --> F[16-D / Camera / Alignment Contract]
-    F --> G[ACT Training]
-    G --> H[Raw / EMA Checkpoints]
-    H --> I[Fixed-seed Rollout Matrix]
-    I --> J[Failure Taxonomy and Replay]
-    J --> A
-    J --> G
+## 16 维数据契约
+
+ACT 配置固定 `state_dim=16`，对应两侧各 `7` 个关节和 `1` 个夹爪通道。右臂、左臂的排列顺序必须在采集、数据转换、训练和部署四处一致；夹爪开度与关节归一化也不能在中间环节重新解释。
+
+视觉输入的顺序同样属于接口的一部分：`head_camera`、`right_wrist_camera`、`left_wrist_camera`。相机张量 shape 即使保持不变，顺序交换也不会触发运行时异常，却会让策略把腕部视角当成全局视角。
+
+训练入口还要验证 action 的 next-state 语义：`action[t]` 应对应从 `qpos[t]` 到 `qpos[t+1]` 的控制目标。NaN/Inf、时间长度不一致、相机帧缺失和截断 episode 进入 rejected manifest，不应靠 mask 静默混入训练集。
+
+## T4 Expert 的失败定位
+
+T4 的主要问题最初不是网络容量，而是第一步 approach 的候选姿态不可达。十个 Seed 的一次诊断中出现 `8` 次 `move_1_approach_failed`、`1` 次 `move_1_grasp_pose_failed` 和 `1` 次 `place_misaligned`，完整成功数为 `0`。因此先改候选生成和日志边界，没有直接修改 ACT 超参数。
+
+### Native-first 候选顺序
+
+原先所有严格 top-down 候选都强制施加腕部内倾，导致本来可达的原生姿态被替换。修复后采用以下顺序：
+
+1. 原生 top-down 姿态；
+2. 配置的内倾姿态作为低优先级 fallback；
+3. 只有 approach 成功但 grasp-pose 规划失败时，才继续尝试下一个候选；
+4. 对自然倾斜的 Curobo 候选放宽轴向过滤，默认允许到 `25°`，硬上限为 `35°`。
+
+候选耗尽后才返回失败，并记录 `move_N_approach_failed` 或 `move_N_grasp_pose_failed`，避免把不同阶段压成一个布尔值。
+
+### 结果边界
+
+日志中 Seed `195` 和 `196` 在旧流程均停在 approach；放宽自然腕轴 fallback 后，两者完成了完整流程。该结果说明修复了 Expert 的候选过滤问题，不等同于 ACT 的 rollout 成功率提升。
+
+## 实时放置对齐与释放稳定
+
+双碗、三碗堆叠的预检目标必须和执行目标使用同一个函数。Move 1 使用固定基准点；Move 2 在放置前读取 Bowl 1 的 live XY；Move 3 读取 Bowl 2 的 live XY，再生成当前层目标。修正量限制在 `0.035 m` 内，超过边界直接拒绝，避免误差补偿变成无界搜索。
+
+释放后保持同一姿态 `50` 个仿真步，再执行原有撤退；撤退先沿 Z 方向抬升 `0.15 m`，随后向 home 位姿做 `0.8` 的线性混合。这样可以把释放沉降与撤退运动分离，减少刚释放的碗被末端再次扫到。
+
+这些约束只改变 Expert 轨迹的可执行性，不改变 ACT 的模型结构。保存的轨迹还应记录 nominal XY、live XY、实际修正量和 release settle 结果，便于排查是抓取、放置还是撤退阶段产生误差。
+
+## 采集 I/O 优化
+
+T4 的瓶颈来自多相机渲染、读回和临时 pickle 写入，而不是日志输出。两路腕部相机和头部相机同时启用时，旧配置 `save_freq=15` 会让完整 Seed `195` 在超过 `300 s` 时仍未结束，并已写入 `708` 个临时帧。
+
+最终配置采用：
+
+| 配置 | 旧值 | 当前值 | 目的 |
+| --- | ---: | ---: | --- |
+| `save_freq` | `15` | `30` | 减少重复图像读回，同时保留边界帧 |
+| `save_video` | `true` | `false`（T4） | 保留 HDF5 RGB，跳过 MP4 编码 |
+| approach retries | `3` | `1` | 依靠候选 fallback，避免重复规划同一失败目标 |
+| 其他阶段 retries | `3` | `3` | 保留 grasp/lift/place/retreat 的恢复空间 |
+
+Seed `195` 的单次验证结果为成功、`507` 帧、HDF5 `31,304,263` bytes，三路 RGB 均存在且未生成 MP4，耗时 `246.79 s`。相对尚未完成且超过 `300 s` 的旧流程，最多只能表述为已观测到至少 `17.7%` 的耗时下降，不能包装成所有场景的通用加速 benchmark。
+
+## 评测必须与训练解耦
+
+`recipes/eval/act_contract.py` 将评测结果固定为：
+
+```json
+{
+  "sr": 0.0,
+  "n_repeats": 1,
+  "n_episodes": 100,
+  "per_repeat": [0.0],
+  "track": "T4",
+  "graded": 0.0
+}
 ```
 
-这套闭环将 Expert 失败、数据问题、模型误差和部署问题分开诊断，避免用增加 epoch 或扩大数据量掩盖上游缺陷。
+T1-T3 只输出二元 `sr`，用于顺序解锁；T4 额外输出 `graded`，表示每个 episode 末态的三层堆叠进度均值。评测内核通过 `TASK_BY_TRACK` 固定 track 到 RoboTwin task 的映射，并要求每个 repeat 覆盖相同数量的 Seed，禁止 ragged repeat 被平均成看似合理的数字。
 
-## 核心技术贡献
+T4 的 `graded_stack_score` 只在 episode 结束时调用一次，读取三只碗的最终位置、桌面高度偏移和双夹爪打开状态。评分按锚点 `C=(0,-0.1)`、层高容差和最小层间距计算 `0、1/3、2/3、1`；不能把逐仿真步分数累加，否则长轨迹会被错误放大。
 
-### 1. ACT 数据契约与 Fail-Loud 校验
+## Fail-loud 回归边界
 
-针对双臂机器人的特殊性，建立了严格的数据契约层，确保训练前发现所有潜在的数据质量问题：
+评测契约拒绝以下情况：重复 Seed、空 Seed 表、未知 track、非布尔 success、非有限或不在 `[0,1]` 的 graded 值、不同 repeat 的 episode 数量不一致。纯 Python 单元测试覆盖分级评分的层数、锚点、夹爪门控、重叠高度区间和输入校验；GPU/仿真端仍需独立执行真实 rollout。
 
-#### 状态-动作时序对齐
+AuraVLA 的经验可以作为上层系统边界：VLM 只产生经过 Schema 验证的 `pick_and_place` 意图，禁止 `pose`、`trajectory`、`joint_positions` 等底层字段；ACT 则只消费经过数据契约和评测契约筛选的轨迹。两者共同遵循“模型负责泛化，确定性模块负责约束”的分层原则。
 
-ACT 模仿学习的核心假设是 `action[t]` 应该驱动系统从 `qpos[t]` 转移到 `qpos[t+1]`。数据处理中的时间步偏移会导致模型学习到近似 no-op 或滞后控制。项目实现了显式的 next-state 语义校验：
+## 结论
 
-```python
-# 训练前强制检查
-def validate_action_qpos_alignment(hdf5_path):
-    with h5py.File(hdf5_path, 'r') as f:
-        for episode_key in f.keys():
-            qpos = f[episode_key]['qpos'][:]
-            action = f[episode_key]['action'][:]
-            # 验证 action[t] == qpos[t+1]
-            alignment_error = np.abs(action[:-1] - qpos[1:]).max()
-            if alignment_error > THRESHOLD:
-                raise ValueError(f"Action-qpos misalignment in {episode_key}")
-```
-
-#### 双臂 16 维状态空间
-
-Tron2 双臂机器人的状态和动作空间为 16 维：`2 × (7 arm DoF + 1 gripper)`。训练和部署必须使用完全一致的维度定义：
-
-- 维度顺序：先右臂 8 维，后左臂 8 维
-- 数值范围：关节位置归一化到 `[-1, 1]`，夹爪开度 `[0, 1]`
-- 有限性检查：拒绝包含 NaN 或 Inf 的轨迹
-
-#### 三相机语义顺序
-
-ACT 按张量位置索引消费图像特征，相机顺序错误不会触发 shape error，却会造成严重的语义错位。项目在三处固定相机顺序：
-
-1. **数据配置**：HDF5 中按 `[head_camera, right_wrist_camera, left_wrist_camera]` 顺序存储
-2. **训练 DataLoader**：显式检查并强制相机名称顺序
-3. **部署 Policy**：rollout 时按相同顺序读取观测
-
-```python
-CAMERA_ORDER = ['head_camera', 'right_wrist_camera', 'left_wrist_camera']
-
-def check_camera_order(dataset):
-    actual_order = dataset.camera_names
-    if actual_order != CAMERA_ORDER:
-        raise ValueError(f"Camera order mismatch: {actual_order} != {CAMERA_ORDER}")
-```
-
-### 2. ACT 训练策略的任务自适应优化
-
-针对不同难度的任务，设计了差异化的训练配置：
-
-| 配置项 | T1 单臂调整 | T2 长时训练 | T2 Fine-tune | T3 双碗堆叠 | T4 三碗堆叠 |
-|---|---:|---:|---:|---:|---:|
-| 演示数据量 | 200 | 200 | 200 | 200 | 300 |
-| 训练轮数 | 6000 | 6500 | 3000→5000 | 6000 | 6500 |
-| Batch Size | 8 | 16 | 32 | 16 | 24 |
-| KL 权重 | 10 | 1.0 | 1.0 | 10 | 2.0 (500 warmup) |
-| Chunk Size | 50 | 100 | 100 | 50 | 100 |
-| Policy LR | 1×10⁻⁵ | 2×10⁻⁵ | 8×10⁻⁶ | 1×10⁻⁵ | 1.5×10⁻⁵ |
-| Backbone LR | 1×10⁻⁵ | 1×10⁻⁵ | 2×10⁻⁶ | 1×10⁻⁵ | 3×10⁻⁶ |
-| EMA 系数 | 0.999 | 0.999 | 0.9995 | 0.999 | 0.9995 |
-
-#### KL 权重的 Warmup 策略
-
-对于 T4 三碗堆叠这种长时序任务，采用了 KL 权重渐进增加策略：
-
-- **前 500 epoch**：KL 权重从 0 线性增加到 2.0，允许潜变量探索动作空间
-- **后续训练**：固定 KL=2.0，在动作重建和潜变量正则之间平衡
-
-这种策略避免了训练早期过强的正则导致模型陷入保守动作。
-
-#### 学习率的分层设计
-
-视觉 Backbone（ResNet-18）和 Transformer Policy 使用不同的学习率：
-
-- **Backbone LR**：3×10⁻⁶，保持预训练特征稳定
-- **Policy LR**：1.5×10⁻⁵，让策略层快速适应任务
-
-这种分层设计在保留视觉特征通用性的同时，让策略层有足够学习能力。
-
-#### EMA 权重的高系数配置
-
-使用 0.9995 的高 EMA 系数，相当于对约 2000 个 batch 的权重进行指数移动平均：
-
-```python
-# EMA 更新
-ema_param = ema_coeff * ema_param + (1 - ema_coeff) * train_param
-```
-
-高 EMA 系数产生的模型更稳定，在 rollout 时表现出更好的闭环鲁棒性。
-
-### 3. Keyframe-Aware 数据采样
-
-长时序轨迹中的关键帧（grasp、release、alignment）占比较低，随机采样容易被 approach 阶段淹没。项目实现了关键帧感知采样：
-
-```python
-def keyframe_aware_sampling(episode, keyframe_ratio=0.30):
-    """
-    30% 概率从关键帧附近采样，70% 从全轨迹均匀采样
-    """
-    if random.random() < keyframe_ratio:
-        # 识别关键帧：夹爪状态变化 + 速度峰值
-        keyframe_indices = detect_keyframes(episode)
-        center = random.choice(keyframe_indices)
-        start_idx = max(0, center - 10 + random.randint(0, 20))
-    else:
-        start_idx = random.randint(0, len(episode) - chunk_size)
-
-    return episode[start_idx : start_idx + chunk_size]
-```
-
-这种采样策略让模型更频繁地看到关键操作时刻。
-
-### 4. Expert 轨迹的阶段化优化
-
-以 T4 三碗堆叠为例，将任务分解为多个子阶段，针对每个阶段设计失败恢复机制：
-
-#### 抓取候选的 Native-First 策略
-
-```python
-def generate_grasp_candidates(bowl_pose):
-    candidates = []
-
-    # 1. Native top-down 抓取（优先级最高）
-    candidates.append(generate_top_down_grasp(bowl_pose, wrist_tilt=0))
-
-    # 2. 腕部倾斜的 fallback（15°）
-    candidates.append(generate_top_down_grasp(bowl_pose, wrist_tilt=15))
-
-    # 3. 侧向抓取（备选）
-    candidates.append(generate_side_grasp(bowl_pose))
-
-    return candidates
-```
-
-当 approach 成功但 grasp pose 失败时，继续尝试下一个候选。
-
-#### 实时放置对齐
-
-Move 2/3 在放置前重新读取支撑碗的实时位姿，使用 live XY 对齐：
-
-```python
-def place_bowl_on_stack(robot, bowl, stack):
-    # 读取支撑碗的实时位姿
-    support_bowl_pose = stack.get_top_bowl_pose()
-
-    # 使用实时 XY 对齐
-    target_pose = Pose(
-        position=[support_bowl_pose.p[0], support_bowl_pose.p[1],
-                  support_bowl_pose.p[2] + BOWL_HEIGHT],
-        orientation=support_bowl_pose.q
-    )
-
-    robot.move_to(target_pose)
-```
-
-这种设计将三碗堆叠的累积误差从链式传播降低为依赖当前支撑层的局部误差。
-
-### 5. 模型选择的多维度评估
-
-**核心原则：Validation Loss 不等于 Rollout Success Rate。**
-
-项目保留了多类 checkpoint 候选：
-
-- **Raw Weights**：训练过程中的原始权重
-- **EMA Weights**：指数移动平均权重
-- **Best Checkpoint**：validation loss 最低点
-- **Last Checkpoint**：训练终点
-
-最终模型选择需结合固定 Seed rollout 的实际成功率：
-
-```python
-def select_best_policy(checkpoints, eval_seeds):
-    results = []
-    for ckpt in checkpoints:
-        policy = load_policy(ckpt)
-        success_rate = evaluate_on_seeds(policy, eval_seeds)
-        results.append({
-            'checkpoint': ckpt,
-            'val_loss': ckpt.validation_loss,
-            'success_rate': success_rate
-        })
-
-    # 按 success_rate 排序
-    return sorted(results, key=lambda x: x['success_rate'], reverse=True)[0]
-```
-
-在 T4 的 6500 epoch 训练中：
-
-- Best Raw Weights：epoch 1499，selection loss `0.106784`
-- Best EMA Weights：epoch 3899，selection loss `0.118849`
-
-两者的 rollout 表现需要通过实际部署确定。
-
-## 量化成果
-
-量化数据按三个不同层次分别报告：Expert 采集率、validation loss、policy rollout 成功率。三者口径不同，不能相互替代。
-
-### Policy Rollout（固定 Seed，各 100 episodes）
-
-| 任务 | 策略候选 | Rollout SR |
-|---|---|---:|
-| T2 双臂滚筒抓举 | policy_best | **55%** |
-| T3 双碗堆叠 | policy_best_ema | **55%** |
-| T4 三碗堆叠 | policy_best_official | **55%**（分层评分另行统计） |
-
-T4 的二元 SR 与分层进度评分采用不同口径：前者只统计完整三层堆叠，后者记录中间阶段完成情况。两者不能合并为一个“准确率”，否则会掩盖第三碗最终对齐阶段的误差累积。
-
-### Expert 采集质量
-
-| 场景 | 观测结果 | 指标口径 |
-|---|---|---|
-| T1 Expert 数据 | 约 260 次尝试得到 200 条成功轨迹，采集率约 76.9% | Expert 采集率，非 ACT rollout SR |
-| T2 Expert 候选 | 固定 10 Seed 中 8 条可采集成功 | Expert probe，非策略 SR |
-| T2 失败方案 | 自由接触点方案 0/10，被否决 | 固定 Seed A/B |
-| T3 Expert | 历史采集率约 75% | 采集估计，用于预算 Seed 数 |
-| T4 Expert 改造前 | 10 Seed 样本 0 成功 | Expert 生产样本 |
-| T4 Expert 改造后 | 生产样本约 72%–78%；Seed 195/196 从 approach fail 变为成功 | Expert 回归，非 ACT SR |
-| T4 采集速度 | 成功 Seed 195 用时 246.79 s；旧流程超过 300 s 仍未完成 | 至少 17.7% 加速 |
-
-### 具体案例：Seed 195/196 回归
-
-优化前，Seed 195/196 在 approach 阶段即失败；优化后稳定通过 approach、grasp、lift 和 place 全流程，成为可重复的回归测试基准。
-
-## 工程方法论
-
-1. **先修 Expert，再扩数据**
-   不可达、碰撞或抖动轨迹不会因为样本更多而变成高质量监督。
-
-2. **先验证数据契约，再调超参数**
-   action/qpos、相机和 state dim 错位会让所有超参数实验失去意义。
-
-3. **失败按阶段分类**
-   grasp、lift、alignment、release 的优化方向不同，单个 `success=false` 信息量不足。
-
-4. **固定 Seed 做小预算 A/B**
-   先否决明显错误方案，再启动长时间采集或训练。
-
-5. **训练与部署联合设计**
-   chunk size、执行频率和 temporal aggregation 共同决定闭环行为。
-
-## 技术启发
-
-本项目的经验适用于所有基于模仿学习的具身智能系统：
-
-- **数据质量 > 数据数量**：300 条高质量演示优于 1000 条污染数据
-- **Fail-Loud 优于 Silent-Fail**：数据不一致应该立即中断训练，而非静默使用错误默认值
-- **Validation Loss 是必要非充分条件**：必须结合实际 rollout 选择模型
-- **阶段化诊断**：将长时序任务分解为子阶段，每个阶段独立优化
-
----
-
-**相关论文：**
-- [ACT: Learning Fine-Grained Bimanual Manipulation](https://arxiv.org/abs/2304.13705)
-- [RoboTwin: Dual-Arm Robot Benchmark](https://github.com/RoboTwin-Platform/RoboTwin)
-- [TRONCamp Mani: 双臂操作训练与评测框架](https://github.com/limxdynamics/troncamp-mani)
+这次优化没有把“训练更久”当成默认答案，而是先修复 Expert 候选不可达、堆叠目标漂移、观测 I/O 和评分口径四类会污染实验的因素。最终报告必须同时给出数据契约版本、Seed manifest、checkpoint、控制频率、chunk size、相机顺序和末态评分规则；缺少这些条件的成功率只能作为一次运行记录，不能作为模型能力结论。
