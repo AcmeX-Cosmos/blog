@@ -1,6 +1,6 @@
 ---
 title: "AuraVLA 具身智能闭环控制系统"
-date: "2026-08-21"
+date: "2026-08-19"
 description: "集成 VLM 多模态理解、Schema 验证规划、Lula IK/RRT 运动规划、Isaac Sim 仿真与几何验证的自主机器人操作系统，实现感知-规划-执行-验证的完整闭环。"
 tags: ["Embodied AI", "VLA", "ROS2", "Vision-Language Model", "Robotics", "Isaac Sim", "Lula", "RRT"]
 category: "tech"
