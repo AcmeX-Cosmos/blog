@@ -84,7 +84,7 @@ const awards = [
 const projects = projectCatalog.slice(0, 3);
 ---
 
-<SiteLayout>
+<SiteLayout viewportWidth={1200}>
   <div id="web_bg_about"></div>
   <article id="about-page">
     <!-- ====== Author Box with Avatar ====== -->
@@ -112,7 +112,7 @@ const projects = projectCatalog.slice(0, 3);
       <div class="author-content-item myInfoAndSayHello">
         <div class="title1">你好，很高兴认识你 👋</div>
         <div class="title2">我叫 <span class="inline-word">陈泽欣</span></div>
-        <div class="title1">是一名 <span>机器人视觉算法工程师</span>、<span>VLA 世界模型</span> 探索者</div>
+        <div class="title1">专注 <span>机器人视觉</span>、<span>模仿学习</span> 与 <span>VLA 系统工程</span></div>
       </div>
       <div class="aboutsiteTips author-content-item">
         <div class="author-content-item-tips">追求</div>
@@ -2527,156 +2527,7 @@ const projects = projectCatalog.slice(0, 3);
     100% { opacity: 0; transform: translateY(-30px); }
   }
 
-  /* ========== Responsive ========== */
-  @media (max-width: 900px) {
-    .author-tag-left,
-    .author-tag-right {
-      display: none;
-    }
-
-    .author-img {
-      width: 140px;
-      height: 140px;
-    }
-
-    .author-img img {
-      width: 90%;
-      height: 90%;
-    }
-
-    .author-img:before {
-      bottom: -5px;
-      right: -5px;
-    }
-
-    .author-content {
-      flex-direction: column;
-    }
-
-    .author-content-item,
-    .author-content-item.skills,
-    .author-content-item.careers,
-    .author-content-item.personalities,
-    .author-content-item.mbti,
-    .author-content-item.maxim,
-    .author-content-item.buff,
-    .author-content-item.game-dual,
-    .author-content-item.comic-content,
-    .author-content-item.like-technology,
-    .author-content-item.aboutsiteTips,
-    #about-page .myInfoAndSayHello,
-    #about-page .about-statistic,
-    .author-content-item-group.column,
-    .author-content-item-group.column.mapAndInfo {
-      width: 100% !important;
-      margin-bottom: 1rem;
-    }
-
-    /* 窄屏保持左右斜切分栏，与 comic-content 一致，只压低高度 */
-    .author-content-item.like-technology.single {
-      min-height: 300px;
-    }
-
-    /* 单列时不锁比例，沿用原来的固定高度 */
-    .author-content-item.mbti {
-      aspect-ratio: auto;
-      min-height: 135px;
-    }
-
-    .hello-about {
-      height: 200px;
-    }
-
-    .hello-about .content {
-      height: 200px;
-    }
-
-    .hello-about h1 {
-      font-size: clamp(2rem, 8vw, 6rem);
-    }
-
-    .author-content-item .author-content-item-title {
-      font-size: 22px;
-    }
-
-    .author-content-item.personalities .image {
-      width: 88px;
-      right: 10px;
-    }
-
-    .author-content-item.selfInfo {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .author-content-item.selfInfo .selfInfo-content {
-      font-size: 22px;
-    }
-
-    .author-content-item.map {
-      min-height: 200px;
-      height: 250px;
-    }
-
-    #statistic {
-      grid-template-columns: 1fr 1fr 1fr;
-    }
-
-    #statistic div span:last-child {
-      font-size: 20px;
-    }
-
-    .post-tips {
-      left: 1rem;
-    }
-
-    .author-content-item .card-content .banner-button-group {
-      right: 1rem;
-      bottom: 1rem;
-    }
-
-    .author-content-item .card-content .banner-button-group .banner-button-text {
-      display: none;
-    }
-
-    .author-content-item .card-content .banner-button-group .banner-button {
-      background: transparent;
-      padding: 0;
-      width: auto;
-      backdrop-filter: unset;
-    }
-
-    .author-content-item .card-content .banner-button-group .banner-button i {
-      font-size: 1.5rem;
-      background: hsl(var(--card));
-      border-radius: 50%;
-      padding: 6px;
-      height: 40px;
-      width: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: hsl(var(--foreground));
-    }
-  }
-
-  @media (max-width: 480px) {
-    #statistic {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .award-list-item {
-      grid-template-columns: minmax(0, 2.2fr) minmax(5.5rem, 1fr);
-      gap: 0.75rem;
-    }
-
-    .author-content-item.personalities .image {
-      width: 100px;
-      right: 0;
-    }
-  }
 </style>
-
 <script async src="/blog/opencv.js" onload="window._cvLoaded=1"></script>
 <script>
   // Umami 统计：优先使用公开分享接口，避免把管理端凭据暴露到浏览器。

@@ -15,12 +15,23 @@ interface Props {
   title?: string;
   description?: string;
   universeOpacity?: number;
+  viewportWidth?: number;
 }
 
-const { title, description, universeOpacity } = Astro.props;
+const {
+  title,
+  description,
+  universeOpacity,
+  viewportWidth = 1200,
+} = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} universeOpacity={universeOpacity}>
+<BaseLayout
+  title={title}
+  description={description}
+  universeOpacity={universeOpacity}
+  viewportWidth={viewportWidth}
+>
   <!-- 主题闪烁抑制 -->
   <script is:inline>
     (function () {
@@ -32,7 +43,7 @@ const { title, description, universeOpacity } = Astro.props;
   </script>
 
   <!-- 所有页面沿用站点原有的居中 75% 内容宽度。 -->
-  <div class="mx-auto flex min-h-screen w-[75%] flex-col px-4 sm:px-7 lg:px-10">
+  <div class="mx-auto flex min-h-screen w-[75%] flex-col px-4 sm:px-7 lg:px-10 fixed-viewport-shell">
     <Header />
 
     <main class="mt-6 grow lg:mt-10">
@@ -43,3 +54,17 @@ const { title, description, universeOpacity } = Astro.props;
   </div>
 
 </BaseLayout>
+
+<style>
+  /* Keep the fixed desktop canvas aligned with the viewport on touch devices. */
+  @media (hover: none) and (pointer: coarse) and (orientation: portrait) {
+    :global(.fixed-viewport-shell) {
+      width: 100% !important;
+      max-width: none !important;
+    }
+
+    :global(.fixed-viewport-shell > main) {
+      width: 100%;
+    }
+  }
+</style>

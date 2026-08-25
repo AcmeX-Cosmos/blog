@@ -11,20 +11,27 @@ interface Props {
   title?: string;
   description?: string;
   universeOpacity?: number;
+  /** Lock the layout viewport to a desktop canvas on selected pages. */
+  viewportWidth?: number;
 }
 
 const {
   title = 'AcmeX的技术博客',
   description = 'AcmeX的技术博客 - 机器人视觉算法 / ROS2系统开发',
   universeOpacity = 1,
+  viewportWidth = 1200,
 } = Astro.props;
+
+const viewport = viewportWidth
+  ? `width=${viewportWidth}, viewport-fit=cover`
+  : 'width=device-width, initial-scale=1.0';
 ---
 
 <!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content={viewport} />
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/blog/favicon.svg" />
     <title>{title}</title>
