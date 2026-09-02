@@ -22,7 +22,7 @@ int32 heartbeat_id
 builtin_interfaces/Time stamp
 ```
 
-心跳由 `HeartBeatPublisher` 在[跟踪节点](/tracker-state-machine-lost)的回调里发出。这个选址很关键——心跳挂在**最下游**的节点上，意味着它隐含验证了整条链路：相机出图、检测出板、BA 解算、EKF 更新，任何一环卡住，心跳就断。如果把心跳发在相机节点里，检测崩了看门狗根本不知道。
+心跳由 `HeartBeatPublisher` 在[跟踪节点](/blog/tracker-state-machine-lost)的回调里发出。这个选址很关键——心跳挂在**最下游**的节点上，意味着它隐含验证了整条链路：相机出图、检测出板、BA 解算、EKF 更新，任何一环卡住，心跳就断。如果把心跳发在相机节点里，检测崩了看门狗根本不知道。
 
 ### 2. 检测逻辑
 
@@ -112,7 +112,7 @@ rclcpp::shutdown();
 
 **`system()` 在 ROS 回调里同步阻塞。** `execute_command` 是 `system()` 的薄封装，每次调用 fork 一个 shell。看门狗只有一个定时器回调，阻塞几百毫秒没有实际危害，但这是个坏范式——同样的写法放进图像回调里会直接拖垮帧率。
 
-**路径全部硬编码。** `/home/rcia/Desktop/auto_start.sh` 和 `auto_watchDog.sh` 写死在字符串里，和[数字分类的模型路径](/armor-digit-lenet-onnx)是同一类问题。换台机器就得改代码重编。
+**路径全部硬编码。** `/home/rcia/Desktop/auto_start.sh` 和 `auto_watchDog.sh` 写死在字符串里，和[数字分类的模型路径](/blog/armor-digit-lenet-onnx)是同一类问题。换台机器就得改代码重编。
 
 ### 5. 联调结果
 
@@ -130,4 +130,4 @@ kill -9 $(pgrep -f component_container) # 手动制造崩溃
 
 ---
 
-下一篇是调试基础设施：[Foxglove 动态调参与可视化](/foxglove-dynamic-params)。
+下一篇是调试基础设施：[Foxglove 动态调参与可视化](/blog/foxglove-dynamic-params)。

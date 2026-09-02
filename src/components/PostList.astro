@@ -25,11 +25,7 @@ function readingTime(body: string): number {
 }
 
 const pageNumbers = page ? Array.from({ length: page.total }, (_, i) => i + 1) : [];
-const pageHref = (n: number) => {
-  if (n === 1) return page!.baseUrl;
-  const base = page!.baseUrl.replace(/\/$/, '');
-  return `${base}/${n}`;
-};
+const pageHref = (n: number) => (n === 1 ? page!.baseUrl : `${page!.baseUrl}/${n}`);
 const previousPage = page && page.current > 1 ? page.current - 1 : null;
 const nextPage = page && page.current < page.total ? page.current + 1 : null;
 ---
@@ -40,7 +36,7 @@ const nextPage = page && page.current < page.total ? page.current + 1 : null;
       ? `Page ${page.current} - Showing ${posts.length} of ${totalCount} posts`
       : `Showing ${posts.length} of ${totalCount} posts`}
   </span>
-  <a class="hover:underline underline-offset-4" href="/">View all posts →</a>
+  <a class="hover:underline underline-offset-4" href="/blog">View all posts →</a>
 </div>
 
 {posts.length === 0 ? (
@@ -49,7 +45,7 @@ const nextPage = page && page.current < page.total ? page.current + 1 : null;
   <ul class="flex flex-col gap-y-4 text-start">
     {posts.map((post, i) => (
       <PostCard
-        href={`/${post.id.replace(/\.md$/, '')}`}
+        href={`/blog/${post.id.replace(/\.md$/, '')}`}
         title={post.data.title}
         date={post.data.date}
         description={post.data.description}

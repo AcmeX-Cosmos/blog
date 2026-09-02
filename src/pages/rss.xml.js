@@ -15,7 +15,7 @@ export async function GET(context) {
       title: post.data.title,
       pubDate: new Date(post.data.date),
       description: post.data.description || '',
-      link: `/${post.id.replace(/\.md$/, '')}`,
+      link: `/blog/${post.id.replace(/\.md$/, '')}`,
     })),
     customData: `<language>zh-CN</language>`,
   });

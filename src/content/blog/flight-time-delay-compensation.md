@@ -8,7 +8,7 @@ category: "algorithm"
 
 ## 运动目标的提前量解算
 
-[装甲板选择](/gimbal-armor-selection-fire)解决了"打哪块"，[弹道补偿](/ballistic-rk4-ceres)解决了"抬多高"。但这两步算的都是**目标此刻在哪**——而弹丸打到那里时，目标早就走了。
+[装甲板选择](/blog/gimbal-armor-selection-fire)解决了"打哪块"，[弹道补偿](/blog/ballistic-rk4-ceres)解决了"抬多高"。但这两步算的都是**目标此刻在哪**——而弹丸打到那里时，目标早就走了。
 
 一辆步兵横向速度 2 m/s，5 m 距离飞行时间 0.21 s，位移 42 cm。装甲板宽 13.5 cm。不算提前量，横向移动的目标基本打不中。
 
@@ -29,7 +29,7 @@ $$
 + \underbrace{t_{\text{ctrl}}}_{\text{④控制器延迟}}
 $$
 
-**① 流水线耗时**是实测量，不是参数。`header.stamp` 来自[相机回调](/huaray-camera-ros2-driver)，一路经检测、PnP、BA、EKF 传下来，到云台控制这里减一下当前时间就是这一帧真实走了多久。它随负载波动，所以必须每帧算而不能写死。
+**① 流水线耗时**是实测量，不是参数。`header.stamp` 来自[相机回调](/blog/huaray-camera-ros2-driver)，一路经检测、PnP、BA、EKF 传下来，到云台控制这里减一下当前时间就是这一帧真实走了多久。它随负载波动，所以必须每帧算而不能写死。
 
 **② 飞行时间**由距离和初速决定，`getFlyingTime()` 算出来。
 
@@ -83,7 +83,7 @@ case TRACKING_ARMOR: {
 
 注释写得很直白：`If isOnTarget() never returns true, adjust controller_delay to force the gimbal to move`。这不是在补偿物理延迟，而是在**强迫云台动起来**。
 
-背后的问题是这样的：开火判据要求准星压在装甲板上（[窗口 0.135 m](/gimbal-armor-selection-fire)）。如果云台的位置环有稳态误差，准星会稳定地停在目标旁边一点点，`isOnTarget()` 永远返回 false，一发都打不出去。人为多加一个提前量，等于把目标点往前推，逼着云台越过那个死区。
+背后的问题是这样的：开火判据要求准星压在装甲板上（[窗口 0.135 m](/blog/gimbal-armor-selection-fire)）。如果云台的位置环有稳态误差，准星会稳定地停在目标旁边一点点，`isOnTarget()` 永远返回 false，一发都打不出去。人为多加一个提前量，等于把目标点往前推，逼着云台越过那个死区。
 
 这是典型的"用一个补偿参数掩盖另一个环节的缺陷"。正确的做法是去修云台位置环，或者给开火判据加一个死区容忍。但赛场上没有时间改电控固件，加个参数是最快的止血方式——代价是 `controller_delay` 从此不再是一个有物理意义的量，它的值取决于云台的稳态误差有多大。
 
@@ -121,4 +121,4 @@ case TRACKING_ARMOR: {
 
 ---
 
-系统层的兜底机制：[心跳看门狗与 tmux 自动重启](/guard-dog-heartbeat-tmux)。
+系统层的兜底机制：[心跳看门狗与 tmux 自动重启](/blog/guard-dog-heartbeat-tmux)。

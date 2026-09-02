@@ -30,7 +30,7 @@ armors_marker_.type = visualization_msgs::msg::Marker::SPHERE_LIST;
 armors_marker_.color.r = 1.0;        // 红球 = 反推出的四块装甲板
 ```
 
-绿球和红球一起看，[9 维 EKF](/ekf9-spintop-tracker) 到底估得对不对是一眼的事——四个红球应该均匀绕着绿球转，半径不跳、中心不飘。数字看不出来的问题，图上一秒就能看出来。
+绿球和红球一起看，[9 维 EKF](/blog/ekf9-spintop-tracker) 到底估得对不对是一眼的事——四个红球应该均匀绕着绿球转，半径不跳、中心不飘。数字看不出来的问题，图上一秒就能看出来。
 
 ### 参数校验回调
 
@@ -43,7 +43,7 @@ rcl_interfaces::msg::SetParametersResult
 ArmorIdentifier::on_set_parameters(const std::vector<rclcpp::Parameter> &parameters);
 ```
 
-这个回调的语义是**预校验**：它在参数真正生效之前被调用，返回 `result.successful = false` 就能拒绝这次修改。所以它是最后一道防线——比如把 `max_contours` 拖到 5000，可以在这里直接驳回，而不是等[配对循环](/light-bar-pairing-geometry)把节点卡死。
+这个回调的语义是**预校验**：它在参数真正生效之前被调用，返回 `result.successful = false` 就能拒绝这次修改。所以它是最后一道防线——比如把 `max_contours` 拖到 5000，可以在这里直接驳回，而不是等[配对循环](/blog/light-bar-pairing-geometry)把节点卡死。
 
 回调里不能做耗时操作，也不能在里面写状态：它可能因为一次批量设置被连续调用多次，而其中任何一个返回 false 都会让整批回滚。真正的应用逻辑应该放在参数已经生效之后读。
 
@@ -65,7 +65,7 @@ void SpinTopTracker::update(...) {
 }
 ```
 
-[云台控制](/gimbal-armor-selection-fire)里还有一份类似的，11 次。
+[云台控制](/blog/gimbal-armor-selection-fire)里还有一份类似的，11 次。
 
 这么写的好处是极其省事——不用维护回调、不用管缓存失效，改了立刻生效。坏处有三个：
 
@@ -84,8 +84,8 @@ void SpinTopTracker::update(...) {
 | 参数 | 什么时候调 |
 | --- | --- |
 | `enemy_color` | 每场必调，红蓝方交换 |
-| `red_thresh` / `blue_thresh` | 换场地必看，[二值化](/armor-color-split-gamma)受灯光影响最大 |
-| `compensator.initial_velocity` | 换弹丸批次或枪管后，[弹道](/ballistic-rk4-ceres)整条曲线跟着漂 |
+| `red_thresh` / `blue_thresh` | 换场地必看，[二值化](/blog/armor-color-split-gamma)受灯光影响最大 |
+| `compensator.initial_velocity` | 换弹丸批次或枪管后，[弹道](/blog/ballistic-rk4-ceres)整条曲线跟着漂 |
 | `gimbal_control.side_angle` | 对手车型偏灵活时收紧 |
 | `tracker.max_match_distance` | 场地小、车密集时收紧防误跟 |
 
@@ -93,4 +93,4 @@ void SpinTopTracker::update(...) {
 
 ---
 
-下一篇进虚实闭环：[ROS2-UE5 桥接的坐标系与延迟](/ros2-ue5-bridge-coordinate)。
+下一篇进虚实闭环：[ROS2-UE5 桥接的坐标系与延迟](/blog/ros2-ue5-bridge-coordinate)。

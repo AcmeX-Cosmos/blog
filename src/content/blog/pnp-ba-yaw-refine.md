@@ -35,7 +35,7 @@ references:
   - 经 BA 精化后发布为 `ArmorBaposeInfo`，含 `geometry_msgs/Pose`
 - **约束条件**
   - 单帧必须在相机帧间隔内解完，BA 迭代不能拖累整条流水线
-  - yaw 要求平滑到能直接喂给 9 维 EKF 作观测（详见 [9 维 EKF 状态建模](/ekf9-spintop-tracker)）
+  - yaw 要求平滑到能直接喂给 9 维 EKF 作观测（详见 [9 维 EKF 状态建模](/blog/ekf9-spintop-tracker)）
 
 标定得到的内参里有个值得一提的细节：
 
@@ -226,8 +226,8 @@ armor_identify_msg.euler.y = atan2(-rotM.at<double>(2,0),
 
 ---
 
-延迟补偿链是另一半：[飞行时间与多级延迟](/flight-time-delay-compensation)；弹道本身写在[弹道补偿：查表法与被注释掉的 RK4](/ballistic-rk4-ceres)。
+延迟补偿链是另一半：[飞行时间与多级延迟](/blog/flight-time-delay-compensation)；弹道本身写在[弹道补偿：查表法与被注释掉的 RK4](/blog/ballistic-rk4-ceres)。
 
 - Collins T., Bartoli A. *Infinitesimal Plane-Based Pose Estimation*. IJCV, 2014.（OpenCV `SOLVEPNP_IPPE` 的原始论文）
 - Ceres Solver 官方文档：[Modeling Non-linear Least Squares](http://ceres-solver.org/nnls_modeling.html)
-- 相关文章：[9 维 EKF 状态建模与调参](/ekf9-spintop-tracker)、[弹道补偿与 RK4 数值积分](/ballistic-rk4-ceres)
+- 相关文章：[9 维 EKF 状态建模与调参](/blog/ekf9-spintop-tracker)、[弹道补偿与 RK4 数值积分](/blog/ballistic-rk4-ceres)

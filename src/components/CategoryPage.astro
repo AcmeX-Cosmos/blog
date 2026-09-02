@@ -42,7 +42,7 @@ const counts = countByCategory(all);
     <PostList
       posts={slice}
       totalCount={posts.length}
-      page={{ current: page, total: totalPages, size: PAGE_SIZE, baseUrl: `/${category}` }}
+      page={{ current: page, total: totalPages, size: PAGE_SIZE, baseUrl: `/blog/${category}` }}
     />
   </section>
 

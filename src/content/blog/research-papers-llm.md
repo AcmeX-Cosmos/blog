@@ -4,7 +4,7 @@ date: "2025-07-20"
 description: "从 GPT、BERT、T5 到 MoE、Mamba、Qwen2.5 与 DeepSeek，系统梳理大语言模型的架构、扩展规律、分布式训练和对齐方法。"
 tags: ["LLM", "Transformer", "模型架构", "模型对齐", "论文合集"]
 category: "research"
-cover: "/images/research/llm-architecture-map.svg"
+cover: "/blog/images/research/llm-architecture-map.svg"
 references:
   - title: "Attention Is All You Need"
     meta: "Vaswani et al. · NeurIPS 2017"
@@ -23,7 +23,7 @@ references:
     url: "https://arxiv.org/abs/2412.19437"
 ---
 
-![LLM architecture evolution map](/images/research/llm-architecture-map.svg)
+![LLM architecture evolution map](/blog/images/research/llm-architecture-map.svg)
 
 *本站原创整理图：从 Transformer 主干、规模化训练和偏好对齐到 MoE、MLA 与状态空间模型。*
 
@@ -59,7 +59,7 @@ GPT-1 的意义在于证明生成式预训练能够学习可迁移语言表示�
 [BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](https://arxiv.org/abs/1810.04805) 使用 Transformer encoder 和双向上下文。核心预训练任务是 Masked Language Modeling：随机遮盖部分 token，并根据左右文恢复原词。
 
 <figure class="paper-figure">
-  <img src="/images/research/papers/bert-architecture.webp" alt="BERT 双向编码器预训练与任务微调架构" loading="lazy" decoding="async" />
+  <img src="/blog/images/research/papers/bert-architecture.webp" alt="BERT 双向编码器预训练与任务微调架构" loading="lazy" decoding="async" />
   <figcaption>BERT：双向 Transformer 编码器预训练后接入不同下游任务头。图源：<a href="https://arxiv.org/abs/1810.04805">论文原文</a>。</figcaption>
 </figure>
 
@@ -88,7 +88,7 @@ Tensor Parallelism 解决单层放不进一张卡的问题，Pipeline Parallelis
 [Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer](https://arxiv.org/abs/1910.10683) 把分类、翻译、摘要和问答统一成 text-to-text 任务。输入用自然语言前缀描述任务，模型始终生成目标文本。
 
 <figure class="paper-figure">
-  <img src="/images/research/papers/t5-architecture.webp" alt="T5 encoder-decoder、decoder-only 与 prefix LM 结构对比" loading="lazy" decoding="async" />
+  <img src="/blog/images/research/papers/t5-architecture.webp" alt="T5 encoder-decoder、decoder-only 与 prefix LM 结构对比" loading="lazy" decoding="async" />
   <figcaption>T5：encoder-decoder、causal language model 与 prefix LM 的注意力结构对照。图源：<a href="https://arxiv.org/abs/1910.10683">论文原文</a>。</figcaption>
 </figure>
 
@@ -129,7 +129,7 @@ In-context learning 改变了模型使用方式：同一个基础模型可以通
 [Switch Transformers](https://arxiv.org/abs/2101.03961) 使用稀疏 Mixture-of-Experts 扩展参数量。每个 token 经 router 选择一个前馈专家，而 attention 仍保持稠密。若专家数为 $E$，每个 token 只激活一个专家，计算量不随总参数线性增长。
 
 <figure class="paper-figure">
-  <img src="/images/research/papers/switch-transformer-architecture.webp" alt="Switch Transformer 稀疏专家路由架构" loading="lazy" decoding="async" />
+  <img src="/blog/images/research/papers/switch-transformer-architecture.webp" alt="Switch Transformer 稀疏专家路由架构" loading="lazy" decoding="async" />
   <figcaption>Switch Transformer：每个 token 由路由器分配给一个 FFN 专家。图源：<a href="https://arxiv.org/abs/2101.03961">论文原文</a>。</figcaption>
 </figure>
 
@@ -206,7 +206,7 @@ DPO 实现简单、训练稳定，因此广泛用于指令模型对齐。它仍�
 [Mamba: Linear-Time Sequence Modeling with Selective State Spaces](https://arxiv.org/abs/2312.00752) 用选择性状态空间模型替代注意力。连续状态方程离散后可写为
 
 <figure class="paper-figure">
-  <img src="/images/research/papers/mamba-architecture.webp" alt="Mamba 选择性状态空间模型架构" loading="lazy" decoding="async" />
+  <img src="/blog/images/research/papers/mamba-architecture.webp" alt="Mamba 选择性状态空间模型架构" loading="lazy" decoding="async" />
   <figcaption>Mamba：输入相关的 selective scan 在保持线性复杂度的同时进行内容选择。图源：<a href="https://arxiv.org/abs/2312.00752">论文原文</a>。</figcaption>
 </figure>
 

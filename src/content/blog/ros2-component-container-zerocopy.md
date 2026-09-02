@@ -78,7 +78,7 @@ load_action = TimerAction(
 
 相机侧是回调驱动的：SDK 抓帧回调、图像订阅回调，两者天然并发，用 `component_container_mt`（MultiThreadedExecutor）让它们各跑各的。相机回调阻塞时不会拖住检测。
 
-解算侧是严格串行的流水线：`armor_bapose_info` → BA → EKF → 云台指令，每一步依赖上一步的输出。上这条链用多线程没有任何收益，反而要给共享状态加锁。更要命的是 [BA 求解器里那个全局变量](/pnp-ba-yaw-refine)——它本来就不是线程安全的，单线程容器等于免费给它上了一把锁。
+解算侧是严格串行的流水线：`armor_bapose_info` → BA → EKF → 云台指令，每一步依赖上一步的输出。上这条链用多线程没有任何收益，反而要给共享状态加锁。更要命的是 [BA 求解器里那个全局变量](/blog/pnp-ba-yaw-refine)——它本来就不是线程安全的，单线程容器等于免费给它上了一把锁。
 
 ### 3. 零拷贝的前提
 
@@ -115,4 +115,4 @@ ps -eLf | grep component_container  # 两个进程，不是六个
 
 ---
 
-下一篇是解算链的入口：[TF2 消息过滤器与 odom 对齐](/tf2-message-filter-odom)。
+下一篇是解算链的入口：[TF2 消息过滤器与 odom 对齐](/blog/tf2-message-filter-odom)。

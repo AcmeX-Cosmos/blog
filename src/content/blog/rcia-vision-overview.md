@@ -25,7 +25,7 @@ RCIA-vision 是深圳职业技术大学 RoboMaster 战队的机器人视觉系�
 
 难的地方在于每个环节都被现实条件卡着。装甲板是 13.5 cm 宽的一块反光板，5 m 外在图像上只有几十像素；对手会开"小陀螺"——底盘持续自旋，四块装甲板轮流转到正面，转速能到 6 rad/s 以上；弹丸初速约 26 m/s，打 5 m 目标飞行 0.19 s，这期间横移 2 m/s 的车已经走了 38 cm。
 
-后续在这套系统上又推进了一步：把它接进 UE5 和Isaac Sim，做成虚实双向闭环的系统验证框架。
+毕业设计在这套系统上又推进了一步：把它接进 UE5，做成虚实双向闭环的数字孪生验证框架。
 
 ## 整条流水线
 
@@ -72,7 +72,7 @@ $$
 
 装甲板跳变从"目标瞬移"变成"同一刚体的不同观测点"，运动模型立刻连续。更关键的是，$\dot{\psi}$（陀螺转速）在观测方程里的偏导整列为零——它**不可直接观测**，只能通过 $\psi$ 的时序变化被估计出来。而这个估计出来的转速，正是提前量解算必需的。
 
-细节写在[9 维 EKF 整车建模](/ekf9-spintop-tracker)。
+细节写在[9 维 EKF 整车建模](/blog/ekf9-spintop-tracker)。
 
 ### 用物理先验把六自由度压成一维
 
@@ -86,9 +86,9 @@ $$
 
 六自由度的束调整退化成单参数最小二乘，在 5 帧滑动窗口上联合求解。雅可比只有一列，`DENSE_QR` 几乎零成本，解空间是一维区间加了上下界不可能跑飞。yaw 抖动就是这么被压下去的。
 
-同样的思路在项目里反复出现：[双半径互换](/armor-jump-continuous-yaw)用几何先验替代滤波收敛，[弹道查表](/ballistic-rk4-ceres)用实测曲线替代数值积分。算力和时间预算都紧的时候，先验往往比通用方法划算。
+同样的思路在项目里反复出现：[双半径互换](/blog/armor-jump-continuous-yaw)用几何先验替代滤波收敛，[弹道查表](/blog/ballistic-rk4-ceres)用实测曲线替代数值积分。算力和时间预算都紧的时候，先验往往比通用方法划算。
 
-详见 [PnP + 降自由度 BA](/pnp-ba-yaw-refine)。
+详见 [PnP + 降自由度 BA](/blog/pnp-ba-yaw-refine)。
 
 ### 四笔延迟账分开记
 
@@ -105,7 +105,7 @@ $$
 
 yaw 也要外推。位置外推错了偏几厘米，yaw 外推错了会打到隔壁那块板上。整条链路选的是"弹丸到达时**将会**正对我方的那块板"。
 
-详见[飞行时间与多级延迟补偿](/flight-time-delay-compensation)。
+详见[飞行时间与多级延迟补偿](/blog/flight-time-delay-compensation)。
 
 ### 虚实双向闭环
 
@@ -121,7 +121,7 @@ $$
 
 原点对齐用的是装甲板本身当配准标记——整套感知链路本来就能高精度测装甲板位姿，不必再引入一套 ArUco。求解是经典的 Umeyama 问题，闭式解，但 SVD 之后那个 $\operatorname{diag}(1, 1, \det(VU^\top))$ 不能省，否则可能解出一个镜像而不是旋转。
 
-详见 [UE5 桥接](/ros2-ue5-bridge-coordinate)与[低延迟标记配准](/marker-registration-latency)。
+详见 [UE5 桥接](/blog/ros2-ue5-bridge-coordinate)与[低延迟标记配准](/blog/marker-registration-latency)。
 
 ## 量化结果
 
@@ -142,16 +142,16 @@ $$
 
 按技术难度递增：
 
-**驱动与工程基础** — [ROS2 工作区搭建](/ros2-workspace-bootstrap) · [华睿相机驱动](/huaray-camera-ros2-driver) · [串口协议与双缓冲](/serial-protocol-double-buffer)
+**驱动与工程基础** — [ROS2 工作区搭建](/blog/ros2-workspace-bootstrap) · [华睿相机驱动](/blog/huaray-camera-ros2-driver) · [串口协议与双缓冲](/blog/serial-protocol-double-buffer)
 
-**装甲板检测** — [通道相减与伽玛 LUT](/armor-color-split-gamma) · [灯条配对几何判据](/light-bar-pairing-geometry) · [PCA 角点亚像素精修](/armor-corner-subpixel-pca) · [LeNet-5 ONNX 数字分类](/armor-digit-lenet-onnx)
+**装甲板检测** — [通道相减与伽玛 LUT](/blog/armor-color-split-gamma) · [灯条配对几何判据](/blog/light-bar-pairing-geometry) · [PCA 角点亚像素精修](/blog/armor-corner-subpixel-pca) · [LeNet-5 ONNX 数字分类](/blog/armor-digit-lenet-onnx)
 
-**系统架构** — [组件容器与零拷贝](/ros2-component-container-zerocopy) · [TF2 消息过滤器](/tf2-message-filter-odom)
+**系统架构** — [组件容器与零拷贝](/blog/ros2-component-container-zerocopy) · [TF2 消息过滤器](/blog/tf2-message-filter-odom)
 
-**位姿与跟踪** — [PnP + 降自由度 BA](/pnp-ba-yaw-refine) · [9 维 EKF](/ekf9-spintop-tracker) · [装甲板跳变](/armor-jump-continuous-yaw) · [Q/R 噪声整定](/ekf-qr-adaptive-tuning) · [跟踪状态机](/tracker-state-machine-lost)
+**位姿与跟踪** — [PnP + 降自由度 BA](/blog/pnp-ba-yaw-refine) · [9 维 EKF](/blog/ekf9-spintop-tracker) · [装甲板跳变](/blog/armor-jump-continuous-yaw) · [Q/R 噪声整定](/blog/ekf-qr-adaptive-tuning) · [跟踪状态机](/blog/tracker-state-machine-lost)
 
-**决策与控制** — [装甲板选择与开火判据](/gimbal-armor-selection-fire) · [弹道补偿](/ballistic-rk4-ceres) · [多级延迟补偿](/flight-time-delay-compensation)
+**决策与控制** — [装甲板选择与开火判据](/blog/gimbal-armor-selection-fire) · [弹道补偿](/blog/ballistic-rk4-ceres) · [多级延迟补偿](/blog/flight-time-delay-compensation)
 
-**可靠性与调试** — [心跳看门狗](/guard-dog-heartbeat-tmux) · [Foxglove 在线调参](/foxglove-dynamic-params)
+**可靠性与调试** — [心跳看门狗](/blog/guard-dog-heartbeat-tmux) · [Foxglove 在线调参](/blog/foxglove-dynamic-params)
 
-**虚实闭环** — [UE5 桥接](/ros2-ue5-bridge-coordinate) · [标记配准](/marker-registration-latency) · [整链路复盘](/digital-twin-validation-efficiency)
+**虚实闭环** — [UE5 桥接](/blog/ros2-ue5-bridge-coordinate) · [标记配准](/blog/marker-registration-latency) · [整链路复盘](/blog/digital-twin-validation-efficiency)

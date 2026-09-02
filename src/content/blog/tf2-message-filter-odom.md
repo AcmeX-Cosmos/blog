@@ -95,4 +95,4 @@ TF 树断裂最典型的症状是 MessageFilter 完全不触发回调，而节�
 
 ---
 
-下一篇回到检测末端：[LeNet-5 ONNX 数字分类](/armor-digit-lenet-onnx)。
+下一篇回到检测末端：[LeNet-5 ONNX 数字分类](/blog/armor-digit-lenet-onnx)。

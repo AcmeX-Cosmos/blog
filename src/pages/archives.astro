@@ -177,7 +177,7 @@ const hoverSlotWidth = plotWidth / monthlyCounts.length;
                       <strong>{String(date.getDate()).padStart(2, '0')}</strong>
                     </time>
                     <div class="archive-entry-content">
-                      <a href={`/${post.id.replace(/\.md$/, '')}`} class="archive-entry-title">
+                      <a href={`/blog/${post.id.replace(/\.md$/, '')}`} class="archive-entry-title">
                         {post.data.title}
                       </a>
                       <div class="archive-entry-meta">
@@ -196,7 +196,7 @@ const hoverSlotWidth = plotWidth / monthlyCounts.length;
   </main>
 
   <nav class="archive-footer" aria-label="Archive navigation">
-    <a href="/">← Back to Blog</a>
+    <a href="/blog">← Back to Blog</a>
   </nav>
 </SiteLayout>
 

@@ -13,9 +13,9 @@ references:
 
 ## 装甲板数字识别
 
-灯条配对给出的是"这里有一块装甲板"，但打谁要看数字——1 号英雄、3/4/5 步兵、6 号前哨站，[跟踪器](/ekf9-spintop-tracker)靠 `armor_pattern_idx` 锁定目标，[装甲板跳变处理](/armor-jump-continuous-yaw)也依赖它判断是不是同一辆车。
+灯条配对给出的是"这里有一块装甲板"，但打谁要看数字——1 号英雄、3/4/5 步兵、6 号前哨站，[跟踪器](/blog/ekf9-spintop-tracker)靠 `armor_pattern_idx` 锁定目标，[装甲板跳变处理](/blog/armor-jump-continuous-yaw)也依赖它判断是不是同一辆车。
 
-训练部分在 [LeNet-5 从零实现](/lenet5-cnn-pytorch) 那篇，这里只讲部署侧：怎么把一块透视变形的装甲板变成网络能吃的 28×28。
+训练部分在 [LeNet-5 从零实现](/blog/lenet5-cnn-pytorch) 那篇，这里只讲部署侧：怎么把一块透视变形的装甲板变成网络能吃的 28×28。
 
 ### 1. 问题定义
 
@@ -120,4 +120,4 @@ $$
 
 ---
 
-数字有了，位姿有了，下一步是把它们在时间上串起来：[9 维 EKF 状态建模](/ekf9-spintop-tracker)。
+数字有了，位姿有了，下一步是把它们在时间上串起来：[9 维 EKF 状态建模](/blog/ekf9-spintop-tracker)。

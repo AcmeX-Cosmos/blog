@@ -54,7 +54,7 @@ private:
 
 `UartTransporter` 只管字节进出（open / read / write / 重连），`Protocol` 只管帧格式（帧头、字段布局、校验）。分开的实际收益是：兵种协议不一样时只换 Protocol 子类，传输层一行不动；调试时也可以把 Transporter 换成文件回放。
 
-`simulate_mode: true` 是仿真开关。开着的时候不真的开串口，直接喂预设数据——这让整条视觉链路可以在没有机器人的情况下跑起来，[UE5 虚实闭环](/ros2-ue5-bridge-coordinate)也依赖这个开关。
+`simulate_mode: true` 是仿真开关。开着的时候不真的开串口，直接喂预设数据——这让整条视觉链路可以在没有机器人的情况下跑起来，[UE5 虚实闭环](/blog/ros2-ue5-bridge-coordinate)也依赖这个开关。
 
 ### 3. 原子双缓冲
 
@@ -76,7 +76,7 @@ rcia::Xin_Main::SerialDataStruct buffer1_, buffer2_;   // 双缓冲实例
 
 - 串口下行帧率取决于电控，实测在 200 Hz 量级
 - 图像 30–60 FPS，每帧读一次姿态
-- 上行只在跟踪状态下发，`fire_flag` 由[开火判据](/gimbal-armor-selection-fire)决定
+- 上行只在跟踪状态下发，`fire_flag` 由[开火判据](/blog/gimbal-armor-selection-fire)决定
 
 读频率远低于写频率，意味着大部分串口帧其实被丢弃了——这是刻意的。检测只需要\"当前最新姿态\"，历史帧没有价值，双缓冲天然实现了这个语义。
 
@@ -98,4 +98,4 @@ serial_driver_composable = ComposableNode(
 
 ---
 
-下一篇进入视觉本身：[颜色通道相减与伽玛校正](/armor-color-split-gamma)。
+下一篇进入视觉本身：[颜色通道相减与伽玛校正](/blog/armor-color-split-gamma)。

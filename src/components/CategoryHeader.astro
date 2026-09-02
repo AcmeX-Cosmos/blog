@@ -22,7 +22,7 @@ const { prev, next } = getNeighbors(slug);
     <div class="category-nav-arrows ml-3 inline-flex gap-1 align-middle">
       {prev && (
         <a
-          href={`/${prev.slug}`}
+          href={`/blog/${prev.slug}`}
           class="flex h-8 w-8 items-center justify-center text-[hsl(var(--muted-foreground))] transition-colors hover:text-[hsl(var(--foreground))]"
           title={`Previous: ${prev.title}`}
           aria-label={`Go to ${prev.title}`}
@@ -44,7 +44,7 @@ const { prev, next } = getNeighbors(slug);
       )}
       {next && (
         <a
-          href={`/${next.slug}`}
+          href={`/blog/${next.slug}`}
           class="flex h-8 w-8 items-center justify-center text-[hsl(var(--muted-foreground))] transition-colors hover:text-[hsl(var(--foreground))]"
           title={`Next: ${next.title}`}
           aria-label={`Go to ${next.title}`}

@@ -28,12 +28,6 @@ export async function GET() {
 
   const entries = [
     { url: '/', lastmod: posts[0]?.data.date || '' },
-    { url: '/archives', lastmod: '' },
-    { url: '/tags', lastmod: '' },
-    { url: '/research', lastmod: '' },
-    { url: '/algorithm', lastmod: '' },
-    { url: '/tech', lastmod: '' },
-    { url: '/daily', lastmod: '' },
     { url: '/projects', lastmod: '' },
     { url: '/projects/diceposeest', lastmod: '' },
     { url: '/about', lastmod: '' },
@@ -44,7 +38,7 @@ export async function GET() {
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${entries.map(e => `  <url>
-    <loc>https://acmex-cosmos.github.io${e.url}</loc>${e.lastmod ? `\n    <lastmod>${e.lastmod}</lastmod>` : ''}
+    <loc>https://acmex-cosmos.github.io/blog${e.url}</loc>${e.lastmod ? `\n    <lastmod>${e.lastmod}</lastmod>` : ''}
   </url>`).join('\n')}
 </urlset>`;
 

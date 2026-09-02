@@ -4,7 +4,7 @@ date: "2025-09-21"
 description: "从图文对比学习、多模态连接器到动作 Token、扩散策略与 Flow Matching，系统梳理 VLM/VLA 主流模型架构和训练目标。"
 tags: ["VLM", "VLA", "多模态", "机器人基础模型", "论文合集"]
 category: "research"
-cover: "/images/research/vla-vlm-architecture-map.svg"
+cover: "/blog/images/research/vla-vlm-architecture-map.svg"
 references:
   - title: "CLIP"
     meta: "Radford et al. · ICML 2021"
@@ -23,7 +23,7 @@ references:
     url: "https://arxiv.org/abs/2410.24164"
 ---
 
-![VLM and VLA architecture map](/images/research/vla-vlm-architecture-map.svg)
+![VLM and VLA architecture map](/blog/images/research/vla-vlm-architecture-map.svg)
 
 *本站原创整理图：从视觉编码器、多模态连接器和语言主干延伸到四类动作生成接口。*
 
@@ -38,7 +38,7 @@ VLA 在此基础上增加时间、本体状态和动作。动作可以是离散 
 [Learning Transferable Visual Models From Natural Language Supervision](https://arxiv.org/abs/2103.00020) 使用独立图像编码器和文本编码器，把匹配图文对拉近、批内错误配对推远。对 batch 中第 $i$ 个图像和第 $j$ 个文本，logit 为
 
 <figure class="paper-figure">
-  <img src="/images/research/papers/clip-architecture.webp" alt="CLIP 图像文本双编码器对比学习架构" loading="lazy" decoding="async" />
+  <img src="/blog/images/research/papers/clip-architecture.webp" alt="CLIP 图像文本双编码器对比学习架构" loading="lazy" decoding="async" />
   <figcaption>CLIP：图像与文本双编码器通过批内对比学习建立共享表示空间。图源：<a href="https://arxiv.org/abs/2103.00020">论文原文</a>。</figcaption>
 </figure>
 
@@ -97,7 +97,7 @@ LLaVA 的研究重点在数据配方而不只是 projector。预训练图文对�
 [PaLM-E: An Embodied Multimodal Language Model](https://arxiv.org/abs/2303.03378) 将图像、连续状态和其他传感器表示编码成与词 embedding 同维度的 token，直接插入预训练语言模型上下文。模型以自回归方式输出文本计划、答案或高层决策。
 
 <figure class="paper-figure">
-  <img src="/images/research/papers/palm-e-architecture.webp" alt="PaLM-E 连续传感器输入与语言模型架构" loading="lazy" decoding="async" />
+  <img src="/blog/images/research/papers/palm-e-architecture.webp" alt="PaLM-E 连续传感器输入与语言模型架构" loading="lazy" decoding="async" />
   <figcaption>PaLM-E：连续视觉和状态表示作为多模态 token 注入 PaLM。图源：<a href="https://arxiv.org/abs/2303.03378">论文原文</a>。</figcaption>
 </figure>
 
@@ -110,7 +110,7 @@ PaLM-E 说明连续具身输入可以与语言 token 共用一个 decoder-only T
 [RT-1: Robotics Transformer for Real-World Control at Scale](https://arxiv.org/abs/2212.06817) 将图像、语言指令和历史信息编码为 token，再用 Transformer 预测离散动作。视觉部分使用 EfficientNet，并通过 FiLM 由语言条件调制；TokenLearner 将空间特征压缩成少量 token。
 
 <figure class="paper-figure">
-  <img src="/images/research/papers/rt1-architecture.webp" alt="RT-1 视觉语言调制与动作 token 预测架构" loading="lazy" decoding="async" />
+  <img src="/blog/images/research/papers/rt1-architecture.webp" alt="RT-1 视觉语言调制与动作 token 预测架构" loading="lazy" decoding="async" />
   <figcaption>RT-1：FiLM、TokenLearner 与 Transformer 组成端到端多任务控制策略。图源：<a href="https://arxiv.org/abs/2212.06817">论文原文</a>。</figcaption>
 </figure>
 
@@ -165,7 +165,7 @@ Octo 使用模块化 tokenizers 和 heads，使新传感器、新任务条件和
 [OpenVLA: An Open-Source Vision-Language-Action Model](https://arxiv.org/abs/2406.09246) 基于 Prismatic VLM 构建 7B VLA，结合 DINOv2 与 SigLIP 视觉特征，并在 Open X-Embodiment 数据上训练离散动作 token。
 
 <figure class="paper-figure">
-  <img src="/images/research/papers/openvla-architecture.webp" alt="OpenVLA 双视觉编码器与动作 token 架构" loading="lazy" decoding="async" />
+  <img src="/blog/images/research/papers/openvla-architecture.webp" alt="OpenVLA 双视觉编码器与动作 token 架构" loading="lazy" decoding="async" />
   <figcaption>OpenVLA：DINOv2 与 SigLIP 视觉特征接入语言模型并生成动作 token。图源：<a href="https://arxiv.org/abs/2406.09246">论文原文</a>。</figcaption>
 </figure>
 
@@ -186,7 +186,7 @@ RDT 强调 physical state 与动作的统一表示，并通过数据重采样、
 [$\pi_0$: A Vision-Language-Action Flow Model for General Robot Control](https://arxiv.org/abs/2410.24164) 将预训练 VLM 与 flow-matching action expert 组合。VLM 负责图像和语言条件表示，动作专家在连续动作空间中学习从噪声到数据分布的向量场。
 
 <figure class="paper-figure">
-  <img src="/images/research/papers/pi0-architecture.webp" alt="PI-0 视觉语言主干与动作专家架构" loading="lazy" decoding="async" />
+  <img src="/blog/images/research/papers/pi0-architecture.webp" alt="PI-0 视觉语言主干与动作专家架构" loading="lazy" decoding="async" />
   <figcaption>PI-0：预训练 VLM 与连续动作 flow expert 的联合结构。图源：<a href="https://arxiv.org/abs/2410.24164">论文原文</a>。</figcaption>
 </figure>
 

@@ -87,7 +87,7 @@ void CameraNode::try_reconnect() {
 
 `init_camera()` 开头先调 `cleanup_camera()`，保证重连前把旧句柄彻底释放（`IMV_StopGrabbing` → `IMV_Close` → `IMV_DestroyHandle` 三步缺一不可）。漏掉 `IMV_DestroyHandle` 的话重连几次之后 SDK 就再也枚举不到设备了，必须重启进程。
 
-这个自愈只覆盖了"启动时相机不在"的情况。运行中掉线目前不会触发重连——回调只是停止调用，节点看起来还活着。这个缺口由上层的[心跳看门狗](/guard-dog-heartbeat-tmux)兜底：检测节点长时间收不到图就不发心跳，看门狗重启整条链路。
+这个自愈只覆盖了"启动时相机不在"的情况。运行中掉线目前不会触发重连——回调只是停止调用，节点看起来还活着。这个缺口由上层的[心跳看门狗](/blog/guard-dog-heartbeat-tmux)兜底：检测节点长时间收不到图就不发心跳，看门狗重启整条链路。
 
 ### 5. 联调结果
 
@@ -102,4 +102,4 @@ RCLCPP_COMPONENTS_REGISTER_NODE(rcia::camera_driver::CameraNode)
 
 ---
 
-下一篇是另一半 I/O：[串口协议与原子双缓冲](/serial-protocol-double-buffer)。
+下一篇是另一半 I/O：[串口协议与原子双缓冲](/blog/serial-protocol-double-buffer)。
