@@ -8,7 +8,7 @@ category: "algorithm"
 
 ## 云台目标选择与开火判据
 
-[9 维 EKF](/blog/ekf9-spintop-tracker) 输出的是整车状态——中心位置、速度、 yaw 、转速、半径。但炮管要瞄的是一块具体的装甲板。从"我知道这辆车在哪、转多快"到"我该把云台指向哪个点、什么时候扣扳机"，中间这层决策是自瞄系统里最靠近比赛结果的一环。
+[9 维 EKF](/ekf9-spintop-tracker) 输出的是整车状态——中心位置、速度、 yaw 、转速、半径。但炮管要瞄的是一块具体的装甲板。从"我知道这辆车在哪、转多快"到"我该把云台指向哪个点、什么时候扣扳机"，中间这层决策是自瞄系统里最靠近比赛结果的一环。
 
 ### 1. 问题定义
 
@@ -34,7 +34,7 @@ z_a + \delta_k
 \end{bmatrix}
 $$
 
-四装甲板车型的 $r_k$ 和 $\delta_k$ 在两组值之间交替——这正是[跳变处理](/blog/armor-jump-continuous-yaw)里维护的 `r1`/`r2`/`dz`。奇数号板用 `r1` 和 `z_a`，偶数号板用 `r2` 和 `z_a - dz`。三装甲板的前哨站四个量全部相同。
+四装甲板车型的 $r_k$ 和 $\delta_k$ 在两组值之间交替——这正是[跳变处理](/armor-jump-continuous-yaw)里维护的 `r1`/`r2`/`dz`。奇数号板用 `r1` 和 `z_a`，偶数号板用 `r2` 和 `z_a - dz`。三装甲板的前哨站四个量全部相同。
 
 ```cpp
 std::vector<Eigen::Vector3d> armor_positions = getArmorPositions(
@@ -143,4 +143,4 @@ vision_msg.fire_flag = isOnTarget(rpy_[2], rpy_[1], yaw, pitch, distance);
 
 ---
 
-延迟补偿链是另一半：[飞行时间与多级延迟](/blog/flight-time-delay-compensation)；弹道本身写在[弹道补偿：查表法与被注释掉的 RK4](/blog/ballistic-rk4-ceres)。
+延迟补偿链是另一半：[飞行时间与多级延迟](/flight-time-delay-compensation)；弹道本身写在[弹道补偿：查表法与被注释掉的 RK4](/ballistic-rk4-ceres)。

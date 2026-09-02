@@ -4,7 +4,7 @@ date: "2025-11-23"
 description: "聚焦具身智能中高影响力和高热度的代表论文，覆盖模仿学习、VLA、语言规划、空间推理、大规模数据、生成式策略与抓取感知。"
 tags: ["Embodied AI", "具身智能", "机器人学习", "VLA", "论文合集"]
 category: "research"
-cover: "/blog/images/research/embodied-ai-architecture-map.svg"
+cover: "/images/research/embodied-ai-architecture-map.svg"
 references:
   - title: "ACT"
     meta: "Zhao et al. · RSS 2023"
@@ -23,7 +23,7 @@ references:
     url: "https://arxiv.org/abs/2410.24164"
 ---
 
-![Embodied AI architecture map](/blog/images/research/embodied-ai-architecture-map.svg)
+![Embodied AI architecture map](/images/research/embodied-ai-architecture-map.svg)
 
 *本站原创整理图：按模仿学习、通用 VLA、生成式动作与具身推理划分代表架构。*
 
@@ -38,7 +38,7 @@ Embodied AI 的核心不是单一模型，而是把感知、任务条件、状�
 [Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware](https://arxiv.org/abs/2304.13705) 提出 Action Chunking with Transformers。传统行为克隆每个时刻预测一个动作，误差会随闭环执行积累；ACT 一次预测未来 $H$ 步动作块，用较长时间结构降低有效决策次数。
 
 <figure class="paper-figure">
-  <img src="/blog/images/research/papers/act-architecture.webp" alt="ACT 条件 VAE 与动作块预测架构" loading="lazy" decoding="async" />
+  <img src="/images/research/papers/act-architecture.webp" alt="ACT 条件 VAE 与动作块预测架构" loading="lazy" decoding="async" />
   <figcaption>ACT：视觉与本体状态经 Transformer 解码为未来动作块。图源：<a href="https://arxiv.org/abs/2304.13705">论文原文</a>。</figcaption>
 </figure>
 
@@ -56,7 +56,7 @@ $$
 [Diffusion Policy: Visuomotor Policy Learning via Action Diffusion](https://arxiv.org/abs/2303.04137) 把动作轨迹视为条件生成问题。训练阶段给真实动作序列逐步加高斯噪声，网络学习在视觉与状态条件下预测噪声；推理阶段从随机噪声反复去噪得到完整动作序列。
 
 <figure class="paper-figure">
-  <img src="/blog/images/research/papers/diffusion-policy-architecture.webp" alt="Diffusion Policy 条件去噪策略架构" loading="lazy" decoding="async" />
+  <img src="/images/research/papers/diffusion-policy-architecture.webp" alt="Diffusion Policy 条件去噪策略架构" loading="lazy" decoding="async" />
   <figcaption>Diffusion Policy：在观测条件下迭代去噪动作序列。图源：<a href="https://arxiv.org/abs/2303.04137">论文原文</a>。</figcaption>
 </figure>
 
@@ -129,7 +129,7 @@ PaLM-E 证明连续观测能进入 LLM，但它并没有消除控制层。高层
 [VoxPoser: Composable 3D Value Maps for Robotic Manipulation with Language Models](https://arxiv.org/abs/2307.05973) 让 LLM/VLM 生成三维空间价值图，而不是直接生成机器人轨迹。目标、障碍、方向和速度偏好分别形成体素场，再组合为运动优化目标。
 
 <figure class="paper-figure">
-  <img src="/blog/images/research/papers/voxposer-architecture.webp" alt="VoxPoser 三维价值图与轨迹优化流程" loading="lazy" decoding="async" />
+  <img src="/images/research/papers/voxposer-architecture.webp" alt="VoxPoser 三维价值图与轨迹优化流程" loading="lazy" decoding="async" />
   <figcaption>VoxPoser：语言约束被组合为三维价值图，再交由运动规划器求解。图源：<a href="https://arxiv.org/abs/2307.05973">论文原文</a>。</figcaption>
 </figure>
 
@@ -172,7 +172,7 @@ Octo 设计了可扩展接口：语言或目标图像都可以作为任务 token
 [OpenVLA: An Open-Source Vision-Language-Action Model](https://arxiv.org/abs/2406.09246) 基于 7B VLM，在 Open X-Embodiment 数据上训练动作 token。视觉侧结合 DINOv2 与 SigLIP：前者强调密集空间特征，后者强调图文语义对齐。
 
 <figure class="paper-figure">
-  <img src="/blog/images/research/papers/openvla-architecture.webp" alt="OpenVLA 双视觉编码器与动作 token 架构" loading="lazy" decoding="async" />
+  <img src="/images/research/papers/openvla-architecture.webp" alt="OpenVLA 双视觉编码器与动作 token 架构" loading="lazy" decoding="async" />
   <figcaption>OpenVLA：DINOv2 与 SigLIP 视觉特征接入语言模型并生成动作 token。图源：<a href="https://arxiv.org/abs/2406.09246">论文原文</a>。</figcaption>
 </figure>
 
@@ -214,7 +214,7 @@ $$
 [GraspNet-1Billion: A Large-Scale Benchmark for General Object Grasping](https://arxiv.org/abs/1912.13470) 建立大规模杂乱场景抓取数据与统一评价。数据包含 RGB-D、点云、对象姿态和大量 6D 抓取标注，覆盖不同相机与未见对象。
 
 <figure class="paper-figure">
-  <img src="/blog/images/research/papers/graspnet-architecture.webp" alt="GraspNet-1Billion 数据与六自由度抓取评测框架" loading="lazy" decoding="async" />
+  <img src="/images/research/papers/graspnet-architecture.webp" alt="GraspNet-1Billion 数据与六自由度抓取评测框架" loading="lazy" decoding="async" />
   <figcaption>GraspNet-1Billion：从场景采集、密集抓取标注到统一评测的完整流程。图源：<a href="https://arxiv.org/abs/1912.13470">论文原文</a>。</figcaption>
 </figure>
 

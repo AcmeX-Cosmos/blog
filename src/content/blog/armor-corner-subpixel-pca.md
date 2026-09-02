@@ -138,7 +138,7 @@ if (left_minRect.size.width > left_minRect.size.height)
     std::swap(left_minRect.size.width, left_minRect.size.height);
 ```
 
-同[上一篇](/blog/light-bar-pairing-geometry)提到的坑，这里再犯一次的话，`L = minRect.size.height` 会拿到宽度，搜索范围完全错位。
+同[上一篇](/light-bar-pairing-geometry)提到的坑，这里再犯一次的话，`L = minRect.size.height` 会拿到宽度，搜索范围完全错位。
 
 **性能指标**：每条灯条一次 PCA（点云约 10⁴ 点）加 $w-2$ 条搜索线，两条灯条共四个端点。相比后面的 Ceres BA，这部分开销可以忽略。
 
@@ -176,4 +176,4 @@ cv::Point2f centroid = cv::Point2f(moments.m10/moments.m00, moments.m01/moments.
 
 ---
 
-角点定完了，装甲板上还有个数字要认：[LeNet-5 ONNX 数字分类](/blog/armor-digit-lenet-onnx)。
+角点定完了，装甲板上还有个数字要认：[LeNet-5 ONNX 数字分类](/armor-digit-lenet-onnx)。

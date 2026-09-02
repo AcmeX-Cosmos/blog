@@ -67,7 +67,7 @@ if (
       {categories.map((cat) => (
         <li>
           <a
-            href={`/blog/${cat.slug}`}
+            href={`/${cat.slug}`}
             aria-current={activeCategory === cat.slug ? 'page' : undefined}
             class:list={[
               'group block rounded-xl border p-3 transition-colors',
@@ -88,7 +88,7 @@ if (
       ))}
     </ul>
     <span class="mt-4 block text-end text-sm">
-      <a class="hover:underline underline-offset-4" href="/blog">View all posts →</a>
+      <a class="hover:underline underline-offset-4" href="/">View all posts →</a>
     </span>
   </div>
 
@@ -114,7 +114,7 @@ if (
     {visibleTagCounts.map(({ name, count }) => (
       <li>
         <a
-          href={`/blog/tag/${encodeURIComponent(name)}`}
+          href={`/tag/${encodeURIComponent(name)}`}
           aria-current={activeTag === name ? 'page' : undefined}
           class:list={[
             'sidebar-tag-link inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-medium leading-none transition-all duration-200',
@@ -133,7 +133,7 @@ if (
     ))}
   </ul>
   <span class="mt-4 block text-sm sm:text-end">
-    <a class="hover:underline underline-offset-4" href="/blog/tags">View all tags →</a>
+    <a class="hover:underline underline-offset-4" href="/tags">View all tags →</a>
   </span>
 </aside>
 

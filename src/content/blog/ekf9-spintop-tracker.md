@@ -125,7 +125,7 @@ J_h <<   1,   0,   0,   0,   0,   0,    r * sin(yaw),   0,      -cos(yaw),
          0,   0,   0,   0,   0,   0,    1,              0,       0;
 ```
 
-注意 $\partial h / \partial \dot{\psi}$ 一整列全是零——角速度不可直接观测，只能通过 $\psi$ 的时序变化被间接估计出来。这是这个滤波器最核心的价值：**它把观测不到的转速估计了出来**，而转速正是[弹道提前量](/blog/gimbal-armor-selection-fire)必需的。
+注意 $\partial h / \partial \dot{\psi}$ 一整列全是零——角速度不可直接观测，只能通过 $\psi$ 的时序变化被间接估计出来。这是这个滤波器最核心的价值：**它把观测不到的转速估计了出来**，而转速正是[弹道提前量](/gimbal-armor-selection-fire)必需的。
 
 ### 3. 工程实现
 
@@ -187,7 +187,7 @@ target_state << xc, 0, yc, 0, za, 0, yaw, 0, r;
 | `ekf.r_x` | 0.15 | 0.15 | x 观测噪声系数 |
 | `ekf.r_y` | 0.20 | 0.20 | y 观测噪声系数 |
 | `ekf.r_z` | 0.25 | 0.25 | z 观测噪声系数，最大——深度方向本来就最不准 |
-| `ekf.r_yaw` | 0.02 | 0.05 | yaw 观测噪声，经 [BA 精化](/blog/pnp-ba-yaw-refine)后可以给得很小 |
+| `ekf.r_yaw` | 0.02 | 0.05 | yaw 观测噪声，经 [BA 精化](/pnp-ba-yaw-refine)后可以给得很小 |
 | `tracker.max_match_distance` | 0.2 | 0.2 | 关联门限（m） |
 | `tracker.max_match_yaw_diff` | 1.0 | 1.0 | yaw 关联门限（rad） |
 
@@ -197,7 +197,7 @@ $r_z > r_y > r_x$ 的排序反映了单目视觉的固有特性：横向（像�
 
 **$P$ 初始化为零矩阵。** 构造函数里 `P.setZero()`，而 $Q$、$R$ 都是 `setIdentity()`。$P = 0$ 意味着\"对初始状态完全确信\"，第一次 update 时 $K = P H^\top S^{-1} = 0$，观测被完全忽略。所幸 predict 步的 $P \leftarrow FPF^\top + Q$ 会让协方差从 $Q$ 开始生长，几帧之后就正常了。但严格说初始协方差应该给一个反映真实初始不确定度的对角阵，而不是靠 $Q$ 慢慢\"泡\"出来。
 
-**噪声整定的细节需要单独验证。** $Q$ 的分块构造与 $R$ 的观测噪声设计，可参考[EKF 多传感器融合](/blog/ekf-multisensor-fusion)。
+**噪声整定的细节需要单独验证。** $Q$ 的分块构造与 $R$ 的观测噪声设计，可参考[EKF 多传感器融合](/ekf-multisensor-fusion)。
 
 ### 5. 验证方法
 
@@ -210,4 +210,4 @@ $r_z > r_y > r_x$ 的排序反映了单目视觉的固有特性：横向（像�
 
 ---
 
-跳变的处理是这套模型能跑起来的另一半：[装甲板跳变与连续化 yaw](/blog/armor-jump-continuous-yaw)。
+跳变的处理是这套模型能跑起来的另一半：[装甲板跳变与连续化 yaw](/armor-jump-continuous-yaw)。

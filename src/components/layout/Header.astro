@@ -9,16 +9,16 @@ import { categories } from '../../data/categories';
 
 const currentPath = Astro.url.pathname.replace(/\/$/, '');
 // Blog 项高亮：文章总览页本身，或任意一个分类页
-const onBlogIndex = currentPath === '/blog' || currentPath === '';
+const onBlogIndex = currentPath === '/' || currentPath === '';
 const onBlogCategory =
   onBlogIndex ||
-  currentPath === '/blog/tags' ||
-  currentPath.startsWith('/blog/tag/') ||
-  categories.some((c) => currentPath.endsWith(`/blog/${c.slug}`));
+  currentPath === '/tags' ||
+  currentPath.startsWith('/tag/') ||
+  categories.some((c) => currentPath.endsWith(`/${c.slug}`));
 
 const navLinks = [
-  { href: '/blog/projects', label: 'Projects' },
-  { href: '/blog/about', label: 'About' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/about', label: 'About' },
 ];
 
 const GITHUB_URL = 'https://github.com/AcmeX-Cosmos';
@@ -31,7 +31,7 @@ const GITHUB_URL = 'https://github.com/AcmeX-Cosmos';
 >
   <!-- 品牌 -->
   <a
-    href="/blog"
+    href="/"
     aria-label="Brand"
     class="brand z-30 text-xl font-semibold tracking-tight group-[.not-top]:ms-3 sm:group-[.not-top]:ms-5"
   >
@@ -48,7 +48,7 @@ const GITHUB_URL = 'https://github.com/AcmeX-Cosmos';
         <!-- 文章 + 分类下拉 -->
         <div class="menu-item-with-dropdown relative w-full md:w-fit">
           <a
-            href="/blog"
+            href="/"
             aria-label="Nav menu item"
             class:list={[
               'blog-menu-link flex w-full flex-none items-center justify-end py-2 font-medium transition-colors hover:text-[hsl(var(--foreground))] md:justify-center md:px-4',
@@ -76,7 +76,7 @@ const GITHUB_URL = 'https://github.com/AcmeX-Cosmos';
             <div class="py-1">
               {categories.map((cat) => (
                 <a
-                  href={`/blog/${cat.slug}`}
+                  href={`/${cat.slug}`}
                   class="category-link block px-4 py-2 text-sm transition-colors hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
                 >
                   {cat.title}

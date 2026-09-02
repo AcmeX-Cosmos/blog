@@ -4,7 +4,7 @@ date: "2025-03-16"
 description: "从 CNN、ViT、自监督学习到开放词汇检测、可提示分割、点云 Transformer、深度估计、三维重建和视频预测，系统梳理 CV 主流论文。"
 tags: ["CV", "计算机视觉", "三维视觉", "视觉表征", "论文合集"]
 category: "research"
-cover: "/blog/images/research/cv-architecture-map.svg"
+cover: "/images/research/cv-architecture-map.svg"
 references:
   - title: "Deep Residual Learning for Image Recognition"
     meta: "He et al. · CVPR 2016"
@@ -23,7 +23,7 @@ references:
     url: "https://arxiv.org/abs/2312.14132"
 ---
 
-![Computer vision architecture map](/blog/images/research/cv-architecture-map.svg)
+![Computer vision architecture map](/images/research/cv-architecture-map.svg)
 
 *本站原创整理图：按监督骨干、自监督表征、开放世界感知和三维几何组织代表模型。*
 
@@ -48,7 +48,7 @@ VGG 的结构高度统一：同一 stage 保持通道数，池化后分辨率减
 [Deep Residual Learning for Image Recognition](https://arxiv.org/abs/1512.03385) 引入残差块
 
 <figure class="paper-figure">
-  <img src="/blog/images/research/papers/resnet-architecture.webp" alt="ResNet 残差块与普通深层网络对比" loading="lazy" decoding="async" />
+  <img src="/images/research/papers/resnet-architecture.webp" alt="ResNet 残差块与普通深层网络对比" loading="lazy" decoding="async" />
   <figcaption>ResNet：shortcut 让残差分支学习相对输入的修正。图源：<a href="https://arxiv.org/abs/1512.03385">论文原文</a>。</figcaption>
 </figure>
 
@@ -67,7 +67,7 @@ ResNet 的思想超越 CNN，残差连接成为 Transformer 和扩散模型的�
 [An Image is Worth 16x16 Words](https://arxiv.org/abs/2010.11929) 将图像切成 patch，并把每个 patch 线性投影成 token。加入位置 embedding 与 `[CLS]` token 后，序列进入标准 Transformer encoder。
 
 <figure class="paper-figure">
-  <img src="/blog/images/research/papers/vit-architecture.webp" alt="Vision Transformer 图像分块与编码器架构" loading="lazy" decoding="async" />
+  <img src="/images/research/papers/vit-architecture.webp" alt="Vision Transformer 图像分块与编码器架构" loading="lazy" decoding="async" />
   <figcaption>ViT：图像 patch 被映射为序列 token，再由标准 Transformer encoder 建模。图源：<a href="https://arxiv.org/abs/2010.11929">论文原文</a>。</figcaption>
 </figure>
 
@@ -112,7 +112,7 @@ DINOv2 强调通用 frozen features：同一个 backbone 可用于分类、深�
 [Segment Anything](https://arxiv.org/abs/2304.02643) 建立 promptable segmentation。系统由大型 image encoder、prompt encoder 和轻量 mask decoder 构成。图像 embedding 可预计算，不同点、框或粗 mask prompt 能快速产生分割结果。
 
 <figure class="paper-figure">
-  <img src="/blog/images/research/papers/sam-architecture.webp" alt="Segment Anything 图像编码、提示编码与掩码解码架构" loading="lazy" decoding="async" />
+  <img src="/images/research/papers/sam-architecture.webp" alt="Segment Anything 图像编码、提示编码与掩码解码架构" loading="lazy" decoding="async" />
   <figcaption>SAM：图像编码器、提示编码器与轻量掩码解码器相互解耦。图源：<a href="https://arxiv.org/abs/2304.02643">论文原文</a>。</figcaption>
 </figure>
 
@@ -133,7 +133,7 @@ SAM 2 的关键问题是时序身份保持。遮挡、相似对象交叉和长�
 [PointNet: Deep Learning on Point Sets for 3D Classification and Segmentation](https://arxiv.org/abs/1612.00593) 直接处理无序点集。每个点经共享 MLP 编码，再通过对称 max pooling 聚合全局特征：
 
 <figure class="paper-figure">
-  <img src="/blog/images/research/papers/pointnet-architecture.webp" alt="PointNet 点级共享网络与对称聚合架构" loading="lazy" decoding="async" />
+  <img src="/images/research/papers/pointnet-architecture.webp" alt="PointNet 点级共享网络与对称聚合架构" loading="lazy" decoding="async" />
   <figcaption>PointNet：共享点特征提取与对称池化共同保证排列不变性。图源：<a href="https://arxiv.org/abs/1612.00593">论文原文</a>。</figcaption>
 </figure>
 
@@ -166,7 +166,7 @@ PointNet 简洁但缺少局部邻域建模。max pooling 只保留少量关键�
 [DUSt3R: Geometric 3D Vision Made Easy](https://arxiv.org/abs/2312.14132) 将两幅图像输入双分支 ViT encoder 与交叉 decoder，直接预测每幅图在第一相机坐标系中的 pointmap 及置信度。
 
 <figure class="paper-figure">
-  <img src="/blog/images/research/papers/dust3r-architecture.webp" alt="DUSt3R 双图像编码与点图回归架构" loading="lazy" decoding="async" />
+  <img src="/images/research/papers/dust3r-architecture.webp" alt="DUSt3R 双图像编码与点图回归架构" loading="lazy" decoding="async" />
   <figcaption>DUSt3R：双视图特征交互后直接回归统一坐标系中的 pointmap。图源：<a href="https://arxiv.org/abs/2312.14132">论文原文</a>。</figcaption>
 </figure>
 

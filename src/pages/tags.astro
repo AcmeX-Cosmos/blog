@@ -69,7 +69,7 @@ const prominenceClass = (count: number) => {
               const curveY = Math.round(-14 * (1 - distance * distance));
               return (
                 <a
-                  href={`/blog/tag/${encodeURIComponent(name)}`}
+                  href={`/tag/${encodeURIComponent(name)}`}
                   style={`--tag-curve-y: ${curveY}px;`}
                   class:list={[
                     'tag-cloud-item group inline-flex min-h-11 items-center gap-3 rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--muted))]/40 px-4 py-2.5 text-[hsl(var(--muted-foreground))] transition-[transform,color,border-color,background-color] duration-200 hover:border-[hsl(var(--foreground))]/25 hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]',
@@ -91,7 +91,7 @@ const prominenceClass = (count: number) => {
 
   <nav class="mt-12 border-t border-[hsl(var(--border))] pt-6" aria-label="Back to blog">
     <a
-      href="/blog"
+      href="/"
       class="inline-flex items-center gap-2 text-sm text-[hsl(var(--muted-foreground))] transition-colors hover:text-[hsl(var(--foreground))]"
     >
       <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

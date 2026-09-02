@@ -161,7 +161,7 @@ void Trajectory_compensator::angle_compensator(const Eigen::Vector3d& target_pos
 
 **耗时。** RK4 每帧要积分几十步，还要外层用 Ceres 搜最优仰角；查表是一次 `lower_bound`（$O(\log n)$，$n=10$）加几次浮点运算。在已经有检测、BA、EKF 的流水线里，弹道这一环没有预算做数值积分。
 
-**可调性。** 赛场上换一批弹丸、枪管磨损、气压变化，都会让弹道漂。查表法只要改十个数就能重新贴合，改完立刻通过 [Foxglove 动态参数](/blog/foxglove-dynamic-params)生效；RK4 那套要重跑标定。
+**可调性。** 赛场上换一批弹丸、枪管磨损、气压变化，都会让弹道漂。查表法只要改十个数就能重新贴合，改完立刻通过 [Foxglove 动态参数](/foxglove-dynamic-params)生效；RK4 那套要重跑标定。
 
 **失败模式。** 数值积分在极端输入下可能不收敛或跑飞，查表法最差也就是抛 `out_of_range`。
 
@@ -197,4 +197,4 @@ void Trajectory_compensator::angle_compensator(const Eigen::Vector3d& target_pos
 
 ---
 
-补偿角算出来只是静态的，运动目标还要加提前量：[飞行时间与多级延迟补偿](/blog/flight-time-delay-compensation)。
+补偿角算出来只是静态的，运动目标还要加提前量：[飞行时间与多级延迟补偿](/flight-time-delay-compensation)。

@@ -8,7 +8,7 @@ const queryCompat = fileURLToPath(new URL('./src/shims/astro-query-compat.mjs', 
 
 export default defineConfig({
   site: 'https://acmex-cosmos.github.io',
-  base: '/blog',
+  base: '/',
   trailingSlash: 'never',
   build: {
     assets: 'assets'

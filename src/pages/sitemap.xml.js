@@ -11,14 +11,14 @@ export async function GET() {
   const postEntries = posts.map(post => {
     const slug = post.id.replace(/\.md$/, '');
     return {
-      url: `/blog/${slug}`,
+      url: `/${slug}`,
       lastmod: post.data.date,
     };
   });
 
   const allTags = [...new Set(posts.flatMap(p => p.data.tags || []))];
   const tagEntries = allTags.map(tag => ({
-    url: `/blog/tag/${encodeURIComponent(tag)}`,
+    url: `/tag/${encodeURIComponent(tag)}`,
     lastmod: posts
       .filter(p => (p.data.tags || []).includes(tag))
       .map(p => p.data.date)
@@ -28,6 +28,12 @@ export async function GET() {
 
   const entries = [
     { url: '/', lastmod: posts[0]?.data.date || '' },
+    { url: '/archives', lastmod: '' },
+    { url: '/tags', lastmod: '' },
+    { url: '/research', lastmod: '' },
+    { url: '/algorithm', lastmod: '' },
+    { url: '/tech', lastmod: '' },
+    { url: '/daily', lastmod: '' },
     { url: '/projects', lastmod: '' },
     { url: '/projects/diceposeest', lastmod: '' },
     { url: '/about', lastmod: '' },
@@ -38,7 +44,7 @@ export async function GET() {
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${entries.map(e => `  <url>
-    <loc>https://chenzexin.github.io/blog${e.url}</loc>${e.lastmod ? `\n    <lastmod>${e.lastmod}</lastmod>` : ''}
+    <loc>https://acmex-cosmos.github.io${e.url}</loc>${e.lastmod ? `\n    <lastmod>${e.lastmod}</lastmod>` : ''}
   </url>`).join('\n')}
 </urlset>`;
 

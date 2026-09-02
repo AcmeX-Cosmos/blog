@@ -129,11 +129,11 @@ lut2 = lookUpTable2;
 ### 5. 验证方法
 
 - **静态图集**：存一批不同距离、不同曝光的图，二值化后目视检查灯条是否完整且无粘连
-- **在线调参**：通过 [Foxglove 动态参数](/blog/foxglove-dynamic-params) 实时拖阈值，看二值图变化
+- **在线调参**：通过 [Foxglove 动态参数](/foxglove-dynamic-params) 实时拖阈值，看二值图变化
 - **回归**：改完参数跑一遍录制的 bag，统计检测率是否退化
 
 **评价指标**：灯条召回率、单帧二值化耗时、误检轮廓数。
 
 ---
 
-下一篇是配对：[灯条配对的几何判据](/blog/light-bar-pairing-geometry)。
+下一篇是配对：[灯条配对的几何判据](/light-bar-pairing-geometry)。
