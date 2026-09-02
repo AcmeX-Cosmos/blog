@@ -1,62 +1,61 @@
 [
   {
-    "name": "AuraVLA 具身智能闭环控制系统",
+    "name": "具身智能 VLA 抓取放置系统 · AuraVLA",
     "slug": "auravla",
-    "role": "独立开发",
+    "role": "研发负责人",
     "detail": "/blog/auravla-embodied-ai-closed-loop",
     "github": "https://github.com/AcmeX-Cosmos/AuraVLA",
-    "description": "集成 VLM 多模态理解、Schema 验证规划、Lula IK/RRT 运动规划、Isaac Sim 仿真与几何验证的自主机器人操作系统，实现感知-规划-执行-验证的完整闭环与自动重规划能力。",
-    "tags": ["VLA", "ROS2", "Lula", "RRT", "Isaac Sim", "cuRobo", "VLM", "Python"],
+    "description": "独立构建语言引导的具身操作系统，围绕抓取位姿偏移、复杂位姿规划失败与运输失稳，打通感知、规划、执行和验证闭环。",
+    "tags": ["Isaac Sim", "ROS2 Humble", "MoveIt 2", "AnyGrasp", "Nemotron VLM", "SAM", "Python"],
     "highlights": [
-      "Lula IK + RRT 混合规划：warm-start 连续 IK + 碰撞避障全局路径搜索",
-      "Schema 验证安全规划：禁止底层运动指令，防止 VLM 幻觉生成不安全参数",
-      "稀疏关键姿态扩散：minimum jerk 插值生成 C² 连续轨迹，满足动力学约束",
-      "双臂协同控制：实时 TCP 间距约束（18cm）+ 力反馈独立双指抓取",
-      "文件桥接通信：零依赖跨进程集成 ROS2 与 Isaac Sim，支持心跳与独占控制"
+      "语义-执行分层：VLM 输出受 JSON Schema 约束的 pick_and_place，失败时自动回退重规划",
+      "多帧抓取感知：连续采集 RGB-D，融合 AnyGrasp 置信度、深度有效性和几何包围盒，以 Median/MAD 剔除时序离群并完成四元数姿态融合",
+      "分级运动规划：MoveIt 2 plan-only、task-space RRT 无解时降级 warm-start IK + c-space RRT",
+      "物理执行闭环：minimum-jerk 轨迹插值、15° 抓取倾角约束与 PhysX 接触反馈连续帧确认；模型运行时缓存并配套融合单元测试"
     ],
     "results": [
-      { "label": "IK 求解", "value": "8-25ms" },
-      { "label": "RRT 规划", "value": "0.5-3s" },
-      { "label": "TCP 精度", "value": "±3.5cm" },
-      { "label": "重规划成功率", "value": "78%" }
+      { "label": "规划策略", "value": "多级降级" },
+      { "label": "抓取确认", "value": "5 帧" },
+      { "label": "闭环链路", "value": "端到端" }
     ]
   },
   {
-    "name": "双臂机器人 ACT 训练闭环优化",
+    "name": "基于 ACT 的双臂机器人长时序操作模仿学习系统",
     "slug": "dual-arm-act-training-optimization",
-    "role": "独立开发",
+    "role": "研发负责人",
     "detail": "/blog/dual-arm-act-training-optimization",
-    "description": "基于 Tron2 双臂机器人构建的 Expert → Data → ACT → Evaluation 闭环优化系统，系统性解决从数据采集到策略部署的全链路质量问题，覆盖单臂调整、双臂抓举、双碗堆叠和三碗长时序堆叠四类递增难度任务。",
-    "tags": ["ACT", "PyTorch", "模仿学习", "RoboTwin", "SAPIEN", "cuRobo"],
+    "description": "面向双臂机器人长时序操作，构建 Expert → Data → ACT → Evaluation 训练闭环，系统处理专家数据质量、超参数选择和策略评测问题。",
+    "tags": ["PyTorch", "ACT", "RoboTwin", "SAPIEN", "Python"],
     "highlights": [
-      "ACT 数据契约：16维双臂状态空间、三相机语义顺序、action/qpos 时序对齐校验",
-      "训练策略优化：KL权重Warmup、分层学习率、高EMA系数、Keyframe-Aware采样",
-      "Expert 轨迹优化：阶段化任务分解、实时放置对齐、抓取候选fallback策略",
-      "评测基础设施：固定Seed rollout、分层堆叠评分、多维度模型选择"
+      "专家数据诊断：十阶段流程定位预检与执行目标不一致导致的 IK 无解，统一逻辑后采集成功率达 67%–92%",
+      "训练策略对照：系统评估 learning rate、batch size、chunk size 与 KL weight，小数据采用 warmup + cosine decay",
+      "评测闭环：统一双臂 16 维状态空间与三路相机顺序，HDF5 校验定位 dataloader off-by-one 时序错误",
+      "工程化评估：协调 3 台服务器，以固定 Seed rollout、分层评分和回放验证完成模型选择"
     ],
     "results": [
-      { "label": "T4 Expert成功率", "value": "0%→20%" },
-      { "label": "采集速度提升", "value": "≥17.7%" },
-      { "label": "训练完成度", "value": "6500 epochs" }
+      { "label": "采集成功率", "value": "67%–92%" },
+      { "label": "轨迹耗时", "value": "优化 ≥27.7%" },
+      { "label": "评测资源", "value": "3 台服务器" }
     ]
   },
   {
-    "name": "RCIA-Vision-2025",
+    "name": "机器人实时位姿估计与跟踪系统 · RCIA-Vision-2025",
     "slug": "rcia-vision-2025",
     "role": "核心算法负责人",
     "detail": "/blog/rcia-vision-overview",
-    "description": "基于ROS2架构的机器人自动瞄准跟踪系统，涵盖装甲板检测、位姿解算、多传感器融合跟踪与弹道补偿的完整管线。同时负责UE5虚实仿真环境的搭建，实现算法在虚拟和真实环境下的闭环验证。",
-    "tags": ["ROS2", "OpenCV", "PnP", "Ceres", "EKF", "C++", "UE5", "Docker"],
+    "github": "https://github.com/AcmeX-Cosmos/RCIA-Vision-2025",
+    "description": "主导 RoboMaster 视觉系统架构，面向高速对抗场景解决位姿抖动、目标跟踪和实时通信问题，构建从感知、估计到弹道补偿的 Real2Sim 验证闭环。",
+    "tags": ["ROS2 Humble", "Ceres BA", "EKF", "IPPE/PnP", "Isaac Sim", "C++", "Foxglove"],
     "highlights": [
-      "ROS2架构：Component节点封装、TF2坐标系转换、DDS实时通信",
-      "装甲板检测：OpenCV灯柱检测、PnP位姿解算、Ceres BA联合优化",
-      "目标跟踪：EKF多传感器融合 + 四阶龙格库塔弹道补偿",
-      "UE5虚实仿真：搭建竞技场景，实现算法双向闭环验证"
+      "位姿优化：固定 pitch/roll，仅以 5 帧滑窗和 Cauchy 核优化 yaw，抑制 IPPE 初解抖动至 <1.5°",
+      "目标跟踪：9 维 EKF 建模位置、速度、高度、yaw 与半径，角度解缠避免 ±π 跳变导致滤波发散",
+      "实时系统：ROS2 intra-process 消除序列化开销，按链路采用 BEST_EFFORT/RELIABLE QoS 与分层延迟补偿",
+      "Real2Sim 验证：打通 Isaac Sim/UE5 虚实环境，覆盖多赛季步兵、英雄和哨兵兵种"
     ],
     "results": [
       { "label": "跟踪精度", "value": "±1.5°" },
-      { "label": "检测帧率", "value": "60fps" },
-      { "label": "全国赛", "value": "一等奖" }
+      { "label": "运行帧率", "value": "200fps" },
+      { "label": "RMUC 全国赛", "value": "国家二等奖" }
     ]
   },
   {
