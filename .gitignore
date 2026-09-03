@@ -31,6 +31,7 @@ pnpm-debug.log*
 # IDE and editor state
 .vscode/
 .idea/
+.obsidian/
 *.sublime-*
 *.swp
 *.swo
@@ -43,6 +44,7 @@ ehthumbs.db
 
 # Local notes and quick-start instructions
 QuickStart.md
+backups/
 
 # Archives and reference material
 *.zip
