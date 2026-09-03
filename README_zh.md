@@ -16,6 +16,10 @@
   </a>
 </p>
 
+<p align="center">
+  <a href="README.md">English</a> | <a href="README_zh.md">简体中文</a>
+</p>
+
 ---
 
 ## 项目简介
@@ -67,7 +71,7 @@ npm run preview      # 预览生产构建
 | <div align="center"><img src="https://img.shields.io/badge/Portfolio-AcmeX-3CD500.svg" alt="作品集"></div> | <div align="center">[AcmeX-Cosmos.github.io/portfolio](https://AcmeX-Cosmos.github.io/portfolio/)</div> |
 | <div align="center"><img src="https://img.shields.io/badge/GitHub-AcmeX-181717.svg?logo=github" alt="GitHub"></div> | <div align="center">[github.com/AcmeX](https://github.com/AcmeX)</div> |
 | <div align="center"><img src="https://img.shields.io/badge/Email-foxmail-EA4335.svg?logo=gmail" alt="邮箱"></div> | <div align="center">[AcmeX@foxmail.com](mailto:AcmeX@foxmail.com)</div> |
-| <div align="center"><img src="https://img.shields.io/badge/WeChat-QR_Code-07C160.svg?logo=wechat" alt="微信"></div> | <div align="center"><img src="https://AcmeX-Cosmos.github.io/portfolio/projects/WeChat-QR.jpg" width="120" alt="微信二维码"></div> |
+| <div align="center"><img src="https://img.shields.io/badge/WeChat-QR_Code-07C160.svg?logo=wechat" alt="微信"></div> | <div align="center"><img src="./public/images/WeChat-QR.jpg" width="120" alt="微信二维码"></div> |
 
 ## 许可证
 
